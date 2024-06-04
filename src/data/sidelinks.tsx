@@ -1,5 +1,6 @@
 import {
   IconLayoutDashboard,
+  IconVaccineBottle,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -19,6 +20,12 @@ export const sidelinks: SideLink[] = [
     label: '',
     href: '/',
     icon: <IconLayoutDashboard size={18} />,
+  },
+  {
+    title: 'Medicines',
+    label: '',
+    href: '/medicines',
+    icon: <IconVaccineBottle size={18} />,
   },
   // {
   //   title: 'Tasks',

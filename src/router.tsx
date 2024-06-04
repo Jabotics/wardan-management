@@ -46,6 +46,12 @@ const router = createBrowserRouter([
         }),
       },
 
+      {
+        path: 'medicines',
+        lazy: async () => ({
+          Component: (await import('./pages/medicines')).default,
+        })
+      },
     ],
   },
 
