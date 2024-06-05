@@ -6,13 +6,16 @@ export interface HeadCell<T> {
   id: keyof T
   label: string
   numeric: boolean
+  type: 'string' | 'custom';
+  body?: ({ data }: { data: T; }) => React.JSX.Element;
 }
 
-export interface EnhancedTableProps<T extends { [key: string]: string | number }> {
+export interface EnhancedTableProps<T extends { [key: string]: any }> {
   data: T[]
   headCells: HeadCell<T>[]
   title: string
   dense?: boolean
+  rowHeight?: number
 }
 
 export interface EnhancedTableHeadProps<T> {
@@ -27,4 +30,5 @@ export interface EnhancedTableHeadProps<T> {
 
 export interface EnhancedTableToolbarProps {
   numSelected: number
+  setDelete: React.Dispatch<React.SetStateAction<boolean>>
 }

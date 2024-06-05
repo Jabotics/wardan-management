@@ -19,7 +19,7 @@ export default function AppShell() {
   // }, [navigate, isAuthenticated])
 
   return (
-    <div className='relative h-full overflow-hidden bg-background'>
+    <div className='relative h-screen overflow-hidden bg-gray-50'>
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <main
         id='content'

@@ -2,23 +2,27 @@ import React from 'react'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Toolbar from '@mui/material/Toolbar'
 
-import { alpha } from '@mui/material/styles'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
-import { BsChevronDown } from 'react-icons/bs'
+import { FaAngleDown } from 'react-icons/fa6'
 import MenuItem from '@mui/material/MenuItem'
 import Checkbox from '@mui/material/Checkbox'
 import ListItemText from '@mui/material/ListItemText'
-import TextField from '@mui/material/TextField'
 import { Button } from '../custom/button'
 
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
-import { CiExport } from 'react-icons/ci'
+import { PiExportBold } from 'react-icons/pi'
 import { StyledMenu } from './style'
 import { EnhancedTableToolbarProps } from '@/interface'
+import Paper from '@mui/material/Paper'
+import IconButton from '@mui/material/IconButton'
+
+import { LuSearch } from 'react-icons/lu'
+import InputBase from '@mui/material/InputBase'
+import { MdDelete } from 'react-icons/md'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -32,7 +36,7 @@ const MenuPropsX = {
 }
 
 export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props
+  const { numSelected, setDelete } = props
 
   const [personName, setPersonName] = React.useState<string[]>([])
 
@@ -81,19 +85,37 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        pt: { xs: 1, sm: 2 },
         flex: { justifyContent: 'space-between' },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity
-            ),
-        }),
       }}
     >
-      <div className='gap-15 flex items-center'>
-        <FormControl sx={{ width: 200 }}>
-          <InputLabel id='demo-multiple-checkbox-label'>Tag</InputLabel>
+      <div className='flex items-center gap-4'>
+        <FormControl
+          sx={{
+            width: 200,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#33333325' },
+              '&:hover fieldset': { borderColor: 'gray' },
+              '&.Mui-focused fieldset': { borderColor: 'black' },
+            },
+            '&:hover .MuiInputLabel-root': {
+              color: 'initial',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '15px',
+              color: '#33333375',
+              '&.Mui-focused': {
+                color: 'black',
+                fontWeight: 600,
+              },
+            },
+            '& .MuiOutlinedInput-input': {
+              fontSize: '15px',
+              color: '#33333375',
+            },
+          }}
+        >
+          <InputLabel>Tag</InputLabel>
           <Select
             labelId='demo-multiple-checkbox-label'
             id='demo-multiple-checkbox'
@@ -103,7 +125,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             input={<OutlinedInput label='Tag' />}
             renderValue={(selected) => selected.join(', ')}
             MenuProps={MenuPropsX}
-            IconComponent={BsChevronDown}
+            IconComponent={FaAngleDown}
             sx={{ borderRadius: 2 }}
           >
             {['Oliver Hansen'].map((name) => (
@@ -114,8 +136,33 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             ))}
           </Select>
         </FormControl>
-        <FormControl sx={{ m: 1, width: 200 }}>
-          <InputLabel id='demo-multiple-checkbox-label'>Tag</InputLabel>
+
+        <FormControl
+          sx={{
+            width: 200,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: '#33333325' },
+              '&:hover fieldset': { borderColor: 'gray' },
+              '&.Mui-focused fieldset': { borderColor: 'black' },
+            },
+            '&:hover .MuiInputLabel-root': {
+              color: 'initial',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '15px',
+              color: '#33333375',
+              '&.Mui-focused': {
+                color: 'black',
+                fontWeight: 600,
+              },
+            },
+            '& .MuiOutlinedInput-input': {
+              fontSize: '15px',
+              color: '#33333375',
+            },
+          }}
+        >
+          <InputLabel>Tag</InputLabel>
           <Select
             labelId='demo-multiple-checkbox-label'
             id='demo-multiple-checkbox'
@@ -125,7 +172,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             input={<OutlinedInput label='Tag' />}
             renderValue={(selected) => selected.join(', ')}
             MenuProps={MenuPropsX}
-            IconComponent={BsChevronDown}
+            IconComponent={FaAngleDown}
             sx={{ borderRadius: 2 }}
           >
             {['Oliver Hansen'].map((name) => (
@@ -136,10 +183,52 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             ))}
           </Select>
         </FormControl>
-        <TextField id='outlined-search' label='Search field' type='search' />
+
+        <Paper
+          component='form'
+          sx={{
+            p: '2px 4px',
+            display: 'flex',
+            alignItems: 'center',
+            width: 200,
+            height: 55,
+            borderRadius: 2,
+            boxShadow: 'none',
+            border: '1px solid #33333325',
+            '&:hover': {
+              borderColor: 'gray',
+            },
+            '&:focus-within': {
+              boxShadow: 'inset 0 0 0 2px black',
+            },
+          }}
+        >
+          <IconButton type='button' sx={{ py: '10px' }} aria-label='search'>
+            <LuSearch className='text-gray-500' size={16} />
+          </IconButton>
+          <InputBase
+            sx={{ flex: 1 }}
+            placeholder='Search...'
+            inputProps={{ 'aria-label': 'search fields' }}
+          />
+        </Paper>
       </div>
 
-      <div className='gpa-15 flex items-center'>
+      <div className='mr-4 flex items-end gap-2'>
+        {numSelected > 0 && (
+          <div
+            className='mr-3 flex h-fit cursor-pointer items-center gap-1 p-1 text-[13px] font-bold text-rose-700'
+            onClick={() => {
+              setDelete(true)
+            }}
+          >
+            <span>
+              <MdDelete size={16} />
+            </span>
+            <span>Delete ({numSelected})</span>
+          </div>
+        )}
+
         <span>
           <Button
             id='demo-customized-button'
@@ -150,8 +239,10 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             // disableElevation
             onClick={handleColumnsClickColumns}
             // endIcon={<KeyboardArrowDownIcon />}
+
+            className='flex h-fit items-center p-1 text-[13px] font-bold'
           >
-            <RemoveRedEyeIcon className='mr-1' />
+            <RemoveRedEyeIcon className='mr-1' fontSize='small' />
             Columns
           </Button>
           <StyledMenu
@@ -180,8 +271,10 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             // disableElevation
             onClick={handleFiltersClickColumns}
             // endIcon={<KeyboardArrowDownIcon />}
+
+            className='flex h-fit items-center p-1 text-[13px] font-bold'
           >
-            <FilterAltIcon />
+            <FilterAltIcon fontSize='small' />
             Filters
           </Button>
           <StyledMenu
@@ -199,6 +292,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             </MenuItem>
           </StyledMenu>
         </span>
+
         <span>
           <Button
             id='demo-customized-button'
@@ -209,8 +303,10 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             // disableElevation
             onClick={handleExportClickColumns}
             // endIcon={<KeyboardArrowDownIcon />}
+
+            className='flex h-fit items-center p-1 text-[13px] font-bold'
           >
-            <CiExport size={20} className='mr-2' />
+            <PiExportBold size={18} className='mr-2' />
             Export
           </Button>
           <StyledMenu

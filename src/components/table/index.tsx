@@ -20,17 +20,35 @@ import { getComparator, stableSort } from './table-utils'
 import { AntSwitch } from './style'
 import { EnhancedTableProps, Order } from '@/interface'
 
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'
+import { FaCircle } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-export default function EnhancedTable<
-  T extends { [key: string]: string | number },
->({ data, headCells, title, dense: defaultDense }: EnhancedTableProps<T>) {
+import { MdCheckCircleOutline } from 'react-icons/md'
+import { MdCheckCircle } from 'react-icons/md'
+import DeleteModal from '../shared/delete-modal'
+
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+
+export default function EnhancedTable<T extends { [key: string]: any }>({
+  data,
+  headCells,
+  title,
+  dense: defaultDense,
+  rowHeight,
+}: EnhancedTableProps<T>) {
+  const navigate = useNavigate()
+  const { t } = useTranslation()
+
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof T>(headCells[0].id)
   const [selected, setSelected] = React.useState<readonly number[]>([])
   const [page, setPage] = React.useState(0)
   const [dense, setDense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
+
+  const [toDelete, setToDelete] = React.useState<boolean>(false)
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -100,17 +118,47 @@ export default function EnhancedTable<
     [order, orderBy, page, rowsPerPage, data]
   )
 
-  console.log(headCells)
   return (
     <>
+      <DeleteModal
+        open={toDelete}
+        handleClose={() => {
+          setToDelete(false)
+        }}
+        handleDelete={() => {}}
+        numSelected={selected.length}
+      />
       <div className='mb-8 flex items-center justify-between'>
-        <div className='text-2xl font-medium'>{title}</div>
-        <Button variant={'outline'}><AddIcon /> New {title}</Button>
+        <div className='text-3xl font-medium tracking-tighter'>{title}</div>
+        <Button variant={'new_secondary'}>
+          <AddIcon /> {`${t('New')}`} {title}
+        </Button>
       </div>
-      <Box sx={{ width: '100%' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
-          <TableContainer className='mt-5'>
+      <div className='-mt-5 mb-8 flex h-8 items-start gap-3 text-sm font-medium tracking-tight text-gray-700'>
+        <div className='flex items-center gap-3'>
+          <span
+            onClick={() => {
+              navigate('/')
+            }}
+            className='cursor-pointer hover:underline'
+          >
+            Dashboard
+          </span>
+          <FaCircle size={4} className='text-gray-500' />
+        </div>
+        <div className='text-gray-400'>{title}</div>
+      </div>
+
+      <Box sx={{ width: '100%', borderRadius: 4 }}>
+        <Paper sx={{ width: '100%', mb: 2, borderRadius: 4 }}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setDelete={setToDelete}
+          />
+          <TableContainer
+            className='mt-5'
+            sx={{ height: '500px', overflowY: 'auto' }}
+          >
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby='tableTitle'
@@ -139,27 +187,58 @@ export default function EnhancedTable<
                       tabIndex={-1}
                       selected={isItemSelected}
                       key={index}
-                      sx={{ cursor: 'pointer' }}
+                      sx={{ cursor: 'pointer', height: rowHeight }}
                     >
                       <TableCell padding='checkbox'>
                         <Checkbox
                           color='primary'
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
+                          icon={<MdCheckCircleOutline size={15} />}
+                          checkedIcon={<MdCheckCircle size={15} />}
                         />
                       </TableCell>
-                      {headCells.map((cell) => (
-                        <TableCell
-                          key={cell.id as string}
-                          align={cell.numeric ? 'right' : 'left'}
-                          padding={cell.disablePadding ? 'none' : 'normal'}
-                        >
-                          {row[cell.id]}
-                        </TableCell>
-                      ))}
+                      {headCells.map((cell) => {
+                        if (cell?.body) {
+                          return (
+                            <TableCell
+                              key={cell.id as string}
+                              align={cell.numeric ? 'right' : 'left'}
+                              padding={cell.disablePadding ? 'none' : 'normal'}
+                              sx={{
+                                color: '#000',
+                                // fontWeight: 600,
+                                fontFamily: "'Roboto', sans-serif",
+                                letterSpacing: '1px',
+                              }}
+                            >
+                              <cell.body data={row as T} />
+                            </TableCell>
+                          )
+                        } else {
+                          return (
+                            <TableCell
+                              key={cell.id as string}
+                              align={cell.numeric ? 'right' : 'left'}
+                              padding={cell.disablePadding ? 'none' : 'normal'}
+                              sx={{
+                                color: '#000',
+                                // fontWeight: 600,
+                                fontFamily: "'Roboto', sans-serif",
+                                letterSpacing: '1px',
+                              }}
+                            >
+                              {row[cell.id]}
+                            </TableCell>
+                          )
+                        }
+                      })}
                     </TableRow>
                   )
                 })}
+                {/* <TableRow>
+                  <PiDotsThreeOutlineVerticalFill />
+                </TableRow> */}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={headCells.length + 1} />

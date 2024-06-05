@@ -8,6 +8,9 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { EnhancedTableHeadProps } from '@/interface'
 
+import { FaRegSquareCheck, FaSquareCheck } from "react-icons/fa6";
+import { FaMinusSquare } from "react-icons/fa";
+
 export function EnhancedTableHead<T extends { [key: string]: string | number }>(
   props: EnhancedTableHeadProps<T>
 ) {
@@ -35,12 +38,16 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all items' }}
+            icon={<FaRegSquareCheck />}
+            checkedIcon={<FaSquareCheck />}
+            indeterminateIcon={<FaMinusSquare />}
           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id as string}
-            align={headCell.numeric ? 'right' : 'left'}
+            align={'left'}
+            // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -49,7 +56,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
-              <span className='text-stone-400'>{headCell.label}</span>
+              <span className='text-gray-500 text-sm' style={{ fontFamily: "'RobotoL', sans-serif" }}>{headCell.label}</span>
               {orderBy === headCell.id ? (
                 <Box component='span' sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
