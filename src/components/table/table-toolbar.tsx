@@ -17,7 +17,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { PiExportBold } from 'react-icons/pi'
 import { StyledMenu } from './style'
-import { EnhancedTableToolbarProps } from '@/interface'
+import { EnhancedTableToolbarProps } from '@/interfaces'
 import Paper from '@mui/material/Paper'
 import IconButton from '@mui/material/IconButton'
 

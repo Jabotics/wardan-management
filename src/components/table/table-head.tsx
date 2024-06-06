@@ -6,10 +6,10 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 
 import { visuallyHidden } from '@mui/utils'
-import { EnhancedTableHeadProps } from '@/interface'
+import { EnhancedTableHeadProps } from '@/interfaces'
 
-import { FaRegSquareCheck, FaSquareCheck } from "react-icons/fa6";
-import { FaMinusSquare } from "react-icons/fa";
+import { FaRegSquareCheck, FaSquareCheck } from 'react-icons/fa6'
+import { FaMinusSquare } from 'react-icons/fa'
 
 export function EnhancedTableHead<T extends { [key: string]: string | number }>(
   props: EnhancedTableHeadProps<T>
@@ -31,7 +31,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
+        <TableCell padding='checkbox' sx={{ borderBottom: 'none' }}>
           <Checkbox
             color='primary'
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -47,16 +47,21 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
           <TableCell
             key={headCell.id as string}
             align={'left'}
-            // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            sx={{ borderBottom: 'none' }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
-              <span className='text-gray-500 text-sm' style={{ fontFamily: "'RobotoL', sans-serif" }}>{headCell.label}</span>
+              <span
+                className='text-sm text-gray-500'
+                style={{ fontFamily: "'RobotoL', sans-serif" }}
+              >
+                {headCell.label}
+              </span>
               {orderBy === headCell.id ? (
                 <Box component='span' sx={visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -65,7 +70,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
             </TableSortLabel>
           </TableCell>
         ))}
-        <TableCell></TableCell>
+        <TableCell sx={{ borderBottom: 'none' }}></TableCell>
       </TableRow>
     </TableHead>
   )

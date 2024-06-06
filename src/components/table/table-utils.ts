@@ -1,4 +1,4 @@
-import { Order } from "@/interface"
+import { Order } from "@/interfaces"
 
 export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {

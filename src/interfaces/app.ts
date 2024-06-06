@@ -16,6 +16,7 @@ export interface EnhancedTableProps<T extends { [key: string]: any }> {
   title: string
   dense?: boolean
   rowHeight?: number
+  ExpandedBody?: ({ data }: { data: T; }) => React.JSX.Element;
 }
 
 export interface EnhancedTableHeadProps<T> {

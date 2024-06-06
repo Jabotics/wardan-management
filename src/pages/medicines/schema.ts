@@ -1,6 +1,6 @@
 import { productItems } from "@/___mock___/product"
 import { CreateAt, IsPublish, Price, ProductName, Stock } from "./function"
-import { HeadCell } from "@/interface"
+import { HeadCell } from "@/interfaces"
 
 export interface Data {
   id: number

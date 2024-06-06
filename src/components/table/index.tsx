@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 
 import Box from '@mui/material/Box'
@@ -19,7 +18,7 @@ import { EnhancedTableHead } from './table-head'
 import { EnhancedTableToolbar } from './table-toolbar'
 import { getComparator, stableSort } from './table-utils'
 import { AntSwitch } from './style'
-import { EnhancedTableProps, Order } from '@/interface'
+import { EnhancedTableProps, Order } from '@/interfaces'
 
 import AddIcon from '@mui/icons-material/Add'
 import { FaCircle } from 'react-icons/fa'
@@ -30,7 +29,17 @@ import { MdCheckCircleOutline } from 'react-icons/md'
 import { MdCheckCircle } from 'react-icons/md'
 import DeleteModal from '../shared/delete-modal'
 
-import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi'
+import { BsThreeDotsVertical } from 'react-icons/bs'
+import IconButton from '@mui/material/IconButton'
+
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import Collapse from '@mui/material/Collapse'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+
+import { MdEdit } from 'react-icons/md'
+import { RiDeleteBin6Fill } from 'react-icons/ri'
 
 export default function EnhancedTable<T extends { [key: string]: any }>({
   data,
@@ -38,6 +47,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   title,
   dense: defaultDense,
   rowHeight,
+  ExpandedBody,
 }: EnhancedTableProps<T>) {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -49,7 +59,19 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   const [dense, setDense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
+  const [expandedRows, setExpandedRows] = React.useState<number[]>([])
+
   const [toDelete, setToDelete] = React.useState<boolean>(false)
+
+  const [anchorActionEl, setAnchorActionEl] =
+    React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorActionEl)
+  const handleActionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorActionEl(event.currentTarget)
+  }
+  const handleActionClose = () => {
+    setAnchorActionEl(null)
+  }
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -119,6 +141,14 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
     [order, orderBy, page, rowsPerPage, data]
   )
 
+  const handleExpandClick = (index: number) => {
+    setExpandedRows((prevExpandedRows) =>
+      prevExpandedRows.includes(index)
+        ? prevExpandedRows.filter((row) => row !== index)
+        : [...prevExpandedRows, index]
+    )
+  }
+
   return (
     <>
       <DeleteModal
@@ -177,67 +207,172 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
               <TableBody>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(index)
+                  const isExpanded = expandedRows.includes(index)
                   const labelId = `enhanced-table-checkbox-${index}`
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, index)}
-                      role='checkbox'
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      selected={isItemSelected}
-                      key={index}
-                      sx={{ cursor: 'pointer', height: rowHeight }}
-                    >
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          color='primary'
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                          icon={<MdCheckCircleOutline size={15} />}
-                          checkedIcon={<MdCheckCircle size={15} />}
-                        />
-                      </TableCell>
-                      {headCells.map((cell) => {
-                        if (cell?.body) {
-                          return (
-                            <TableCell
-                              key={cell.id as string}
-                              align={cell.numeric ? 'right' : 'left'}
-                              padding={cell.disablePadding ? 'none' : 'normal'}
+                    <React.Fragment key={index}>
+                      <TableRow
+                        hover
+                        role='checkbox'
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        selected={isItemSelected}
+                        sx={{ cursor: 'pointer', height: rowHeight }}
+                      >
+                        <TableCell padding='checkbox'>
+                          <Checkbox
+                            color='primary'
+                            onClick={(event) => handleClick(event, index)}
+                            checked={isItemSelected}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            icon={<MdCheckCircleOutline size={15} />}
+                            checkedIcon={<MdCheckCircle size={15} />}
+                          />
+                        </TableCell>
+                        {headCells.map((cell) => {
+                          if (cell?.body) {
+                            return (
+                              <TableCell
+                                key={cell.id as string}
+                                align={cell.numeric ? 'right' : 'left'}
+                                padding={
+                                  cell.disablePadding ? 'none' : 'normal'
+                                }
+                                sx={{
+                                  color: '#000',
+                                  // fontWeight: 600,
+                                  fontFamily: "'Roboto', sans-serif",
+                                  letterSpacing: '1px',
+                                }}
+                              >
+                                <cell.body data={row as T} />
+                              </TableCell>
+                            )
+                          } else {
+                            return (
+                              <TableCell
+                                key={cell.id as string}
+                                align={cell.numeric ? 'right' : 'left'}
+                                padding={
+                                  cell.disablePadding ? 'none' : 'normal'
+                                }
+                                sx={{
+                                  color: '#000',
+                                  // fontWeight: 600,
+                                  fontFamily: "'Roboto', sans-serif",
+                                  letterSpacing: '1px',
+                                }}
+                              >
+                                {row[cell.id]}
+                              </TableCell>
+                            )
+                          }
+                        })}
+                        <TableCell
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 2,
+                            height: 'inherit', // Set the height to match other cells
+                          }}
+                        >
+                          {ExpandedBody && (
+                            <IconButton
+                              aria-label='expand row'
+                              size='small'
+                              onClick={() => handleExpandClick(index)}
+                            >
+                              {isExpanded ? (
+                                <LuChevronUp className='text-gray-400' />
+                              ) : (
+                                <LuChevronDown className='text-gray-400' />
+                              )}
+                            </IconButton>
+                          )}
+                          <div>
+                            <IconButton
+                              id='basic-button'
+                              aria-controls={open ? 'basic-menu' : undefined}
+                              aria-haspopup='true'
+                              aria-expanded={open ? 'true' : undefined}
+                              onClick={handleActionClick}
+                            >
+                              <BsThreeDotsVertical
+                                size={20}
+                                className='text-gray-400'
+                              />
+                            </IconButton>
+                            <Menu
+                              id='basic-menu'
+                              anchorEl={anchorActionEl}
+                              open={open}
+                              onClose={handleActionClose}
+                              MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                              }}
                               sx={{
-                                color: '#000',
-                                // fontWeight: 600,
-                                fontFamily: "'Roboto', sans-serif",
-                                letterSpacing: '1px',
+                                '& .MuiPaper-root': {
+                                  borderRadius: 3,
+                                  boxShadow: 'none',
+                                  border: '1px solid #E5E5E5',
+                                },
                               }}
                             >
-                              <cell.body data={row as T} />
-                            </TableCell>
-                          )
-                        } else {
-                          return (
-                            <TableCell
-                              key={cell.id as string}
-                              align={cell.numeric ? 'right' : 'left'}
-                              padding={cell.disablePadding ? 'none' : 'normal'}
-                              sx={{
-                                color: '#000',
-                                // fontWeight: 600,
-                                fontFamily: "'Roboto', sans-serif",
-                                letterSpacing: '1px',
-                              }}
+                              <MenuItem
+                                onClick={handleActionClose}
+                                className='flex items-center gap-2'
+                              >
+                                <span>
+                                  <RemoveRedEyeIcon
+                                    className='mr-1'
+                                    fontSize='small'
+                                  />
+                                </span>
+                                View
+                              </MenuItem>
+                              <MenuItem
+                                onClick={handleActionClose}
+                                className='flex items-center gap-2'
+                              >
+                                <span>
+                                  <MdEdit />
+                                </span>
+                                My account
+                              </MenuItem>
+                              <MenuItem
+                                onClick={handleActionClose}
+                                className='flex items-center gap-2'
+                                sx={{ color: "red" }} // Apply lighter font weight
+                              >
+                                <span>
+                                  <RiDeleteBin6Fill />
+                                </span>
+                                Logout
+                              </MenuItem>
+                            </Menu>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      {ExpandedBody && (
+                        <TableRow>
+                          <TableCell
+                            style={{ paddingBottom: 0, paddingTop: 0 }}
+                            colSpan={6}
+                          >
+                            <Collapse
+                              in={isExpanded}
+                              timeout='auto'
+                              unmountOnExit
                             >
-                              {row[cell.id]}
-                            </TableCell>
-                          )
-                        }
-                      })}
-                      <TableCell>
-                        <PiDotsThreeOutlineVerticalFill />
-                      </TableCell>
-                    </TableRow>
+                              <Box sx={{ margin: 1 }}>
+                                <ExpandedBody data={row as T} />
+                              </Box>
+                            </Collapse>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
                   )
                 })}
                 {emptyRows > 0 && (

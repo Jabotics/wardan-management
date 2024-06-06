@@ -52,6 +52,13 @@ const router = createBrowserRouter([
           Component: (await import('./pages/medicines')).default,
         })
       },
+
+      {
+        path: 'categories',
+        lazy: async () => ({
+          Component: (await import('./pages/category')).default,
+        })
+      },
     ],
   },
 

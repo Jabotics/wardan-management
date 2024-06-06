@@ -6,6 +6,10 @@ import {
   Order,
 } from './app'
 
+import {
+  ICategory,
+} from './data'
+
 export type {
   // app
   EnhancedTableHeadProps,
@@ -13,4 +17,7 @@ export type {
   EnhancedTableToolbarProps,
   HeadCell,
   Order,
+
+  // data
+  ICategory,
 }
