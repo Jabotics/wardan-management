@@ -1,3 +1,4 @@
+import { productItems } from "@/___mock___/product"
 import { CreateAt, IsPublish, Price, ProductName, Stock } from "./function"
 import { HeadCell } from "@/interface"
 
@@ -35,3 +36,17 @@ export const headCells: HeadCell<Data>[] = [
   { id: 'price', numeric: true, disablePadding: false, label: 'Price', type: 'custom', body: Price },
   { id: 'publish', numeric: false, disablePadding: false, label: 'Publish', type: 'custom', body: IsPublish },
 ]
+
+export const rows = productItems.map(item =>
+  createData(
+    item.id,
+    item.name,
+    item.category,
+    item.date,
+    item.quantity,
+    item.image,
+    item.stock,
+    item.price,
+    item.available
+  )
+);

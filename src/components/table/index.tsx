@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 
 import Box from '@mui/material/Box'
@@ -29,7 +30,7 @@ import { MdCheckCircleOutline } from 'react-icons/md'
 import { MdCheckCircle } from 'react-icons/md'
 import DeleteModal from '../shared/delete-modal'
 
-import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import { PiDotsThreeOutlineVerticalFill } from 'react-icons/pi'
 
 export default function EnhancedTable<T extends { [key: string]: any }>({
   data,
@@ -51,7 +52,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   const [toDelete, setToDelete] = React.useState<boolean>(false)
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    _event: React.MouseEvent<unknown>,
     property: keyof T
   ) => {
     const isAsc = orderBy === property && order === 'asc'
@@ -61,14 +62,14 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = data.map((n, index) => index)
+      const newSelected = data.map((_n, index) => index)
       setSelected(newSelected)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, index: number) => {
+  const handleClick = (_event: React.MouseEvent<unknown>, index: number) => {
     const selectedIndex = selected.indexOf(index)
     let newSelected: readonly number[] = []
 
@@ -88,7 +89,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
     setSelected(newSelected)
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage)
   }
 
@@ -233,12 +234,12 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                           )
                         }
                       })}
+                      <TableCell>
+                        <PiDotsThreeOutlineVerticalFill />
+                      </TableCell>
                     </TableRow>
                   )
                 })}
-                {/* <TableRow>
-                  <PiDotsThreeOutlineVerticalFill />
-                </TableRow> */}
                 {emptyRows > 0 && (
                   <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
                     <TableCell colSpan={headCells.length + 1} />

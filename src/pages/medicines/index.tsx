@@ -1,7 +1,6 @@
 import EnhancedTable from '@/components/table'
 import { useTranslation } from 'react-i18next'
-import { rows } from './__mock__'
-import { Data, headCells } from './schema'
+import { Data, headCells, rows } from './schema'
 
 const HomePage = () => {
   const { t } = useTranslation()

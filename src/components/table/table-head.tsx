@@ -65,6 +65,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell></TableCell>
       </TableRow>
     </TableHead>
   )
