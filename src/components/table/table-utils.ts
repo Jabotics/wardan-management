@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Order } from "@/interfaces"
 
 export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {

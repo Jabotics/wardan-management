@@ -8,9 +8,9 @@ const HomePage = () => {
     <EnhancedTable<Data>
       data={rows}
       headCells={headCells}
-      title={t('Nutrition')}
+      title={t('Product')}
       dense
-      rowHeight={100}
+      rowHeight={65}
     />
   )
 }

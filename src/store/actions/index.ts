@@ -1,8 +1,11 @@
-import categorySlice, { categoriesApi } from "./slices/categorySlice"
+import productsSlice, { productsApi } from "./slices/productsSlice"
+import variantsSlice, { variantsApi } from "./slices/variantsSlice"
 
 export {
 
   // data
-  categoriesApi,
-  categorySlice,
+  productsApi,
+  productsSlice,
+  variantsApi,
+  variantsSlice,
 }

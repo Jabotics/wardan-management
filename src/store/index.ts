@@ -1,8 +1,12 @@
 import { Action, configureStore, Dispatch, Middleware, ThunkAction, UnknownAction } from "@reduxjs/toolkit";
 import { rootReducer } from "./rootReducer";
 import { RequestHandler } from "./RequestHandler";
-import { categoriesApi } from "./actions";
 import { setupListeners } from '@reduxjs/toolkit/query'
+
+import { 
+  productsApi,
+  variantsApi,
+} from "./actions";
 
 import { persistStore } from 'redux-persist'
 
@@ -18,7 +22,8 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         serializableCheck: false,
       }).concat(
         RequestHandler.middleware,
-        categoriesApi.middleware,
+        productsApi.middleware,
+        variantsApi.middleware,
 
       );
 

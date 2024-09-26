@@ -4,11 +4,11 @@ import { Data } from './schema'
 export const ProductName = ({ data }: { data: Data }) => {
   return (
     <div className='flex w-[25rem] items-center gap-3'>
-      <img
+      {/* <img
         src={data.image}
         alt='product_image'
         className='h-full w-16 rounded-md'
-      />
+      /> */}
       <div>
         <div
           className='text-lg tracking-tight'

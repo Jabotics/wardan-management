@@ -7,7 +7,8 @@ import {
 } from './app'
 
 import {
-  ICategory,
+  IProduct,
+  IVariant,
 } from './data'
 
 export type {
@@ -19,5 +20,6 @@ export type {
   Order,
 
   // data
-  ICategory,
+  IProduct,
+  IVariant,
 }

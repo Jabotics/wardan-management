@@ -26,8 +26,8 @@ export default function AppShell() {
         className={`overflow-x-hidden pt-16 transition-[margin] md:overflow-y-hidden md:pt-0 ${isCollapsed ? 'md:ml-14' : 'md:ml-64'} h-full`}
       >
         <Navbar />
-        <div className='p-8'>
-        <Outlet />
+        <div className='px-2 py-3 lg:px-8'>
+          <Outlet />
         </div>
       </main>
     </div>

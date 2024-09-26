@@ -1,25 +1,20 @@
-import { APIEndPoints } from '@/APIEndpoints'
-import { ICategory } from '@/interfaces'
-import { getCustomParams } from '@/lib/utils'
-
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import {
-  createApi,
-  fetchBaseQuery,
-  FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/query/react'
+import { APIEndPoints } from "@/APIEndpoints"
+import { IVariant } from "@/interfaces"
+import { getCustomParams } from "@/lib/utils"
+import { createSlice } from "@reduxjs/toolkit"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 interface IncomingData {
   data: {
     count: number
-    categories: ICategory[]
+    records: IVariant[]
   }
   message: string
   status: boolean
 }
 
-export const categoriesApi = createApi({
-  reducerPath: 'categoriesApi',
+export const variantsApi = createApi({
+  reducerPath: "VariantsApi",
   baseQuery: fetchBaseQuery({
     baseUrl: APIEndPoints.BackendURL,
     // prepareHeaders: (headers) => {
@@ -33,21 +28,21 @@ export const categoriesApi = createApi({
     // },
   }),
   endpoints: (builder) => ({
-    getCategories: builder.query<IncomingData, object>({
+    getAllVariants: builder.query<IncomingData, object>({
       query: (params) => {
         return {
-          url: APIEndPoints.get_categories,
+          url: APIEndPoints.get_variants,
           method: 'GET',
           params: getCustomParams(params),
         }
       },
-    }),
-  }),
+    })
+  })
 })
 
 interface InitialState {
   isFilter: boolean
-  categories: ICategory[]
+  variants: IVariant[]
   total: number | null
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | undefined
@@ -55,32 +50,32 @@ interface InitialState {
 
 const initialState: InitialState = {
   isFilter: true,
-  categories: [],
+  variants: [],
   total: null,
   status: 'idle',
   error: undefined,
 }
 
-export const CategorySlice = createSlice({
-  name: 'CategorySlice',
+export const VariantsSlice = createSlice({
+  name: 'VariantsSlice',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     // Handle the asynchronous fetchItems action
     builder
-      .addMatcher(categoriesApi.endpoints.getCategories.matchPending, (state) => {
+      .addMatcher(variantsApi.endpoints.getAllVariants.matchPending, (state) => {
         state.status = 'loading'
       })
       .addMatcher(
-        categoriesApi.endpoints.getCategories.matchFulfilled,
+        variantsApi.endpoints.getAllVariants.matchFulfilled,
         (state, action) => {
           state.status = 'succeeded'
-          state.categories = action.payload.data.categories
+          state.variants = action.payload.data.records
           state.total = action.payload.data.count
         }
       )
       .addMatcher(
-        categoriesApi.endpoints.getCategories.matchRejected,
+        variantsApi.endpoints.getAllVariants.matchRejected,
         (state, action) => {
           state.status = 'failed'
           state.error = action.error.message
@@ -90,8 +85,8 @@ export const CategorySlice = createSlice({
 })
 
 export const {
-  useGetCategoriesQuery,
-} = categoriesApi
-export const {
-} = CategorySlice.actions
-export default CategorySlice.reducer
+  useGetAllVariantsQuery,
+} = variantsApi
+// export const {
+// } = CategorySlice.actions
+export default VariantsSlice.reducer

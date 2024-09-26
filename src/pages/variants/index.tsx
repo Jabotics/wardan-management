@@ -1,5 +1,5 @@
 import { RootState } from "@/store"
-import { useGetCategoriesQuery } from "@/store/actions/slices/categorySlice"
+import { useGetCategoriesQuery } from "@/store/actions/slices/productsSlice"
 import { useAppSelector } from "@/store/hooks"
 import { categoryHeadCells, createCategoryData } from "./schema"
 import { useTranslation } from "react-i18next"
