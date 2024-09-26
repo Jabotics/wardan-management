@@ -49,14 +49,14 @@ const router = createBrowserRouter([
       {
         path: 'products',
         lazy: async () => ({
-          Component: (await import('./pages/products')).default,
+          Component: (await import('./pages/stocks')).default,
         })
       },
 
       {
-        path: 'variants',
+        path: 'stocks',
         lazy: async () => ({
-          Component: (await import('./pages/variants')).default,
+          Component: (await import('./pages/stocks')).default,
         })
       },
     ],

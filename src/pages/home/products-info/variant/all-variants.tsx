@@ -13,7 +13,7 @@ const AllVariants = () => {
             return (
               <div
                 key={index}
-                className='flex aspect-[2/1] h-3/5 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white text-indigo-950 shadow-lg shadow-gray-100 cursor-pointer'
+                className='flex aspect-[2/1] h-3/5 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white/50 text-indigo-950 shadow-lg shadow-gray-100 cursor-pointer'
               >
                 <p>{item.name}</p>
                 <p className='text-xs text-gray-500'>4 Products</p>

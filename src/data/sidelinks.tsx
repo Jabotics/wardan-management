@@ -1,7 +1,6 @@
 import {
   IconLayoutDashboard,
   IconBusinessplan,
-  IconVersionsFilled,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -25,14 +24,8 @@ export const sidelinks: SideLink[] = [
   {
     title: 'Stocks',
     label: '',
-    href: '/products',
+    href: '/stocks',
     icon: <IconBusinessplan size={18} />,
-  },
-  {
-    title: 'Variants',
-    label: '',
-    href: '/variants',
-    icon: <IconVersionsFilled size={18} />,
   },
   // {
   //   title: 'Tasks',

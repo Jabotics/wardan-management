@@ -8,7 +8,7 @@ const HomePage = () => {
     <EnhancedTable<Data>
       data={rows}
       headCells={headCells}
-      title={t('Product')}
+      title={t('Stock')}
       dense
       rowHeight={65}
     />
