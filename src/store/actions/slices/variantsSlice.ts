@@ -10,7 +10,7 @@ interface IncomingData {
     records: IVariant[]
   }
   message: string
-  status: 'success' | 'fail'
+  status: string
 }
 
 export const variantsApi = createApi({
