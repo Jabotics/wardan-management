@@ -1,23 +1,51 @@
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { IVariant } from '@/interfaces'
 import { RootState } from '@/store'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import { useAppSelector } from '@/store/hooks'
+import { Fragment, useState } from 'react'
+import ModifyVariant from './modify-variant'
 
 const AllVariants = () => {
-  const { isLoading } = useGetAllVariantsQuery({})
+  const { isLoading } = useGetAllVariantsQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  )
   const { variants } = useAppSelector((state: RootState) => state.variants)
+
+  const [selectedVariant, setSelectedVariant] = useState<IVariant | null>(null)
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <>
       {!isLoading
         ? variants?.map((item, index) => {
             return (
-              <div
-                key={index}
-                className='flex aspect-[2/1] h-3/5 flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white/50 text-indigo-950 shadow-lg shadow-gray-100 cursor-pointer'
-              >
-                <p>{item.name}</p>
-                <p className='text-xs text-gray-500'>4 Products</p>
-              </div>
+              <Fragment key={index}>
+                <Dialog open={open}>
+                  <DialogTrigger asChild>
+                    <div
+                      key={index}
+                      className='flex aspect-[2/1] h-3/5 cursor-pointer flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white/50 text-indigo-950 shadow-lg shadow-gray-100'
+                      onClick={() => {
+                        setOpen(true)
+                        setSelectedVariant(item)
+                      }}
+                    >
+                      <p>{item.name}</p>
+                      <p className='text-xs text-gray-500'>4 Products</p>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className='h-fit w-[65vw] bg-white'>
+                    {selectedVariant ? (
+                      <ModifyVariant
+                        variant={selectedVariant}
+                        setOpen={setOpen}
+                      />
+                    ) : null}
+                  </DialogContent>
+                </Dialog>
+              </Fragment>
             )
           })
         : Array(5)

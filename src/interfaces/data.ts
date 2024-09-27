@@ -1,9 +1,9 @@
 export interface IProduct {
-  _id: string;
+  _id?: string;
   name: string;
-  is_active: boolean;
+  is_active?: boolean;
   type: "WHOLE" | "MIXTURE"
-  ingredients: {
+  ingredients?: {
     _id: string
     name: string
   }[]
@@ -12,5 +12,5 @@ export interface IProduct {
 export interface IVariant {
   _id: string;
   name: string;
-  is_active: boolean;
+  is_active?: boolean;
 }

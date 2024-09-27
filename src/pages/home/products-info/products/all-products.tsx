@@ -2,9 +2,11 @@ import { RootState } from '@/store'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useAppSelector } from '@/store/hooks'
 import { MdRemoveRedEye } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 const AllProducts = () => {
-  const { isLoading } = useGetProductsQuery({})
+  const navigate = useNavigate()
+  const { isLoading } = useGetProductsQuery({}, { refetchOnMountOrArgChange: true })
   const { products } = useAppSelector((state: RootState) => state.products)
 
   return (
@@ -24,7 +26,7 @@ const AllProducts = () => {
                     {item.type + ' SPICE'}
                   </div>
                 </div>
-                <div className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-stone-200'>
+                <div className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-stone-200' onClick={() => { navigate(`/product?id=${item._id}`) }}>
                   <MdRemoveRedEye />
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import { APIEndPoints } from "@/APIEndpoints"
 import { IVariant } from "@/interfaces"
 import { getCustomParams } from "@/lib/utils"
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 interface IncomingData {
@@ -10,22 +10,22 @@ interface IncomingData {
     records: IVariant[]
   }
   message: string
-  status: boolean
+  status: 'success' | 'fail'
 }
 
 export const variantsApi = createApi({
   reducerPath: "VariantsApi",
   baseQuery: fetchBaseQuery({
     baseUrl: APIEndPoints.BackendURL,
-    // prepareHeaders: (headers) => {
-    //   const token = localStorage.getItem('token')
-    //     ? localStorage.getItem('token')
-    //     : ''
-    //   if (token) {
-    //     headers.set('authorization', token)
-    //     return headers
-    //   }
-    // },
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('token')
+        ? localStorage.getItem('token')
+        : ''
+      if (token) {
+        headers.set('authorization', token)
+        return headers
+      }
+    },
   }),
   endpoints: (builder) => ({
     getAllVariants: builder.query<IncomingData, object>({
@@ -36,7 +36,29 @@ export const variantsApi = createApi({
           params: getCustomParams(params),
         }
       },
-    })
+    }),
+
+    addVariant: builder.mutation<Partial<IncomingData>, { name: string }>({
+      query: (body) => {
+        const {...rest} = body
+        return {
+          url: APIEndPoints.add_variant,
+          method: 'POST',
+          body: rest,
+        }
+      }
+    }),
+
+    editVariant: builder.mutation<Partial<IncomingData>, Partial<IVariant>>({
+      query: (body) => {
+        const {...rest} = body
+        return {
+          url: APIEndPoints.update_variant,
+          method: 'PUT',
+          body: rest,
+        }
+      }
+    }),
   })
 })
 
@@ -59,7 +81,17 @@ const initialState: InitialState = {
 export const VariantsSlice = createSlice({
   name: 'VariantsSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    addVariant: (state, action: PayloadAction<IVariant>) => {
+      state.variants.unshift(action.payload)
+    },
+    editVariant: (state, action: PayloadAction<{ id: string; data: IVariant }>) => {
+      const { id, data } = action.payload
+      const variantIndex = state.variants.findIndex(i => i._id === id)
+
+      state.variants[variantIndex] = data
+    },
+  },
   extraReducers: (builder) => {
     // Handle the asynchronous fetchItems action
     builder
@@ -86,7 +118,11 @@ export const VariantsSlice = createSlice({
 
 export const {
   useGetAllVariantsQuery,
+  useAddVariantMutation,
+  useEditVariantMutation,
 } = variantsApi
-// export const {
-// } = CategorySlice.actions
+export const {
+  addVariant,
+  editVariant,
+} = VariantsSlice.actions
 export default VariantsSlice.reducer

@@ -24,15 +24,15 @@ export const productsApi = createApi({
   reducerPath: 'ProductsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: APIEndPoints.BackendURL,
-    // prepareHeaders: (headers) => {
-    //   const token = localStorage.getItem('token')
-    //     ? localStorage.getItem('token')
-    //     : ''
-    //   if (token) {
-    //     headers.set('authorization', token)
-    //     return headers
-    //   }
-    // },
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem('token')
+        ? localStorage.getItem('token')
+        : ''
+      if (token) {
+        headers.set('authorization', token)
+        return headers
+      }
+    },
   }),
   endpoints: (builder) => ({
     getProducts: builder.query<IncomingData, object>({
@@ -44,6 +44,37 @@ export const productsApi = createApi({
         }
       },
     }),
+
+    fetchProducts: builder.query<IncomingData, void>({
+      query: () => {
+        return {
+          url: APIEndPoints.get_products,
+          method: 'GET',
+        }
+      },
+    }),
+
+    addProducts: builder.mutation<{ res: { data: string }; error: string; }, object>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.add_product,
+          method: 'POST',
+          body: rest,
+        }
+      },
+    }),
+
+    editProducts: builder.mutation<{ res: { data: string }; error: string; }, object>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.update_product,
+          method: 'PUT',
+          body: rest,
+        }
+      },
+    })
   }),
 })
 
@@ -53,6 +84,8 @@ interface InitialState {
   total: number | null
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | undefined
+
+  allWholeProducts: IProduct[]
 }
 
 const initialState: InitialState = {
@@ -61,12 +94,15 @@ const initialState: InitialState = {
   total: null,
   status: 'idle',
   error: undefined,
+
+  allWholeProducts: [],
 }
 
 export const ProductsSlice = createSlice({
   name: 'ProductsSlice',
   initialState,
-  reducers: {},
+  reducers: {
+  },
   extraReducers: (builder) => {
     // Handle the asynchronous fetchItems action
     builder
@@ -88,12 +124,18 @@ export const ProductsSlice = createSlice({
           state.error = action.error.message
         }
       )
+      .addMatcher(productsApi.endpoints.fetchProducts.matchFulfilled, (state, action) => {
+        state.allWholeProducts = action.payload.data.records.filter(i => i.type === "WHOLE")
+      })
   },
 })
 
 export const {
   useGetProductsQuery,
+  useFetchProductsQuery,
+  useAddProductsMutation,
+  useEditProductsMutation,
 } = productsApi
 // export const {
-// } = CategorySlice.actions
+// } = ProductsSlice.actions
 export default ProductsSlice.reducer

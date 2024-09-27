@@ -47,9 +47,9 @@ const router = createBrowserRouter([
       },
 
       {
-        path: 'products',
+        path: 'product',
         lazy: async () => ({
-          Component: (await import('./pages/stocks')).default,
+          Component: (await import('./pages/product')).default,
         })
       },
 

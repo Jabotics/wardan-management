@@ -108,7 +108,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border select-none;
   }
   body {
     @apply bg-background text-foreground;
@@ -123,5 +123,21 @@
   .homeFlex {
     flex-direction: row;
   }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type=number]{
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.ingredientsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 24px;
 }
 
