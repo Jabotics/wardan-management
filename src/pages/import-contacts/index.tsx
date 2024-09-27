@@ -1,0 +1,35 @@
+import EnhancedTable from '@/components/table'
+import { useTranslation } from 'react-i18next'
+import { createData, Data, headCells } from './schema'
+import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice';
+import { useAppSelector } from '@/store/hooks';
+import { RootState } from '@/store';
+
+const ImportersPage = () => {
+  const { t } = useTranslation();
+
+  useGetAllImportersQuery({});
+  const { importers } = useAppSelector((state: RootState) => state.importers)
+
+  const rows = importers?.map((item) =>
+    createData(
+      item._id,
+      item.name,
+      item.address,
+      item.gst_number,
+      item.phone
+    )
+  )
+
+  return (
+    <EnhancedTable<Data>
+      data={rows}
+      headCells={headCells}
+      title={t('Importer')}
+      dense
+      rowHeight={65}
+    />
+  )
+}
+
+export default ImportersPage

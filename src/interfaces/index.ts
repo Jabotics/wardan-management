@@ -9,6 +9,8 @@ import {
 import {
   IProduct,
   IVariant,
+  ISeller,
+  IBuyer,
 } from './data'
 
 export type {
@@ -22,4 +24,6 @@ export type {
   // data
   IProduct,
   IVariant,
+  ISeller,
+  IBuyer,
 }

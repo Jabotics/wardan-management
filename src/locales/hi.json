@@ -3,5 +3,7 @@
   "Product": "उत्पाद",
   "New": "नया",
   "Category": "वर्ग",
-  "Stock": "भंडार"
+  "Stock": "भंडार",
+  "Importer": "आयातक",
+  "Exporter": "निर्यातक"
 }

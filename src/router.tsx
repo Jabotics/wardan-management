@@ -5,30 +5,6 @@ import MaintenanceError from './pages/errors/maintenance-error'
 
 const router = createBrowserRouter([
   // Auth routes
-  // {
-  //   path: '/login',
-  //   lazy: async () => ({
-  //     Component: (await import('./pages/auth/login')).default,
-  //   }),
-  // },
-  // {
-  //   path: `/registration`,
-  //   lazy: async () => ({
-  //     Component: (await import('./pages/auth/registration')).default,
-  //   }),
-  // },
-  // {
-  //   path: '/forgot-password',
-  //   lazy: async () => ({
-  //     Component: (await import('./pages/auth/forgot-password')).default,
-  //   }),
-  // },
-  // {
-  //   path: '/reset-password',
-  //   lazy: async () => ({
-  //     Component: (await import('./pages/auth/reset-password')).default,
-  //   }),
-  // },
 
   // Main routes
   {
@@ -57,6 +33,48 @@ const router = createBrowserRouter([
         path: 'stocks',
         lazy: async () => ({
           Component: (await import('./pages/stocks')).default,
+        })
+      },
+
+      {
+        path: 'import-contacts',
+        lazy: async () => ({
+          Component: (await import('./pages/import-contacts')).default,
+        })
+      },
+
+      {
+        path: 'export-contacts',
+        lazy: async () => ({
+          Component: (await import('./pages/export-contacts')).default,
+        })
+      },
+
+      {
+        path: 'raw-materials-stock',
+        lazy: async () => ({
+          Component: (await import('./pages/raw-materials-stock')).default,
+        })
+      },
+
+      {
+        path: 'packaging-materials-stock',
+        lazy: async () => ({
+          Component: (await import('./pages/packaging-materials-stock')).default,
+        })
+      },
+
+      {
+        path: 'others-stock',
+        lazy: async () => ({
+          Component: (await import('./pages/others-stock')).default,
+        })
+      },
+
+      {
+        path: 'ready-products-stock',
+        lazy: async () => ({
+          Component: (await import('./pages/ready-products-stock')).default,
         })
       },
     ],

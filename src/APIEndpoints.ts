@@ -12,4 +12,17 @@ export const APIEndPoints = {
   add_product: '/api/product/add-product',
   update_product: '/api/product/update-product',
   remove_product: '/api/product',
+
+  // SELLERS / IMPORTERS
+  get_sellers: '/api/seller/get-sellers',
+  add_seller: '/api/seller/add-seller',
+  update_seller: '/api/seller/update-seller',
+  remove_seller: '/api/seller',
+
+
+  // BUYERS / EXPORTERS
+  get_buyers: '/api/buyer/get-buyers',
+  add_buyer: '/api/buyer/add-buyer',
+  update_buyer: '/api/buyer/update-buyer',
+  remove_buyer: '/api/buyer',
 }

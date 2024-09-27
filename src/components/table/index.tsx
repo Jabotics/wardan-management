@@ -236,9 +236,9 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             return (
                               <TableCell
                                 key={cell.id as string}
-                                align={cell.numeric ? 'right' : 'left'}
+                                align={'center'}
                                 padding={
-                                  cell.disablePadding ? 'none' : 'normal'
+                                  'none'
                                 }
                                 sx={{
                                   color: '#000',
@@ -254,9 +254,9 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             return (
                               <TableCell
                                 key={cell.id as string}
-                                align={cell.numeric ? 'right' : 'left'}
+                                align={'center'}
                                 padding={
-                                  cell.disablePadding ? 'none' : 'normal'
+                                  'none'
                                 }
                                 sx={{
                                   color: '#000',
@@ -275,7 +275,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             display: 'flex',
                             alignItems: 'center',
                             gap: 2,
-                            height: 'inherit', // Set the height to match other cells
+                            height: 'inherit', 
                           }}
                         >
                           {ExpandedBody && (

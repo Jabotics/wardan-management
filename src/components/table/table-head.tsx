@@ -43,33 +43,39 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
             indeterminateIcon={<FaMinusSquare />}
           />
         </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id as string}
-            align={'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ borderBottom: 'none' }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+        {headCells.map((headCell) => {
+
+          return (
+            <TableCell
+              key={headCell.id as string}
+              align={'left'}
+              padding={headCell.disablePadding ? 'none' : 'normal'}
+              sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ borderBottom: 'none' }}
             >
-              <span
-                className='text-sm text-gray-500'
-                style={{ fontFamily: "'RobotoL', sans-serif" }}
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+                sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
               >
-                {headCell.label}
-              </span>
-              {orderBy === headCell.id ? (
-                <Box component='span' sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
+                <span
+                  className='text-sm text-gray-500'
+                  style={{ fontFamily: "'RobotoL', sans-serif" }}
+                >
+                  {headCell.label}
+                </span>
+                {orderBy === headCell.id ? (
+                  <Box component='span' sx={visuallyHidden}>
+                    {order === 'desc'
+                      ? 'sorted descending'
+                      : 'sorted ascending'}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          )
+        })}
         <TableCell sx={{ borderBottom: 'none' }}></TableCell>
       </TableRow>
     </TableHead>

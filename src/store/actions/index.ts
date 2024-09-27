@@ -1,5 +1,7 @@
 import productsSlice, { productsApi } from "./slices/productsSlice"
 import variantsSlice, { variantsApi } from "./slices/variantsSlice"
+import importersSlice, { importersApi } from "./slices/importersSlice"
+import exportersSlice, { exportersApi } from "./slices/exportersSlice"
 
 export {
 
@@ -8,4 +10,8 @@ export {
   productsSlice,
   variantsApi,
   variantsSlice,
+  importersApi,
+  importersSlice,
+  exportersApi,
+  exportersSlice,
 }

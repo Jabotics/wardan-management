@@ -6,6 +6,8 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import { 
   productsApi,
   variantsApi,
+  importersApi,
+  exportersApi,
 } from "./actions";
 
 import { persistStore } from 'redux-persist'
@@ -24,6 +26,8 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         RequestHandler.middleware,
         productsApi.middleware,
         variantsApi.middleware,
+        importersApi.middleware,
+        exportersApi.middleware,
 
       );
 

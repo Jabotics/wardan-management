@@ -3,5 +3,7 @@
   "Product": "পণ্য",
   "New": "নতুন",
   "Category": "বিভাগ",
-  "Stock": "স্টক"
+  "Stock": "স্টক",
+  "Importer": "আমদানিকারক",
+  "Exporter": "রপ্তানিকারক"
 }
