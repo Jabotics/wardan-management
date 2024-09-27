@@ -26,6 +26,7 @@ import {
   useAddProductsMutation,
   useEditProductsMutation,
   useFetchProductsQuery,
+  useRemoveProductMutation,
 } from '@/store/actions/slices/productsSlice'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -48,6 +49,7 @@ const FormComponent = ({
 
   const [Add] = useAddProductsMutation()
   const [Update] = useEditProductsMutation()
+  const [Delete] = useRemoveProductMutation()
 
   const [addNewIngredient, setAddNewIngredient] = useState<boolean>(false)
   const [newIngredient, setNewIngredient] = useState<string | null>(null)
@@ -87,6 +89,22 @@ const FormComponent = ({
     form.setValue('ingredients', newIngredientsList)
   }
 
+  async function handleDelete() {
+    if (data && data[0]._id) {
+      setIsSubmitting(true)
+      try {
+        const res = await Delete({ id: data[0]._id }).unwrap()
+
+        if (res.status === 'fail') throw new Error(res.message)
+        navigate(`/`)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
   async function handleModifyProducts(formData: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
 
@@ -110,12 +128,12 @@ const FormComponent = ({
         payload.is_active = data[0].is_active
 
         const res = await Update(payload).unwrap()
-        console.log(res)
+        if (res.status === 'fail') throw new Error(res.message)
         navigate(`/`)
       } else {
         console.log(payload)
         const res = await Add(payload).unwrap()
-        console.log(res)
+        if (res.status === 'fail') throw new Error(res.message)
         navigate(`/`)
       }
     } catch (error) {
@@ -138,6 +156,23 @@ const FormComponent = ({
     data?.[0]?.type === 'MIXTURE' &&
       form.setValue('ingredients', data?.[0]?.ingredients)
   }, [data, form])
+
+  const excludedIds = data
+    ? new Set([
+        data[0]._id,
+        ...(form.watch('ingredients')?.map((i) => i._id) || []),
+      ])
+    : new Set([
+      ...(form.watch('ingredients')?.map((i) => i._id) || []),
+    ])
+
+  const menuItems = allWholeProducts
+    .filter((item) => !excludedIds.has(item._id))
+    .map((item, index) => (
+      <MenuItem value={`${item._id}`} key={index}>
+        {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+      </MenuItem>
+    ))
 
   if (isLoading) {
     return <>Loading...</>
@@ -231,14 +266,6 @@ const FormComponent = ({
                 })}
                 {addNewIngredient ? (
                   <span className='flex items-center gap-2'>
-                    {/* <Input
-                      placeholder='New Ingredient'
-                      className='h-full w-3/4'
-                      value={newIngredient || ''}
-                      onChange={(e) => {
-                        setNewIngredient(e.target.value)
-                      }}
-                    /> */}
                     <Select
                       labelId='product-type-label'
                       displayEmpty
@@ -251,18 +278,7 @@ const FormComponent = ({
                       <MenuItem value='' disabled>
                         Add Ingredient
                       </MenuItem>
-                      {data
-                        ? allWholeProducts
-                            .filter((i) => i._id !== data[0]._id)
-                            .map((item, index) => {
-                              return (
-                                <MenuItem value={`${item._id}`} key={index}>
-                                  {item.name.charAt(0).toUpperCase() +
-                                    item.name.substring(1)}
-                                </MenuItem>
-                              )
-                            })
-                        : null}
+                      {menuItems}
                     </Select>
                     <span className='flex h-full flex-1 items-center justify-end gap-4 px-2'>
                       <FcCheckmark
@@ -294,17 +310,23 @@ const FormComponent = ({
             ) : null}
           </div>
 
-          <div className='flex h-20 w-full items-center justify-end border-t border-stone-500'>
+          <div className='flex h-20 w-full items-center justify-end gap-5 border-t border-stone-500'>
+            {data ? (
+              <Button
+                type='button'
+                disabled={isSubmitting}
+                className='rounded-xl bg-rose-900 px-5 py-6 text-base tracking-widest text-gray-300 hover:bg-rose-700'
+                onClick={handleDelete}
+              >
+                Remove Product
+              </Button>
+            ) : null}
             <Button
               type='submit'
               disabled={isSubmitting}
-              className='rounded-xl px-16 py-6 text-base tracking-widest text-gray-300'
+              className='rounded-xl border border-gray-300 bg-transparent px-16 py-6 text-base tracking-widest text-gray-800 hover:bg-gray-300'
             >
-              {isSubmitting
-                ? 'Loading...'
-                : toEdit
-                  ? 'Update Product'
-                  : 'Add Product'}
+              {toEdit ? 'Update Product' : 'Add Product'}
             </Button>
           </div>
         </form>

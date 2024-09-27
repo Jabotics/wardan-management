@@ -17,7 +17,7 @@ interface IncomingData {
     records: IProduct[]
   }
   message: string
-  status: boolean
+  status: string
 }
 
 export const productsApi = createApi({
@@ -54,7 +54,7 @@ export const productsApi = createApi({
       },
     }),
 
-    addProducts: builder.mutation<{ res: { data: string }; error: string; }, object>({
+    addProducts: builder.mutation<Partial<IncomingData>, object>({
       query: (body) => {
         const { ...rest } = body
         return {
@@ -65,13 +65,23 @@ export const productsApi = createApi({
       },
     }),
 
-    editProducts: builder.mutation<{ res: { data: string }; error: string; }, object>({
+    editProducts: builder.mutation<Partial<IncomingData>, object>({
       query: (body) => {
         const { ...rest } = body
         return {
           url: APIEndPoints.update_product,
           method: 'PUT',
           body: rest,
+        }
+      },
+    }),
+
+    removeProduct: builder.mutation<Partial<IncomingData>, { id: string }>({
+      query: (body) => {
+        const { id } = body;
+        return {
+          url: `${APIEndPoints.remove_product}/${id}`,
+          method: 'DELETE',
         }
       },
     })
@@ -135,6 +145,7 @@ export const {
   useFetchProductsQuery,
   useAddProductsMutation,
   useEditProductsMutation,
+  useRemoveProductMutation,
 } = productsApi
 // export const {
 // } = ProductsSlice.actions

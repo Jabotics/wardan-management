@@ -10,13 +10,16 @@ import { RootState } from '@/store'
 import {
   addVariant,
   editVariant,
+  removeVariant,
   useAddVariantMutation,
   useEditVariantMutation,
+  useRemoveVariantMutation,
 } from '@/store/actions/slices/variantsSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { useEffect, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
-import { Cross2Icon } from "@radix-ui/react-icons"
+import { Cross2Icon } from '@radix-ui/react-icons'
+import { Button } from '@/components/ui/button'
 
 const ModifyVariant = ({
   variant,
@@ -29,11 +32,34 @@ const ModifyVariant = ({
 
   const [Add] = useAddVariantMutation()
   const [Edit] = useEditVariantMutation()
+  const [Delete] = useRemoveVariantMutation()
 
   const [modifiedVariant, setModifiedVariant] = useState<number | null>(null)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const { products } = useAppSelector((state: RootState) => state.products)
+
+  async function handleDeleteVariant() {
+    console.log('first')
+    console.log(variant)
+    if (variant && variant._id) {
+      setIsSubmitting(true)
+      console.log('first')
+
+      try {
+        const res = await Delete({ id: variant._id }).unwrap()
+
+        if (res.status === 'fail') throw new Error(res.message)
+
+        dispatch(removeVariant({ id: variant._id }))
+        setOpen(false)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
 
   async function handleModifyVariant() {
     setIsSubmitting(true)
@@ -43,9 +69,9 @@ const ModifyVariant = ({
         const res = await Edit({
           _id: variant._id,
           name: modifiedVariant + 'gm',
-        })
+        }).unwrap()
 
-        if (res.data?.status === 'fail') throw new Error(res.data.message)
+        if (res.status === 'fail') throw new Error(res.message)
 
         dispatch(
           editVariant({
@@ -58,12 +84,13 @@ const ModifyVariant = ({
           })
         )
       } else {
-        const res = await Add({ name: modifiedVariant + 'gm' })
+        const res: { data: { _id: string }, status: string,  message: string } = await Add({ name: modifiedVariant + 'gm' }).unwrap()
 
-        if (res.data?.status === 'fail') throw new Error(res.data.message)
+        if (res.status === 'fail') throw new Error(res.message)
 
+        const newId = res.data?._id;
         dispatch(
-          addVariant({ _id: '', name: modifiedVariant + 'gm', is_active: true })
+          addVariant({ _id: newId, name: modifiedVariant + 'gm', is_active: true })
         )
       }
 
@@ -85,7 +112,7 @@ const ModifyVariant = ({
     <Fragment>
       <div
         onClick={() => setOpen(false)}
-        className='cursor-pointer absolute right-5 top-5'
+        className='absolute right-5 top-5 cursor-pointer'
       >
         <Cross2Icon className='h-4 w-4' />
       </div>
@@ -124,13 +151,25 @@ const ModifyVariant = ({
         </div>
       </div>
 
-      <DialogClose
-        className='h-10 rounded-lg bg-primary text-white'
-        disabled={isSubmitting}
-        onClick={handleModifyVariant}
-      >
-        {isSubmitting ? 'Loading...' : 'Submit'}
-      </DialogClose>
+      <div className='flex items-center justify-end gap-3'>
+        {variant ? (
+          <Button
+            variant={'destructive'}
+            className='h-10 w-1/2'
+            disabled={isSubmitting}
+            onClick={handleDeleteVariant}
+          >
+            Remove
+          </Button>
+        ) : null}
+        <DialogClose
+          className='h-10 w-1/2 rounded-lg border border-primary bg-transparent text-primary'
+          disabled={isSubmitting}
+          onClick={handleModifyVariant}
+        >
+          Submit
+        </DialogClose>
+      </div>
     </Fragment>
   )
 }
