@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import Backdrop from '@mui/material/Backdrop'
 import Box from '@mui/material/Box'
@@ -50,7 +52,7 @@ const Fade = React.forwardRef<HTMLDivElement, FadeProps>(
 )
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
@@ -88,7 +90,7 @@ export default function DeleteModal({
         },
       }}
     >
-      <Fade in={open}>
+      {/* <Fade in={open} > */}
         <Box sx={style}>
           <Typography id='spring-modal-title' variant='h6' component='h2' sx={{ mt: -1, fontFamily: "'Ubuntu', sans-serif", color: "#333333" }}>
             Delete
@@ -105,7 +107,7 @@ export default function DeleteModal({
             </Button>
           </Box>
         </Box>
-      </Fade>
+      {/* </Fade> */}
     </Modal>
   )
 }

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import React from "react"
+
 export type Order = 'asc' | 'desc'
 
 export interface HeadCell<T> {
@@ -18,6 +20,9 @@ export interface EnhancedTableProps<T extends { [key: string]: any }> {
   dense?: boolean
   rowHeight?: number
   ExpandedBody?: ({ data }: { data: T; }) => React.JSX.Element;
+  config?: {
+    ModifyComponent: ({ data, setClose }: { data?: T; setClose: React.Dispatch<React.SetStateAction<boolean>> }) => JSX.Element;
+  }
 }
 
 export interface EnhancedTableHeadProps<T> {

@@ -39,8 +39,9 @@ import Collapse from '@mui/material/Collapse'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 
-import { MdEdit } from 'react-icons/md'
+// import { MdEdit } from 'react-icons/md'
 import { RiDeleteBin6Fill } from 'react-icons/ri'
+import { Dialog, DialogTrigger } from '../ui/dialog'
 
 export default function EnhancedTable<T extends { [key: string]: any }>({
   data,
@@ -49,6 +50,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   dense: defaultDense,
   rowHeight,
   ExpandedBody,
+  config,
 }: EnhancedTableProps<T>) {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -63,6 +65,9 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   const [expandedRows, setExpandedRows] = React.useState<number[]>([])
 
   const [toDelete, setToDelete] = React.useState<boolean>(false)
+  
+  const { ModifyComponent } = config || {}
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false)
 
   const [anchorActionEl, setAnchorActionEl] =
     React.useState<null | HTMLElement>(null)
@@ -162,9 +167,16 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
       />
       <div className='mb-8 flex items-center justify-between'>
         <div className='text-3xl font-medium tracking-tighter'>{title}</div>
-        <Button variant={'new_secondary'}>
-          <AddIcon /> {`${t('New')}`} {title}
-        </Button>
+        {ModifyComponent ? (
+          <Dialog open={openDialog}>
+            <DialogTrigger asChild>
+              <Button variant={'new_secondary'} onClick={() => setOpenDialog(true)}>
+                <AddIcon /> {`${t('New')}`} {title}
+              </Button>
+            </DialogTrigger>
+            <ModifyComponent setClose={setOpenDialog} />
+          </Dialog>
+        ) : null}
       </div>
       <div className='-mt-5 mb-8 flex h-8 items-start gap-3 text-sm font-medium tracking-tight text-gray-700'>
         <div className='flex items-center gap-3'>
@@ -237,9 +249,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                               <TableCell
                                 key={cell.id as string}
                                 align={'center'}
-                                padding={
-                                  'none'
-                                }
+                                padding={'none'}
                                 sx={{
                                   color: '#000',
                                   // fontWeight: 600,
@@ -255,9 +265,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                               <TableCell
                                 key={cell.id as string}
                                 align={'center'}
-                                padding={
-                                  'none'
-                                }
+                                padding={'none'}
                                 sx={{
                                   color: '#000',
                                   // fontWeight: 600,
@@ -275,7 +283,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             display: 'flex',
                             alignItems: 'center',
                             gap: 2,
-                            height: 'inherit', 
+                            height: 'inherit',
                           }}
                         >
                           {ExpandedBody && (
@@ -317,22 +325,32 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                                   borderRadius: 3,
                                   boxShadow: 'none',
                                   border: '1px solid #E5E5E5',
+                                  zIndex: -1
                                 },
                               }}
                             >
-                              <MenuItem
-                                onClick={handleActionClose}
-                                className='flex items-center gap-2'
-                              >
-                                <span>
-                                  <RemoveRedEyeIcon
-                                    className='mr-1'
-                                    fontSize='small'
-                                  />
-                                </span>
-                                View
-                              </MenuItem>
-                              <MenuItem
+                              {ModifyComponent ? (
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <MenuItem
+                                      // onClick={handleActionClose}
+                                      className='flex items-center gap-2'
+                                    >
+                                      <span>
+                                        <RemoveRedEyeIcon
+                                          className='mr-1'
+                                          fontSize='small'
+                                        />
+                                      </span>
+                                      View
+                                    </MenuItem>
+                                  </DialogTrigger>
+
+
+                                  <ModifyComponent data={row} setClose={setOpenDialog} />
+                                </Dialog>
+                              ) : null}
+                              {/* <MenuItem
                                 onClick={handleActionClose}
                                 className='flex items-center gap-2'
                               >
@@ -340,16 +358,16 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                                   <MdEdit />
                                 </span>
                                 My account
-                              </MenuItem>
+                              </MenuItem> */}
                               <MenuItem
                                 onClick={handleActionClose}
                                 className='flex items-center gap-2'
-                                sx={{ color: "red" }} // Apply lighter font weight
+                                sx={{ color: 'red' }} // Apply lighter font weight
                               >
                                 <span>
                                   <RiDeleteBin6Fill />
                                 </span>
-                                Logout
+                                Delete
                               </MenuItem>
                             </Menu>
                           </div>

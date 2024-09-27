@@ -8,6 +8,9 @@ import {
   IconAddressBook,
   IconPackageImport,
   IconPackageExport,
+  IconCreditCardPay,
+  IconTruckDelivery,
+  IconReceiptRefund,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -22,12 +25,16 @@ export interface SideLink extends NavLink {
 }
 
 export const sidelinks: SideLink[] = [
+
+  // DASHBOARD
   {
     title: 'Dashboard',
     label: '',
     href: '/',
     icon: <IconLayoutDashboard size={18} />,
   },
+
+  // STOCK
   {
     title: 'Stock',
     label: '',
@@ -60,6 +67,30 @@ export const sidelinks: SideLink[] = [
       },
     ],
   },
+
+  // TRANSACTION
+  {
+    title: 'Transactions',
+    label: '',
+    href: '',
+    icon: <IconCreditCardPay size={18} />,
+    sub: [
+      {
+        title: 'Purchase',
+        label: '',
+        href: '/import-contacts',
+        icon: <IconTruckDelivery size={18} />,
+      },
+      {
+        title: 'Sell',
+        label: '',
+        href: '/export-contacts',
+        icon: <IconReceiptRefund size={18} />,
+      },
+    ],
+  },
+
+  // IMPORTERS / EXPORTERS CONTACT
   {
     title: 'Contacts',
     label: '',
@@ -70,13 +101,13 @@ export const sidelinks: SideLink[] = [
         title: 'Importers',
         label: '',
         href: '/import-contacts',
-        icon: <IconPackageImport size={18} />,
+        icon: <IconPackageExport size={18} />,
       },
       {
         title: 'Exporters',
         label: '',
         href: '/export-contacts',
-        icon: <IconPackageExport size={18} />,
+        icon: <IconPackageImport size={18} />,
       },
     ],
   },

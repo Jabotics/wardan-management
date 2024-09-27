@@ -141,3 +141,6 @@ input[type=number]{
   gap: 16px 24px;
 }
 
+.MuiBox-root {
+  border-radius: 16px;
+}

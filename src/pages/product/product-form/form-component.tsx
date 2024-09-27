@@ -64,6 +64,21 @@ const FormComponent = ({
     },
   })
 
+  const excludedIds = data
+    ? new Set([
+        data[0]._id,
+        ...(form.watch('ingredients')?.map((i) => i._id) || []),
+      ])
+    : new Set([...(form.watch('ingredients')?.map((i) => i._id) || [])])
+
+  const menuItems = allWholeProducts
+    .filter((item) => !excludedIds.has(item._id))
+    .map((item, index) => (
+      <MenuItem value={`${item._id}`} key={index}>
+        {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+      </MenuItem>
+    ))
+
   const watchIngredients = form.watch('ingredients')
   const handleAddNewIngredient = () => {
     if (!newIngredient) return
@@ -156,23 +171,6 @@ const FormComponent = ({
     data?.[0]?.type === 'MIXTURE' &&
       form.setValue('ingredients', data?.[0]?.ingredients)
   }, [data, form])
-
-  const excludedIds = data
-    ? new Set([
-        data[0]._id,
-        ...(form.watch('ingredients')?.map((i) => i._id) || []),
-      ])
-    : new Set([
-      ...(form.watch('ingredients')?.map((i) => i._id) || []),
-    ])
-
-  const menuItems = allWholeProducts
-    .filter((item) => !excludedIds.has(item._id))
-    .map((item, index) => (
-      <MenuItem value={`${item._id}`} key={index}>
-        {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-      </MenuItem>
-    ))
 
   if (isLoading) {
     return <>Loading...</>
