@@ -78,14 +78,14 @@ export const sidelinks: SideLink[] = [
       {
         title: 'Purchase',
         label: '',
-        href: '/import-contacts',
-        icon: <IconTruckDelivery size={18} />,
+        href: '/purchase',
+        icon: <IconReceiptRefund size={18} />,
       },
       {
         title: 'Sell',
         label: '',
-        href: '/export-contacts',
-        icon: <IconReceiptRefund size={18} />,
+        href: '/sell',
+        icon: <IconTruckDelivery size={18} />,
       },
     ],
   },
