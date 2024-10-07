@@ -8,6 +8,7 @@ import {
   variantsApi,
   importersApi,
   exportersApi,
+  purchaseApi,
 } from "./actions";
 
 import { persistStore } from 'redux-persist'
@@ -28,6 +29,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         variantsApi.middleware,
         importersApi.middleware,
         exportersApi.middleware,
+        purchaseApi.middleware,
 
       );
 

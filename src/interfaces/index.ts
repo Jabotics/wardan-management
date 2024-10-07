@@ -4,14 +4,12 @@ import {
   EnhancedTableToolbarProps,
   HeadCell,
   Order,
+  TablePaginationConfig,
 } from './app'
 
-import {
-  IProduct,
-  IVariant,
-  ISeller,
-  IBuyer,
-} from './data'
+import { ISeller, IBuyer } from './data/traders'
+import { IProduct, IVariant } from './data/products'
+import { IPurchase, IPurchaseItem } from './data/purchase'
 
 export type {
   // app
@@ -20,10 +18,13 @@ export type {
   EnhancedTableToolbarProps,
   HeadCell,
   Order,
+  TablePaginationConfig,
 
   // data
   IProduct,
   IVariant,
   ISeller,
   IBuyer,
+  IPurchase,
+  IPurchaseItem,
 }

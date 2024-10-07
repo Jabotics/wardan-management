@@ -39,3 +39,10 @@ export interface EnhancedTableToolbarProps {
   numSelected: number
   setDelete: React.Dispatch<React.SetStateAction<boolean>>
 }
+
+export interface TablePaginationConfig {
+  sortBy?: string
+  sortOrder?: 'desc' | 'asc'
+  limit?: number
+  offset?: number
+}

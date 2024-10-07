@@ -10,6 +10,8 @@ import {
   importersSlice,
   exportersApi,
   exportersSlice,
+  purchaseApi,
+  purchseSlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
@@ -21,10 +23,12 @@ export const rootReducer = combineReducers({
   variants: variantsSlice,
   importers: importersSlice,
   exporters: exportersSlice,
+  purchase: purchseSlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
   [variantsApi.reducerPath]: variantsApi.reducer,
   [importersApi.reducerPath]: importersApi.reducer,
   [exportersApi.reducerPath]: exportersApi.reducer,
+  [purchaseApi.reducerPath]: purchaseApi.reducer,
 })

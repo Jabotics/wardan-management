@@ -1,5 +1,5 @@
 import { HeadCell } from '@/interfaces'
-import { IBuyer } from '@/interfaces/data'
+import { IBuyer } from '@/interfaces/data/traders'
 import { Address, GSTNumber } from './function'
 
 export interface Data extends IBuyer {}

@@ -1,5 +1,5 @@
 import { HeadCell } from '@/interfaces'
-import { ISeller } from '@/interfaces/data'
+import { ISeller } from '@/interfaces'
 import { Address, GSTNumber } from './function'
 
 export interface Data extends ISeller {}
