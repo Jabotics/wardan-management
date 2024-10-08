@@ -11,25 +11,35 @@ export const purchaseSchema = z.object({
 })
 
 export const purchaseItemsSchemaforRawMaterial = z.object({
-  purchaseItems: z.array(z.object({
-    product: z.string(),
-    unit: z.string(),
-    qty: z.number(),
-    amount: z.number(),
-  })),
-});
+  purchaseItems: z.array(
+    z.object({
+      product: z.string(),
+      unit: z.string(),
+      qty: z.number(),
+      amount: z.number(),
+    })
+  ),
+})
 
 export const purchaseItemsSchemaforPackagingProduct = z.object({
-  product: z.string(),
-  variant: z.string(),
-  unit: z.string(),
-  qty: z.number(),
-  amount: z.number()
-}).array()
+  purchaseItems: z.array(
+    z.object({
+      product: z.string(),
+      variant: z.string(),
+      unit: z.string(),
+      qty: z.number(),
+      amount: z.number(),
+    })
+  ),
+})
 
 export const purchaseItemsSchemaforOther = z.object({
-  material: z.string(),
-  unit: z.string(),
-  qty: z.number(),
-  amount: z.number()
-}).array()
+  purchaseItems: z.array(
+    z.object({
+      material: z.string(),
+      unit: z.string(),
+      qty: z.number(),
+      amount: z.number(),
+    })
+  ),
+})

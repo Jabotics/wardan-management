@@ -235,7 +235,7 @@ const RawMaterial = ({
             onClick={() => append({ product: '', unit: '', qty: 0, amount: 0 })}
             className='w-full text-black'
           >
-            Add Raw Material
+            Add Invoice
           </Button>
           <Button
             type='submit'
