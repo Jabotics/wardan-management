@@ -1,29 +1,100 @@
-import { RootState } from "@/store"
-import { useGetPurchaseEntryQuery } from "@/store/actions/slices/purchaseSlice"
-import { useAppSelector } from "@/store/hooks"
-import { useTranslation } from "react-i18next";
-import { createData, Data, headCells } from "./schema";
-import EnhancedTable from "@/components/table";
-import { ImportContactsTableConfig } from "./settings.constant";
+import { useState, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import EnhancedTable from '@/components/table'
+import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice'
+import { useAppSelector } from '@/store/hooks'
+import { useGetPurchaseEntryQuery } from '@/store/actions/slices/purchaseSlice'
+import { RootState } from '@/store'
+
+import { createData, Data, headCells } from './schema'
+import { TableDataFilters } from '@/interfaces'
+
+import { ImportContactsTableConfig } from './settings.constant'
 
 const Purchase = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  useGetPurchaseEntryQuery({})
+  const [search, setSearch] = useState<string>('')
+  const [filterValues, setFilterValues] = useState({
+    category: [],
+    importFrom: [],
+  })
+
+  useGetPurchaseEntryQuery(
+    {
+      search: search.replace(/ /g, '') || null,
+      category:
+        filterValues.category.length > 0
+          ? JSON.stringify(filterValues.category)
+          : null,
+      seller:
+        filterValues.importFrom.length > 0
+          ? JSON.stringify(filterValues.importFrom)
+          : null,
+    },
+    { refetchOnMountOrArgChange: true }
+  )
   const { allPurchase } = useAppSelector((state: RootState) => state.purchase)
 
-  const rows = allPurchase?.map((item) =>
-    createData(
-      item._id,
-      item.invoice_no,
-      item.seller,
-      item.category,
-      item.invoice_amount,
-      item.transportation_charge,
-      item.unloading_charge,
-      item.total_amount,
-      item.createdAt
-    )
+  useGetAllImportersQuery({})
+  const { importers } = useAppSelector((state: RootState) => state.importers)
+
+  const rows = useMemo(
+    () =>
+      allPurchase?.map((item) =>
+        createData(
+          item._id,
+          item.invoice_no,
+          item.seller,
+          item.category,
+          item.invoice_amount,
+          item.transportation_charge,
+          item.unloading_charge,
+          item.total_amount,
+          item.createdAt
+        )
+      ) || [],
+    [allPurchase]
+  )
+
+  const handleFilterChange = (label: string, value: string[]) => {
+    setFilterValues((prev) => ({
+      ...prev,
+      [String(label.charAt(0).toLowerCase() + label.substring(1)).replace(
+        / /g,
+        ''
+      )]: value,
+    }))
+  }
+
+  const dataFilters: TableDataFilters = useMemo(
+    () => ({
+      searchBy: {
+        placeholderText: 'Search By Invoice...',
+        actions: [search, setSearch],
+      },
+      filters: [
+        {
+          label: 'Category',
+          type: 'array',
+          options: ['RAW_MATERIAL', 'PACKAGING_PRODUCT', 'OTHER'].map(
+            (i, index) => ({ [String(index)]: i })
+          ),
+          value: filterValues.category, // need to change to incorporate, id to pass in payload, value to show in select
+        },
+        {
+          label: 'Import From',
+          type: 'object',
+          options: importers
+            ? importers.map((i) => ({ [i._id]: i.name })) 
+            : [],
+          value: filterValues.importFrom,
+        },
+      ],
+      handleFilterChange,
+    }),
+    [search, filterValues.category, filterValues.importFrom, importers]
   )
 
   return (
@@ -34,6 +105,7 @@ const Purchase = () => {
       dense
       rowHeight={65}
       config={ImportContactsTableConfig}
+      dataFilters={{ ...dataFilters, handleFilterChange }}
     />
   )
 }

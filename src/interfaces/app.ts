@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from "react"
+import React from 'react'
 
 export type Order = 'asc' | 'desc'
 
@@ -9,8 +9,8 @@ export interface HeadCell<T> {
   id: keyof T
   label: string
   numeric: boolean
-  type: 'string' | 'custom';
-  body?: ({ data }: { data: T; }) => React.JSX.Element;
+  type: 'string' | 'custom'
+  body?: ({ data }: { data: T }) => React.JSX.Element
 }
 
 export interface EnhancedTableProps<T extends { [key: string]: any }> {
@@ -19,10 +19,17 @@ export interface EnhancedTableProps<T extends { [key: string]: any }> {
   title: string
   dense?: boolean
   rowHeight?: number
-  ExpandedBody?: ({ data }: { data: T; }) => React.JSX.Element;
+  ExpandedBody?: ({ data }: { data: T }) => React.JSX.Element
   config?: {
-    ModifyComponent: ({ data, setClose }: { data?: T; setClose: React.Dispatch<React.SetStateAction<boolean>> }) => JSX.Element;
+    ModifyComponent: ({
+      data,
+      setClose,
+    }: {
+      data?: T
+      setClose: React.Dispatch<React.SetStateAction<boolean>>
+    }) => JSX.Element
   }
+  dataFilters?: TableDataFilters
 }
 
 export interface EnhancedTableHeadProps<T> {
@@ -38,6 +45,7 @@ export interface EnhancedTableHeadProps<T> {
 export interface EnhancedTableToolbarProps {
   numSelected: number
   setDelete: React.Dispatch<React.SetStateAction<boolean>>
+  dataFilters?: TableDataFilters
 }
 
 export interface TablePaginationConfig {
@@ -45,4 +53,18 @@ export interface TablePaginationConfig {
   sortOrder?: 'desc' | 'asc'
   limit?: number
   offset?: number
+}
+
+export interface TableDataFilters {
+  searchBy?: {
+    placeholderText: string;
+    actions: [string, React.Dispatch<React.SetStateAction<string>>];
+  };
+  filters?: {
+    label: string;
+    type: 'array' | 'object';
+    options: { [x: string | number]: string }[];
+    value: string[];
+  }[];
+  handleFilterChange?: (label: string, value: string[]) => void;
 }

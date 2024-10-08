@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar'
-import Sidebar from './sidebar'
+import Sidebar from './sidebar/sidebar'
 import useIsCollapsed from '@/hooks/use-is-collapsed'
 // import { useSelector } from 'react-redux'
 // import { RootState } from '@/store'

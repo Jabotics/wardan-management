@@ -5,6 +5,7 @@ import {
   HeadCell,
   Order,
   TablePaginationConfig,
+  TableDataFilters,
 } from './app'
 
 import { ISeller, IBuyer } from './data/traders'
@@ -21,6 +22,7 @@ export type {
   HeadCell,
   Order,
   TablePaginationConfig,
+  TableDataFilters,
 
   // data
   IProduct,

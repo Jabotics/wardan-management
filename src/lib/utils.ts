@@ -20,10 +20,21 @@ export function getCustomParams(params: object) {
   return customParams
 }
 
-const GST_INPUT_PATTERN = /^[A-Z0-9]{15}$/; // Valid GST number pattern
+const GST_INPUT_PATTERN = /^[A-Z0-9]{15}$/;
 
 export const GSTValidation = (value: string) => {
   if (!value) return 'GST Number is required';
   if (!GST_INPUT_PATTERN.test(value)) return 'GST Number must be 15 characters long and alphanumeric';
-  return true; // Valid GST Number
+  return true;
 };
+
+export function transformString(input: string) {
+  if (typeof input !== 'string') {
+    throw new Error('Input must be a string');
+  }
+
+  return input
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}

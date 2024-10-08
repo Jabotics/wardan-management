@@ -51,6 +51,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   rowHeight,
   ExpandedBody,
   config,
+  dataFilters,
 }: EnhancedTableProps<T>) {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -198,6 +199,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
           <EnhancedTableToolbar
             numSelected={selected.length}
             setDelete={setToDelete}
+            dataFilters={dataFilters}
           />
           <TableContainer
             className='mt-5'

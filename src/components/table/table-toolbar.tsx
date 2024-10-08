@@ -24,6 +24,7 @@ import IconButton from '@mui/material/IconButton'
 import { LuSearch } from 'react-icons/lu'
 import InputBase from '@mui/material/InputBase'
 import { MdDelete } from 'react-icons/md'
+import { transformString } from '@/lib/utils'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -37,9 +38,10 @@ const MenuPropsX = {
 }
 
 export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, setDelete } = props
+  const { numSelected, setDelete, dataFilters } = props
+  const { searchBy, filters, handleFilterChange } = dataFilters || {}
 
-  const [personName, setPersonName] = React.useState<string[]>([])
+  const [search, setSearch] = searchBy?.actions || []
 
   const [columnsAnchorEl, setColumnsAnchorEl] =
     React.useState<null | HTMLElement>(null)
@@ -71,16 +73,6 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     setColumnsAnchorEl(null)
   }
 
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value
-    )
-  }
-
   return (
     <Toolbar
       sx={{
@@ -91,128 +83,177 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       }}
     >
       <div className='flex items-center gap-4'>
-        <FormControl
-          sx={{
-            width: 200,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: '#33333325' },
-              '&:hover fieldset': { borderColor: 'gray' },
-              '&.Mui-focused fieldset': { borderColor: 'black' },
-            },
-            '&:hover .MuiInputLabel-root': {
-              color: 'initial',
-            },
-            '& .MuiInputLabel-root': {
-              fontSize: '15px',
-              color: '#33333375',
-              '&.Mui-focused': {
-                color: 'black',
-                fontWeight: 600,
+        {searchBy ? (
+          <Paper
+            component='form'
+            sx={{
+              p: '2px 4px',
+              display: 'flex',
+              alignItems: 'center',
+              width: 300,
+              height: 55,
+              borderRadius: 5,
+              boxShadow: 'none',
+              border: '1px solid #33333325',
+              '&:hover': {
+                borderColor: 'gray',
               },
-            },
-            '& .MuiOutlinedInput-input': {
-              fontSize: '15px',
-              color: '#33333375',
-            },
-          }}
-        >
-          <InputLabel>Tag</InputLabel>
-          <Select
-            labelId='demo-multiple-checkbox-label'
-            id='demo-multiple-checkbox'
-            multiple
-            value={personName}
-            onChange={handleChange}
-            input={<OutlinedInput label='Tag' />}
-            renderValue={(selected) => selected.join(', ')}
-            MenuProps={MenuPropsX}
-            IconComponent={FaAngleDown}
-            sx={{ borderRadius: 2 }}
-          >
-            {['Oliver Hansen'].map((name) => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={personName.indexOf(name) > -1} />
-                <ListItemText primary={name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl
-          sx={{
-            width: 200,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: '#33333325' },
-              '&:hover fieldset': { borderColor: 'gray' },
-              '&.Mui-focused fieldset': { borderColor: 'black' },
-            },
-            '&:hover .MuiInputLabel-root': {
-              color: 'initial',
-            },
-            '& .MuiInputLabel-root': {
-              fontSize: '15px',
-              color: '#33333375',
-              '&.Mui-focused': {
-                color: 'black',
-                fontWeight: 600,
+              '&:focus-within': {
+                boxShadow: 'inset 0 0 0 2px black',
               },
-            },
-            '& .MuiOutlinedInput-input': {
-              fontSize: '15px',
-              color: '#33333375',
-            },
-          }}
-        >
-          <InputLabel>Tag</InputLabel>
-          <Select
-            labelId='demo-multiple-checkbox-label'
-            id='demo-multiple-checkbox'
-            multiple
-            value={personName}
-            onChange={handleChange}
-            input={<OutlinedInput label='Tag' />}
-            renderValue={(selected) => selected.join(', ')}
-            MenuProps={MenuPropsX}
-            IconComponent={FaAngleDown}
-            sx={{ borderRadius: 2 }}
+            }}
           >
-            {['Oliver Hansen'].map((name) => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={personName.indexOf(name) > -1} />
-                <ListItemText primary={name} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <IconButton type='button' sx={{ py: '10px' }} aria-label='search'>
+              <LuSearch className='text-gray-500' size={16} />
+            </IconButton>
+            <InputBase
+              sx={{ flex: 1 }}
+              placeholder={searchBy.placeholderText}
+              inputProps={{ 'aria-label': 'search fields' }}
+              value={search}
+              onChange={(e) => {
+                if (setSearch) {
+                  setSearch(e.target.value)
+                }
+              }}
+            />
+          </Paper>
+        ) : null}
 
-        <Paper
-          component='form'
-          sx={{
-            p: '2px 4px',
-            display: 'flex',
-            alignItems: 'center',
-            width: 200,
-            height: 55,
-            borderRadius: 2,
-            boxShadow: 'none',
-            border: '1px solid #33333325',
-            '&:hover': {
-              borderColor: 'gray',
-            },
-            '&:focus-within': {
-              boxShadow: 'inset 0 0 0 2px black',
-            },
-          }}
-        >
-          <IconButton type='button' sx={{ py: '10px' }} aria-label='search'>
-            <LuSearch className='text-gray-500' size={16} />
-          </IconButton>
-          <InputBase
-            sx={{ flex: 1 }}
-            placeholder='Search...'
-            inputProps={{ 'aria-label': 'search fields' }}
-          />
-        </Paper>
+        {/* {filters && filters.length > 0
+          ? filters.map((item, index) => {
+              return (
+                <FormControl
+                  sx={{
+                    width: 200,
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: '#33333325' },
+                      '&:hover fieldset': { borderColor: 'gray' },
+                      '&.Mui-focused fieldset': { borderColor: 'black' },
+                    },
+                    '&:hover .MuiInputLabel-root': {
+                      color: 'initial',
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: '15px',
+                      color: '#33333375',
+                      '&.Mui-focused': {
+                        color: 'black',
+                        fontWeight: 600,
+                      },
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      fontSize: '15px',
+                      color: '#33333375',
+                    },
+                  }}
+                  key={index}
+                >
+                  <InputLabel
+                    sx={{ backgroundColor: 'white', paddingInline: 0.5 }}
+                  >
+                    {item.label}
+                  </InputLabel>
+                  <Select
+                    labelId='demo-multiple-checkbox-label'
+                    id='demo-multiple-checkbox'
+                    multiple
+                    value={item.value}
+                    onChange={(event) => {
+                      const {
+                        target: { value },
+                      } = event
+
+                      item.value = typeof value === 'string' ? value.split(',') : value
+                    }}
+                    input={<OutlinedInput label='Tag' />}
+                    renderValue={(selected) => selected.join(', ')}
+                    MenuProps={MenuPropsX}
+                    IconComponent={FaAngleDown}
+                    sx={{ borderRadius: 5 }}
+                  >
+                    {item?.options.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        <Checkbox checked={item.value.indexOf(name) > -1} />
+                        <ListItemText primary={transformString(name)} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )
+            })
+          : null} */}
+
+        {filters && filters.length > 0
+          ? filters.map((item, index) => {
+              return (
+                <FormControl
+                  sx={{
+                    width: 200,
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': { borderColor: '#33333325' },
+                      '&:hover fieldset': { borderColor: 'gray' },
+                      '&.Mui-focused fieldset': { borderColor: 'black' },
+                    },
+                    '&:hover .MuiInputLabel-root': {
+                      color: 'initial',
+                    },
+                    '& .MuiInputLabel-root': {
+                      fontSize: '15px',
+                      color: '#33333375',
+                      '&.Mui-focused': {
+                        color: 'black',
+                        fontWeight: 600,
+                      },
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      fontSize: '15px',
+                      color: '#33333375',
+                    },
+                  }}
+                  key={index}
+                >
+                  <InputLabel
+                    sx={{ backgroundColor: 'white', paddingInline: 0.5 }}
+                  >
+                    {item.label}
+                  </InputLabel>
+                  <Select
+                    labelId={`filter-${index}`}
+                    id={`filter-${index}`}
+                    multiple
+                    value={item.value}
+                    onChange={(event) => {
+                      const {
+                        target: { value },
+                      } = event
+
+                      const selectedValues =
+                        typeof value === 'string' ? value.split(',') : value
+
+                      if (handleFilterChange) {
+                        handleFilterChange(item.label, selectedValues) 
+                      }
+                    }}
+                    input={<OutlinedInput label='Tag' />}
+                    renderValue={(selected) => selected.join(', ')}
+                    MenuProps={MenuPropsX}
+                    IconComponent={FaAngleDown}
+                    sx={{ borderRadius: 5 }}
+                  >
+                    {item?.options.map((option, index) => {
+                      return (
+                        <MenuItem key={index} value={Object.keys(option)[0]}>
+                          <Checkbox checked={item.value.indexOf(Object.keys(option)[0]) > -1} />
+                          <ListItemText primary={transformString(Object.values(option)[0])} />
+                        </MenuItem>
+                      )
+                    })}
+                  </Select>
+                </FormControl>
+              )
+            })
+          : null}
       </div>
 
       <div className='mr-4 flex items-end gap-2'>
