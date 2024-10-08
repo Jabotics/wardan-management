@@ -24,15 +24,15 @@ import {
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
-import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
+import { useGetOtherMaterialsQuery } from '@/store/actions/slices/otherMaterialsSlice'
 
 const OtherMaterial = ({
   setOpen,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  useGetProductsQuery({})
-  const { products } = useAppSelector((state: RootState) => state.products)
+  useGetOtherMaterialsQuery({})
+  const { materials } = useAppSelector((state: RootState) => state.materials)
 
   const [Add] = useAddPurchaseMutation()
 
@@ -95,7 +95,7 @@ const OtherMaterial = ({
                 <FormItem>
                   <FormLabel>Other Material</FormLabel>
                   <FormControl>
-                    {products && products.length > 0 ? (
+                    {materials && materials.length > 0 ? (
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -104,7 +104,7 @@ const OtherMaterial = ({
                           <SelectValue placeholder='Select a Unit' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item, index) => {
+                          {materials.map((item, index) => {
                             return (
                               <SelectItem value={item._id || ''} key={index}>
                                 {item.name}

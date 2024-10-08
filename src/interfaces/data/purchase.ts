@@ -25,4 +25,5 @@ export interface IPurchaseItem {
   qty: 'gms' | 'kg' |'ton' |'pcs'
   unit: string
   amount: number
+  price_per_kg: number
 }

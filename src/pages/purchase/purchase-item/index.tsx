@@ -57,19 +57,19 @@ const PurchaseItems = ({
                 <div className='flex w-full flex-1 items-center justify-between px-3 py-2'>
                   <div className='flex h-full w-full flex-col items-start justify-start'>
                     <div className='text-lg'>
-                      {item.product.name + ' Powder'}
+                      {item?.product?.name + ' Powder'}
                     </div>
                     <div className='text-sm text-gray-800/75'>
-                      {mapToCategory[item.category]}
+                      {mapToCategory[item?.category]}
                     </div>
                   </div>
                   <div className='whitespace-nowrap'>
-                    {`${item.qty} ${item.unit}`} ({' '}
-                    <span className='stacked-fractions'>₹1000/kg</span> )
+                    {`${item?.qty} ${item?.unit}`} ({' '}
+                    <span className='stacked-fractions'>₹{item?.price_per_kg}/kg</span> )
                   </div>
                 </div>
                 <div className='flex h-10 w-full items-center justify-between border-t-2 border-dashed border-white px-3'>
-                  <div className='font-mono'>{`₹ ${item.amount}`}</div>
+                  <div className='font-mono'>{`₹ ${item?.amount}`}</div>
                   <div className='flex h-full w-1/4 items-center justify-end gap-3 text-xs'>
                     <Drawer>
                       <DrawerTrigger asChild>
