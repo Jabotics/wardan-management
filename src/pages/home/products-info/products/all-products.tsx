@@ -10,7 +10,7 @@ const AllProducts = () => {
   const { products } = useAppSelector((state: RootState) => state.products)
 
   return (
-    <div className='flex h-full w-full flex-col gap-3 overflow-y-auto overflow-x-hidden py-5 pr-3'>
+    <div className='flex flex-1 w-full flex-col gap-3 overflow-y-auto overflow-x-hidden py-5 pr-3'>
       {!isLoading
         ? products?.map((item, index) => {
             return (

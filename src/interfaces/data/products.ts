@@ -8,9 +8,3 @@ export interface IProduct {
     name: string
   }[]
 }
-
-export interface IVariant {
-  _id: string
-  name: string
-  is_active?: boolean
-}

@@ -8,8 +8,10 @@ import {
 } from './app'
 
 import { ISeller, IBuyer } from './data/traders'
-import { IProduct, IVariant } from './data/products'
+import { IProduct } from './data/products'
+import { IVariant } from './data/variants'
 import { IPurchase, IPurchaseItem } from './data/purchase'
+import { IOtherMaterial } from './data/otherMaterials'
 
 export type {
   // app
@@ -27,4 +29,5 @@ export type {
   IBuyer,
   IPurchase,
   IPurchaseItem,
+  IOtherMaterial,
 }
