@@ -6,7 +6,8 @@ import { sellerEndpoints } from "./seller";
 import { variantsEndpoints } from "./variant";
 
 export const APIEndPoints = {
-  BackendURL: 'http://192.168.29.16:5000',
+  BackendURL: 'http://localhost:5000',
+  // BackendURL: 'http://192.168.29.16:5000',
 
   // VARIANTS
   ...variantsEndpoints,
