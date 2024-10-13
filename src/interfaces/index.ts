@@ -6,6 +6,7 @@ import {
   Order,
   TablePaginationConfig,
   TableDataFilters,
+  EnhancedTableBodyProps,
 } from './app'
 
 import { ISeller, IBuyer } from './data/traders'
@@ -23,6 +24,7 @@ export type {
   Order,
   TablePaginationConfig,
   TableDataFilters,
+  EnhancedTableBodyProps,
 
   // data
   IProduct,

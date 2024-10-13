@@ -114,16 +114,12 @@ export const PurchaseSlice = createSlice({
   name: 'PurchaseSlice',
   initialState,
   reducers: {
-    modifyPurchaseEntry: (state, action: PayloadAction<Partial<IPurchase>>) => {
+    toModifyPurchaseEntry: (state, action: PayloadAction<Partial<IPurchase> | undefined>) => {
       state.purchaseInfo.purchaseEntry = action.payload;
     },
 
     modifyPurchaseEntryItem: (state, action: PayloadAction<Partial<IPurchaseItem>>) => {
       state.purchaseInfo.purchaseEntryItems = action.payload;
-    },
-    
-    toEditPurchaseInfo: (state, action: PayloadAction<{ purchaseEntry: IPurchase, purchaseEntryItems: IPurchaseItem }>) => {
-      state.purchaseInfo = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -167,5 +163,5 @@ export const PurchaseSlice = createSlice({
 
 export const { useGetPurchaseEntryQuery, useGetPurchaseEntryItemsQuery, useAddPurchaseMutation } =
   purchaseApi
-export const { modifyPurchaseEntry, modifyPurchaseEntryItem, toEditPurchaseInfo } = PurchaseSlice.actions
+export const { toModifyPurchaseEntry, modifyPurchaseEntryItem } = PurchaseSlice.actions
 export default PurchaseSlice.reducer

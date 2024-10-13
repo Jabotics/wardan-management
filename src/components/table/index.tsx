@@ -9,7 +9,6 @@ import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import Checkbox from '@mui/material/Checkbox'
 
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
@@ -26,22 +25,10 @@ import { FaCircle } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { MdCheckCircleOutline } from 'react-icons/md'
-import { MdCheckCircle } from 'react-icons/md'
-import DeleteModal from '../shared/delete-modal'
-
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import IconButton from '@mui/material/IconButton'
-
-import { LuChevronDown, LuChevronUp } from 'react-icons/lu'
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import Collapse from '@mui/material/Collapse'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-
 // import { MdEdit } from 'react-icons/md'
-import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { Dialog, DialogTrigger } from '../ui/dialog'
+import EnhancedTableBody from './table-body'
+import DeleteModal from '../shared/delete-modal'
 
 export default function EnhancedTable<T extends { [key: string]: any }>({
   data,
@@ -67,7 +54,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
 
   const [toDelete, setToDelete] = React.useState<boolean>(false)
   
-  const { ModifyComponent } = config || {}
+  const { ModifyComponent, toModify } = config || {}
   const [openDialog, setOpenDialog] = React.useState<boolean>(false)
 
   const [anchorActionEl, setAnchorActionEl] =
@@ -227,7 +214,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
 
                   return (
                     <React.Fragment key={index}>
-                      <TableRow
+                      {/* <TableRow
                         hover
                         role='checkbox'
                         aria-checked={isItemSelected}
@@ -352,15 +339,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                                   <ModifyComponent data={row} setClose={setOpenDialog} />
                                 </Dialog>
                               ) : null}
-                              {/* <MenuItem
-                                onClick={handleActionClose}
-                                className='flex items-center gap-2'
-                              >
-                                <span>
-                                  <MdEdit />
-                                </span>
-                                My account
-                              </MenuItem> */}
+   
                               <MenuItem
                                 onClick={handleActionClose}
                                 className='flex items-center gap-2'
@@ -392,7 +371,26 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             </Collapse>
                           </TableCell>
                         </TableRow>
-                      )}
+                      )} */}
+
+                      <EnhancedTableBody 
+                        anchorActionEl={anchorActionEl}
+                        handleActionClick={handleActionClick}
+                        handleActionClose={handleActionClose}
+                        handleClick={handleClick}
+                        handleExpandClick={handleExpandClick}
+                        headCells={headCells}
+                        labelId={labelId}
+                        open={open}
+                        row={row}
+                        ExpandedBody={ExpandedBody}
+                        ModifyComponent={ModifyComponent}
+                        isExpanded={isExpanded}
+                        isItemSelected={isItemSelected}
+                        rowHeight={rowHeight}
+                        setOpenDialog={setOpenDialog}
+                        toModify={toModify}
+                      />
                     </React.Fragment>
                   )
                 })}

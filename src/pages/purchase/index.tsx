@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import EnhancedTable from '@/components/table'
 import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice'
 import { useAppSelector } from '@/store/hooks'
-import { useGetPurchaseEntryQuery } from '@/store/actions/slices/purchaseSlice'
+import { toModifyPurchaseEntry, useGetPurchaseEntryQuery } from '@/store/actions/slices/purchaseSlice'
 import { RootState } from '@/store'
 
 import { createData, Data, headCells } from './schema'
@@ -107,7 +107,7 @@ const Purchase = () => {
       title={t('Purchase')}
       dense
       rowHeight={65}
-      config={ImportContactsTableConfig}
+      config={{...ImportContactsTableConfig, toModify: toModifyPurchaseEntry}}
       dataFilters={{ ...dataFilters, handleFilterChange }}
     />
   )

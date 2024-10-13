@@ -14,6 +14,7 @@ const ModifyImporters = ({
   setClose: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const { purchaseInfo } = useAppSelector((state: RootState) => state.purchase)
+  console.log(purchaseInfo)
 
   return (
     <DialogContent className='flex h-[65vh] w-[65vw] flex-col rounded-xl'>
