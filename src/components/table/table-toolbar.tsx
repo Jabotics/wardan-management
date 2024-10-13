@@ -120,70 +120,6 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           </Paper>
         ) : null}
 
-        {/* {filters && filters.length > 0
-          ? filters.map((item, index) => {
-              return (
-                <FormControl
-                  sx={{
-                    width: 200,
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': { borderColor: '#33333325' },
-                      '&:hover fieldset': { borderColor: 'gray' },
-                      '&.Mui-focused fieldset': { borderColor: 'black' },
-                    },
-                    '&:hover .MuiInputLabel-root': {
-                      color: 'initial',
-                    },
-                    '& .MuiInputLabel-root': {
-                      fontSize: '15px',
-                      color: '#33333375',
-                      '&.Mui-focused': {
-                        color: 'black',
-                        fontWeight: 600,
-                      },
-                    },
-                    '& .MuiOutlinedInput-input': {
-                      fontSize: '15px',
-                      color: '#33333375',
-                    },
-                  }}
-                  key={index}
-                >
-                  <InputLabel
-                    sx={{ backgroundColor: 'white', paddingInline: 0.5 }}
-                  >
-                    {item.label}
-                  </InputLabel>
-                  <Select
-                    labelId='demo-multiple-checkbox-label'
-                    id='demo-multiple-checkbox'
-                    multiple
-                    value={item.value}
-                    onChange={(event) => {
-                      const {
-                        target: { value },
-                      } = event
-
-                      item.value = typeof value === 'string' ? value.split(',') : value
-                    }}
-                    input={<OutlinedInput label='Tag' />}
-                    renderValue={(selected) => selected.join(', ')}
-                    MenuProps={MenuPropsX}
-                    IconComponent={FaAngleDown}
-                    sx={{ borderRadius: 5 }}
-                  >
-                    {item?.options.map((name) => (
-                      <MenuItem key={name} value={name}>
-                        <Checkbox checked={item.value.indexOf(name) > -1} />
-                        <ListItemText primary={transformString(name)} />
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              )
-            })
-          : null} */}
-
         {filters && filters.length > 0
           ? filters.map((item, index) => {
               return (
@@ -222,21 +158,31 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     labelId={`filter-${index}`}
                     id={`filter-${index}`}
                     multiple
-                    value={item.value}
+                    value={item?.value ?? []}
                     onChange={(event) => {
                       const {
                         target: { value },
                       } = event
 
+                      // console.log(Object.values(item.options[Number(value)]))
+                      // console.log(typeof value === 'string')
                       const selectedValues =
                         typeof value === 'string' ? value.split(',') : value
 
                       if (handleFilterChange) {
-                        handleFilterChange(item.label, selectedValues) 
+                        handleFilterChange(item.label, selectedValues)
                       }
                     }}
                     input={<OutlinedInput label='Tag' />}
-                    renderValue={(selected) => selected.join(', ')}
+                    renderValue={(selected) => { 
+                      // if (item.type === 'array') {
+                        return selected
+                        .map((i) => {
+                          return transformString(i)
+                        })
+                        .join(', ')
+                      // } else {}
+                    }}
                     MenuProps={MenuPropsX}
                     IconComponent={FaAngleDown}
                     sx={{ borderRadius: 5 }}
@@ -244,8 +190,14 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                     {item?.options.map((option, index) => {
                       return (
                         <MenuItem key={index} value={Object.keys(option)[0]}>
-                          <Checkbox checked={item.value.indexOf(Object.keys(option)[0]) > -1} />
-                          <ListItemText primary={transformString(Object.values(option)[0])} />
+                          <Checkbox
+                            checked={
+                              item.value.indexOf(Object.keys(option)[0]) > -1
+                            }
+                          />
+                          <ListItemText
+                            primary={transformString(Object.values(option)[0])}
+                          />
                         </MenuItem>
                       )
                     })}

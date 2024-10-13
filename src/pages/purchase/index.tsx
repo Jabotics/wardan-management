@@ -16,7 +16,10 @@ const Purchase = () => {
   const { t } = useTranslation()
 
   const [search, setSearch] = useState<string>('')
-  const [filterValues, setFilterValues] = useState({
+  const [filterValues, setFilterValues] = useState<{
+    category: string[],
+    importFrom: string[]
+  }>({
     category: [],
     importFrom: [],
   })
@@ -79,7 +82,7 @@ const Purchase = () => {
           label: 'Category',
           type: 'array',
           options: ['RAW_MATERIAL', 'PACKAGING_PRODUCT', 'OTHER'].map(
-            (i, index) => ({ [String(index)]: i })
+            (i) => ({ [i]: i })
           ),
           value: filterValues.category, // need to change to incorporate, id to pass in payload, value to show in select
         },
