@@ -6,6 +6,7 @@ import { useGetAllWastageQuery } from "@/store/actions/slices/wastageSlice"
 import { useAppSelector } from "@/store/hooks"
 import { RootState } from "@/store"
 import { TableDataFilters } from "@/interfaces"
+import { ImportContactsTableConfig } from "./settings.constant"
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
@@ -45,7 +46,7 @@ const RawMaterialStocks = () => {
       title={t('Raw Material Wastage')}
       dense
       rowHeight={65}
-      // config={ImportContactsTableConfig}
+      config={ImportContactsTableConfig}
       dataFilters={{ ...dataFilters }}
     />
   )
