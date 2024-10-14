@@ -5,6 +5,7 @@ import exportersSlice, { exportersApi } from "./slices/exportersSlice"
 import purchseSlice, { purchaseApi } from "./slices/purchaseSlice"
 import otherMaterialsSlice, { otherMaterialsApi } from "./slices/otherMaterialsSlice"
 import rawStockSlice, { rawStockApi } from "./slices/rawStockSlice"
+import wastageSlice, { wastageApi } from "./slices/wastageSlice"
 
 export {
 
@@ -23,4 +24,6 @@ export {
   otherMaterialsApi,
   rawStockSlice,
   rawStockApi,
+  wastageSlice,
+  wastageApi,
 }

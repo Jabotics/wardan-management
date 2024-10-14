@@ -1,10 +1,11 @@
-import { buyerEndpoints } from "./buyer";
-import { otherMaterialsEndpoints } from "./otherMaterial";
-import { productsEndpoints } from "./product";
-import { purchaseEndpoints } from "./purchase";
-import { rawStockEndpoints } from "./rawStock";
-import { sellerEndpoints } from "./seller";
-import { variantsEndpoints } from "./variant";
+import { buyerEndpoints } from "./endpoints/buyer";
+import { otherMaterialsEndpoints } from "./endpoints/otherMaterial";
+import { productsEndpoints } from "./endpoints/product";
+import { purchaseEndpoints } from "./endpoints/purchase";
+import { rawStockEndpoints } from "./endpoints/rawStock";
+import { sellerEndpoints } from "./endpoints/seller";
+import { variantsEndpoints } from "./endpoints/variant";
+import { wastageEndpoints } from "./endpoints/wastage";
 
 export const APIEndPoints = {
   // BackendURL: 'http://localhost:5000',
@@ -30,4 +31,7 @@ export const APIEndPoints = {
 
   // RAW STOCK
   ...rawStockEndpoints,
+
+  // WASTAGE
+  ...wastageEndpoints,
 }
