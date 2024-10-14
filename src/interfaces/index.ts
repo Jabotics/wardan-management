@@ -13,6 +13,9 @@ import { IProduct } from './data/products'
 import { IVariant } from './data/variants'
 import { IPurchase, IPurchaseItem } from './data/purchase'
 import { IOtherMaterial } from './data/otherMaterials'
+import { IWastage } from './data/wastage'
+
+import { IRawMaterialStock, IPackagingProductStock, IOtherStock } from './data/rawStock'
 
 export type {
   // app
@@ -32,4 +35,9 @@ export type {
   IPurchase,
   IPurchaseItem,
   IOtherMaterial,
+  IWastage,
+
+  IRawMaterialStock,
+  IPackagingProductStock,
+  IOtherStock,
 }

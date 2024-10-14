@@ -2,6 +2,9 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 
 import { 
+  appSlice,
+
+
   productsApi, 
   productsSlice,
   variantsApi,
@@ -14,12 +17,18 @@ import {
   purchseSlice,
   otherMaterialsApi,
   otherMaterialsSlice,
+  rawStockApi,
+  rawStockSlice,
+  wastageApi,
+  wastageSlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
 
 export const rootReducer = combineReducers({
   [RequestHandler.reducerPath]: RequestHandler.reducer,
+
+  app: appSlice,
   
   products: productsSlice,
   variants: variantsSlice,
@@ -27,6 +36,8 @@ export const rootReducer = combineReducers({
   exporters: exportersSlice,
   purchase: purchseSlice,
   materials: otherMaterialsSlice,
+  rawStocks: rawStockSlice,
+  wastage: wastageSlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
@@ -35,4 +46,6 @@ export const rootReducer = combineReducers({
   [exportersApi.reducerPath]: exportersApi.reducer,
   [purchaseApi.reducerPath]: purchaseApi.reducer,
   [otherMaterialsApi.reducerPath]: otherMaterialsApi.reducer,
+  [rawStockApi.reducerPath]: rawStockApi.reducer,
+  [wastageApi.reducerPath]: wastageApi.reducer,
 })

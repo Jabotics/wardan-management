@@ -10,6 +10,8 @@ import {
   exportersApi,
   purchaseApi,
   otherMaterialsApi,
+  rawStockApi,
+  wastageApi,
 } from "./actions";
 
 import { persistStore } from 'redux-persist'
@@ -26,12 +28,15 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         serializableCheck: false,
       }).concat(
         RequestHandler.middleware,
+        
         productsApi.middleware,
         variantsApi.middleware,
         importersApi.middleware,
         exportersApi.middleware,
         purchaseApi.middleware,
         otherMaterialsApi.middleware,
+        rawStockApi.middleware,
+        wastageApi.middleware,
 
       );
 

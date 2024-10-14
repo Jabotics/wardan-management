@@ -2,7 +2,7 @@ import EnhancedTable from "@/components/table"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { createData, Data, headCells } from "./schema"
-import { useGetRawStocksQuery } from "@/store/actions/slices/rawStockSlice"
+import { useGetAllWastageQuery } from "@/store/actions/slices/wastageSlice"
 import { useAppSelector } from "@/store/hooks"
 import { RootState } from "@/store"
 import { TableDataFilters } from "@/interfaces"
@@ -12,27 +12,26 @@ const RawMaterialStocks = () => {
 
   const [search, setSearch] = useState<string>('')
 
-  useGetRawStocksQuery({})
-  const { rawMaterialStock } = useAppSelector((state: RootState) => state.rawStocks)
+  useGetAllWastageQuery({})
+  const { rawMaterialWastage } = useAppSelector((state: RootState) => state.wastage)
 
   const rows = useMemo(
     () =>
-      rawMaterialStock?.map((item) =>
+      rawMaterialWastage?.map((item) =>
         createData(
           item._id,
-          item.category,
-          item.product,
           item.qty,
           item.unit,
+          item.product,
         )
       ) || [],
-    [rawMaterialStock]
+    [rawMaterialWastage]
   )
   
   const dataFilters: TableDataFilters = useMemo(
     () => ({
       searchBy: {
-        placeholderText: 'Search Raw Material...',
+        placeholderText: 'Search Wastage...',
         actions: [search, setSearch],
       },
     }),
@@ -43,7 +42,7 @@ const RawMaterialStocks = () => {
     <EnhancedTable<Data>
       data={rows}
       headCells={headCells}
-      title={t('Raw Material')}
+      title={t('Raw Material Wastage')}
       dense
       rowHeight={65}
       // config={ImportContactsTableConfig}

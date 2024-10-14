@@ -1,13 +1,15 @@
-import { buyerEndpoints } from "./buyer";
-import { otherMaterialsEndpoints } from "./otherMaterial";
-import { productsEndpoints } from "./product";
-import { purchaseEndpoints } from "./purchase";
-import { sellerEndpoints } from "./seller";
-import { variantsEndpoints } from "./variant";
+import { buyerEndpoints } from "./endpoints/buyer";
+import { otherMaterialsEndpoints } from "./endpoints/otherMaterial";
+import { productsEndpoints } from "./endpoints/product";
+import { purchaseEndpoints } from "./endpoints/purchase";
+import { rawStockEndpoints } from "./endpoints/rawStock";
+import { sellerEndpoints } from "./endpoints/seller";
+import { variantsEndpoints } from "./endpoints/variant";
+import { wastageEndpoints } from "./endpoints/wastage";
 
 export const APIEndPoints = {
-  BackendURL: 'http://localhost:5000',
-  // BackendURL: 'http://192.168.29.16:5000',
+  // BackendURL: 'http://localhost:5000',
+  BackendURL: 'http://192.168.29.16:5000',
 
   // VARIANTS
   ...variantsEndpoints,
@@ -26,4 +28,10 @@ export const APIEndPoints = {
 
   // PURCHASE
   ...purchaseEndpoints,
+
+  // RAW STOCK
+  ...rawStockEndpoints,
+
+  // WASTAGE
+  ...wastageEndpoints,
 }

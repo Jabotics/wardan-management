@@ -84,6 +84,13 @@ const router = createBrowserRouter([
           Component: (await import('./pages/sell')).default,
         })
       },
+
+      {
+        path: 'wastage',
+        lazy: async () => ({
+          Component: (await import('./pages/wastage')).default,
+        })
+      },
     ],
   },
 
