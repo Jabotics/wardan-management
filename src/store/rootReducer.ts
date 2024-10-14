@@ -14,6 +14,8 @@ import {
   purchseSlice,
   otherMaterialsApi,
   otherMaterialsSlice,
+  rawStockApi,
+  rawStockSlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
@@ -27,6 +29,7 @@ export const rootReducer = combineReducers({
   exporters: exportersSlice,
   purchase: purchseSlice,
   materials: otherMaterialsSlice,
+  rawStocks: rawStockSlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
@@ -35,4 +38,5 @@ export const rootReducer = combineReducers({
   [exportersApi.reducerPath]: exportersApi.reducer,
   [purchaseApi.reducerPath]: purchaseApi.reducer,
   [otherMaterialsApi.reducerPath]: otherMaterialsApi.reducer,
+  [rawStockApi.reducerPath]: rawStockApi.reducer,
 })
