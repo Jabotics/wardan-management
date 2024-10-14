@@ -2,6 +2,9 @@ import { combineReducers } from "@reduxjs/toolkit";
 
 
 import { 
+  appSlice,
+
+
   productsApi, 
   productsSlice,
   variantsApi,
@@ -24,6 +27,8 @@ import { RequestHandler } from "./RequestHandler";
 
 export const rootReducer = combineReducers({
   [RequestHandler.reducerPath]: RequestHandler.reducer,
+
+  app: appSlice,
   
   products: productsSlice,
   variants: variantsSlice,

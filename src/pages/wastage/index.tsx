@@ -1,8 +1,22 @@
 import { FaPlus } from 'react-icons/fa'
 import WastageCategory from './wastage-category'
 import WastageDetails from './wastage-details'
+import { useAppSelector } from '@/store/hooks'
+import { RootState } from '@/store'
+import { useRef, useEffect, useState } from 'react'
 
 const WastagePage = () => {
+  const tableRef = useRef<HTMLDivElement | null>(null)
+  const { wastageTablesShow } = useAppSelector((state: RootState) => state.app)
+  const [shouldScroll, setShouldScroll] = useState(false)
+
+  useEffect(() => {
+    if (shouldScroll && tableRef.current) {
+      tableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setShouldScroll(false) 
+    }
+  }, [shouldScroll])
+
   return (
     <div className='h-[90vh] w-full rounded-3xl'>
       <div className='flex h-full w-full flex-col gap-5 overflow-y-auto overflow-x-hidden'>
@@ -13,7 +27,10 @@ const WastagePage = () => {
                 All Wastage Category
               </h2>
 
-              <WastageCategory />
+              <WastageCategory
+                setShouldScroll={setShouldScroll}
+                ref={tableRef}
+              />
 
               <div className='flex h-16 items-center justify-end border border-transparent border-t-indigo-300 px-3'>
                 <div className='flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-black px-10 py-1 text-white'>
@@ -26,9 +43,11 @@ const WastagePage = () => {
           <div className='h-full w-1/2 p-2'></div>
         </div>
 
-        <div className='h-fit w-full p-2'>
-          <WastageDetails />
-        </div>
+        {wastageTablesShow ? (
+          <div className='h-fit w-full p-2' ref={tableRef}>
+            <WastageDetails />
+          </div>
+        ) : null}
       </div>
     </div>
   )

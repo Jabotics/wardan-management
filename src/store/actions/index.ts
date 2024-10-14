@@ -1,3 +1,5 @@
+import appSlice from './slices/appSlice'
+
 import productsSlice, { productsApi } from "./slices/productsSlice"
 import variantsSlice, { variantsApi } from "./slices/variantsSlice"
 import importersSlice, { importersApi } from "./slices/importersSlice"
@@ -8,6 +10,7 @@ import rawStockSlice, { rawStockApi } from "./slices/rawStockSlice"
 import wastageSlice, { wastageApi } from "./slices/wastageSlice"
 
 export {
+  appSlice,
 
   // data
   productsApi,

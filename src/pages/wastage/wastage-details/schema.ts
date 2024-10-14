@@ -1,5 +1,5 @@
 import { HeadCell } from '@/interfaces'
-import { Product } from './function';
+import { Product, Quantity } from './function';
 
 export interface Data {
   _id: string
@@ -33,5 +33,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Product',
     type: 'custom',
     body: Product,
+  },
+  {
+    id: 'qty',
+    numeric: false,
+    disablePadding: true,
+    label: 'Quantity',
+    type: 'custom',
+    body: Quantity,
   },
 ]
