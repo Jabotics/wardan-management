@@ -11,6 +11,7 @@ import {
   IconCreditCardPay,
   IconTruckDelivery,
   IconReceiptRefund,
+  IconRotate3d,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -110,5 +111,13 @@ export const sidelinks: SideLink[] = [
         icon: <IconPackageImport size={18} />,
       },
     ],
+  },
+
+  // WASTAGE
+  {
+    title: 'Wastage',
+    label: '',
+    href: '/wastage',
+    icon: <IconRotate3d size={18} />,
   },
 ]
