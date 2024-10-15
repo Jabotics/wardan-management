@@ -21,11 +21,11 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { GSTValidation } from '@/lib/utils'
 import {
-  addImporter,
-  editImporter,
-  useAddImporterMutation,
-  useEditImporterMutation,
-} from '@/store/actions/slices/importersSlice'
+  addExporter,
+  editExporter,
+  useAddExporterMutation,
+  useEditExporterMutation,
+} from '@/store/actions/slices/exportersSlice'
 import { Button } from '@/components/ui/button'
 import { useAppDispatch } from '@/store/hooks'
 
@@ -44,8 +44,8 @@ const FormComponent = ({
 }) => {
   const dispatch = useAppDispatch()
 
-  const [Add] = useAddImporterMutation()
-  const [Update] = useEditImporterMutation()
+  const [Add] = useAddExporterMutation()
+  const [Update] = useEditExporterMutation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,7 +83,7 @@ const FormComponent = ({
         if (res.status === 'fail') throw new Error(res.message)
 
         dispatch(
-          editImporter({
+          editExporter({
             id: data._id,
             data: { ...payload, _id: data._id, is_active: true },
           })
@@ -93,7 +93,7 @@ const FormComponent = ({
         if (res.status === 'fail') throw new Error(res.message)
 
         dispatch(
-          addImporter({ ...payload, is_active: true, _id: res.data._id })
+          addExporter({ ...payload, is_active: true, _id: res.data._id })
         )
       }
 

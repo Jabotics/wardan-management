@@ -4,6 +4,7 @@ import { createData, Data, headCells } from './schema'
 import { useAppSelector } from '@/store/hooks';
 import { RootState } from '@/store';
 import { useGetAllExportersQuery } from '@/store/actions/slices/exportersSlice';
+import { ExportContactsTableConfig } from './settings.constant';
 
 const ImportersPage = () => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ const ImportersPage = () => {
       title={t('Exporter')}
       dense
       rowHeight={65}
+      config={ExportContactsTableConfig}
     />
   )
 }
