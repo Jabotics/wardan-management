@@ -107,7 +107,7 @@ export const ExportersSlice = createSlice({
     },
     removeExporter: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload
-      console.log(id)
+
       state.exporters = state.exporters.filter((i) => i._id !== id);
     },
   },

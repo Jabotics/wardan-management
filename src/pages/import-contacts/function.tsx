@@ -2,7 +2,8 @@ import { Data } from './schema'
 import { useState } from 'react'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
-import { useRemoveImporterMutation } from '@/store/actions/slices/importersSlice'
+import { removeImporter, useRemoveImporterMutation } from '@/store/actions/slices/importersSlice'
+import { useAppDispatch } from '@/store/hooks'
 
 export const Address = ({ data }: { data: Data }) => {
   return (
@@ -17,6 +18,8 @@ export const GSTNumber = ({ data }: { data: Data }) => {
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {
+  const dispatch = useAppDispatch();
+
   const [Delete] = useRemoveImporterMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -32,6 +35,7 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
         if (res.status === 'fail') throw new Error(res.message)
 
+        dispatch(removeImporter({ id: data._id }))
         setDeleteOpen(false)
       } catch (error) {
         console.log(error)

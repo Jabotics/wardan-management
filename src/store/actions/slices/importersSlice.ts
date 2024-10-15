@@ -107,7 +107,7 @@ export const ImportersSlice = createSlice({
     },
     removeImporter: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload
-      console.log(id)
+
       state.importers = state.importers.filter((i) => i._id !== id);
     },
   },
