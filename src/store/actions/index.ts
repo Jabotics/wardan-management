@@ -8,6 +8,7 @@ import purchseSlice, { purchaseApi } from "./slices/purchaseSlice"
 import otherMaterialsSlice, { otherMaterialsApi } from "./slices/otherMaterialsSlice"
 import rawStockSlice, { rawStockApi } from "./slices/rawStockSlice"
 import wastageSlice, { wastageApi } from "./slices/wastageSlice"
+import readyProductStocksSlice, { readyProductStocksApi } from "./slices/readyProductStockSlice"
 
 export {
   appSlice,
@@ -29,4 +30,6 @@ export {
   rawStockApi,
   wastageSlice,
   wastageApi,
+  readyProductStocksSlice,
+  readyProductStocksApi,
 }
