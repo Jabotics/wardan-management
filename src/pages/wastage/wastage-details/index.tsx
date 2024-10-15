@@ -1,34 +1,41 @@
-import EnhancedTable from "@/components/table"
-import { useMemo, useState } from "react"
-import { useTranslation } from "react-i18next"
-import { createData, Data, headCells } from "./schema"
-import { useGetAllWastageQuery } from "@/store/actions/slices/wastageSlice"
-import { useAppSelector } from "@/store/hooks"
-import { RootState } from "@/store"
-import { TableDataFilters } from "@/interfaces"
-import { ImportContactsTableConfig } from "./settings.constant"
+import EnhancedTable from '@/components/table'
+import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { createData, Data, headCells } from './schema'
+import { useGetAllWastageQuery } from '@/store/actions/slices/wastageSlice'
+import { useAppSelector } from '@/store/hooks'
+import { RootState } from '@/store'
+import { TableDataFilters } from '@/interfaces'
+// import { ImportContactsTableConfig } from './settings.constant'
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
 
   const [search, setSearch] = useState<string>('')
 
-  useGetAllWastageQuery({})
-  const { rawMaterialWastage } = useAppSelector((state: RootState) => state.wastage)
+  const { wastageTablesShow } = useAppSelector((state: RootState) => state.app)
 
-  const rows = useMemo(
-    () =>
-      rawMaterialWastage?.map((item) =>
-        createData(
-          item._id,
-          item.qty,
-          item.unit,
-          item.product,
-        )
-      ) || [],
-    [rawMaterialWastage]
+  const { isLoading } = useGetAllWastageQuery({
+    category: wastageTablesShow
+  }, {
+    skip: !wastageTablesShow,
+    refetchOnMountOrArgChange: true
+  })
+  const { rawMaterialWastage, packagingMaterialWastage } = useAppSelector(
+    (state: RootState) => state.wastage
   )
+
+  const rows = useMemo(() => {
+    const wastageData =
+      wastageTablesShow === 'RAW_MATERIAL'
+        ? rawMaterialWastage
+        : packagingMaterialWastage;
   
+    return !isLoading && Array.isArray(wastageData) 
+      ? wastageData.map((item) => createData(item._id, item.category, item.items, item.createdAt))
+      : []; 
+  }, [isLoading, packagingMaterialWastage, rawMaterialWastage, wastageTablesShow]);
+
   const dataFilters: TableDataFilters = useMemo(
     () => ({
       searchBy: {
@@ -38,15 +45,19 @@ const RawMaterialStocks = () => {
     }),
     [search]
   )
-  
+
   return (
     <EnhancedTable<Data>
       data={rows}
       headCells={headCells}
-      title={t('Raw Material Wastage')}
+      title={
+        wastageTablesShow === 'RAW_MATERIAL'
+          ? t('Raw Material Wastage')
+          : t('Packaging Product Wastage')
+      }
       dense
       rowHeight={65}
-      config={ImportContactsTableConfig}
+      // config={ImportContactsTableConfig}
       dataFilters={{ ...dataFilters }}
     />
   )

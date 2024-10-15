@@ -12,6 +12,7 @@ import { formSchema } from './form-schema'
 import { toast } from 'sonner'
 import {
   Fragment,
+  useEffect,
   // useEffect,
   useState,
 } from 'react'
@@ -72,12 +73,12 @@ const FormComponent = ({
       } = {
         category: formData.category as 'RAW_MATERIAL',
         items: formData.items.map((i) => ({
-          ...i, 
-          unit: 'kg', 
+          ...i,
+          unit: 'kg',
         })),
       }
 
-      console.log(payload)
+      console.log(formData.category)
 
       try {
         const res = await Add(payload).unwrap()
@@ -98,7 +99,13 @@ const FormComponent = ({
     })
   }
 
-  // useEffect(() => {}, [data, form])
+  useEffect(() => {
+    if (label) {
+      form.setValue('category', label)
+    } else {
+      form.setValue('category', '')
+    }
+  }, [form, label])
 
   return (
     <Fragment>
@@ -107,10 +114,10 @@ const FormComponent = ({
           <form
             action=''
             onSubmit={form.handleSubmit(onSubmit)}
-            className='flex h-full w-full flex-col'
+            className='flex w-full flex-1 flex-col'
           >
-            <div className='mb-5 h-[50vh] w-full overflow-y-auto overflow-x-hidden'>
-              {fields.map((_, index) => (
+            <div className='mb-5 h-96 w-full overflow-y-auto overflow-x-hidden'>
+              {fields?.map((_, index) => (
                 <div
                   key={index}
                   className='mb-5 rounded-3xl bg-amber-800/20 px-4 py-5'
@@ -122,7 +129,7 @@ const FormComponent = ({
                       <FormItem>
                         <FormLabel>Raw Material</FormLabel>
                         <FormControl>
-                          {products && products.length > 0 ? (
+                          {products && products?.length > 0 ? (
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
@@ -131,20 +138,20 @@ const FormComponent = ({
                                 <SelectValue placeholder='Select a Unit' />
                               </SelectTrigger>
                               <SelectContent>
-                                {products.map((item, index) => {
+                                {products?.map((item, index) => {
                                   return (
                                     <SelectItem
-                                      value={item._id || ''}
+                                      value={item?._id || ''}
                                       key={index}
                                     >
-                                      {item.name}
+                                      {item?.name}
                                     </SelectItem>
                                   )
                                 })}
                               </SelectContent>
                             </Select>
                           ) : (
-                            <div className='text-sm text-gray-300'>
+                            <div className='text-sm text-gray-600'>
                               TRY ADDING MATERIAL: Error in getting your other
                               materials
                             </div>
@@ -214,7 +221,7 @@ const FormComponent = ({
                 className='w-full text-black'
                 disabled={isSubmitting}
               >
-                Add Invoice
+                Add More
               </Button>
               <Button
                 type='submit'

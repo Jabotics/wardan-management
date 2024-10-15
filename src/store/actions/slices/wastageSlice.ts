@@ -80,8 +80,8 @@ interface InitialState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | undefined
 
-  rawMaterialWastage: IWastage['items'] | undefined
-  wastageCategories: string[]
+  rawMaterialWastage: IWastage[] | undefined
+  packagingMaterialWastage: IWastage[] | undefined
 }
 
 const initialState: InitialState = {
@@ -91,7 +91,7 @@ const initialState: InitialState = {
   error: undefined,
 
   rawMaterialWastage: undefined,
-  wastageCategories: [],
+  packagingMaterialWastage: undefined,
 }
 
 export const WastageSlice = createSlice({
@@ -108,15 +108,23 @@ export const WastageSlice = createSlice({
         (state, action) => {
           state.status = 'succeeded'
 
-          const allWastage = action.payload.data.records.filter(
-            (i) => i.category === 'RAW_MATERIAL'
-          )[0].items
-          const allCategories = action.payload.data.records.map((i) =>
-            String(i.category)
+          const categorizedWastage = action.payload.data.records.reduce<{
+            rawMaterial: IWastage[]
+            packaging: IWastage[]
+          }>(
+            (acc, record) => {
+              if (record.category === 'RAW_MATERIAL') {
+                acc.rawMaterial.push(record)
+              } else if (record.category === 'PACKAGING_PRODUCT') {
+                acc.packaging.push(record)
+              }
+              return acc
+            },
+            { rawMaterial: [], packaging: [] }
           )
 
-          state.rawMaterialWastage = allWastage
-          state.wastageCategories = allCategories
+          state.rawMaterialWastage = categorizedWastage.rawMaterial
+          state.packagingMaterialWastage = categorizedWastage.packaging
         }
       )
       .addMatcher(
