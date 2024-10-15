@@ -1,5 +1,5 @@
 import { HeadCell, IReadyProductStock } from "@/interfaces";
-import { Price, Product, Quantity, Variant } from "./function";
+import { LastUpdated, Price, Product, Quantity, ToolbarAction, Variant } from "./function";
 
 export interface Data extends IReadyProductStock {}
 
@@ -17,6 +17,7 @@ export function createData(
   unit: string,
   mrp: number,
   count: number,
+  updatedAt: string
 ): Data {
   return {
     _id,
@@ -25,7 +26,8 @@ export function createData(
     qty,
     unit,
     mrp,
-    count
+    count,
+    updatedAt,
   }
 }
 
@@ -47,6 +49,14 @@ export const headCells: HeadCell<Data>[] = [
     body: Variant
   },
   {
+    id: 'updatedAt',
+    numeric: false,
+    disablePadding: true,
+    label: 'Last Updated',
+    type: 'custom',
+    body: LastUpdated
+  },
+  {
     id: 'mrp',
     numeric: false,
     disablePadding: true,
@@ -61,5 +71,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Quantity',
     type: 'custom',
     body: Quantity
+  },
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: ToolbarAction
   },
 ]

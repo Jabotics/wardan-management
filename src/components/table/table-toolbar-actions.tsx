@@ -16,12 +16,14 @@ const TableToolbarActions = ({
   setOpen,
   children,
   handleDelete,
+  isSubmitting
 }: {
   label: 'Edit' | 'Delete'
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   children?: React.ReactNode
   handleDelete?: () => Promise<void>
+  isSubmitting?: boolean
 }) => {
   return (
     <Dialog open={open}>
@@ -60,12 +62,14 @@ const TableToolbarActions = ({
           <DialogClose
             onClick={() => setOpen(false)}
             className={`w-full text-sm text-gray-400`}
+            disabled={isSubmitting}
           >
             Cancel
           </DialogClose>
           <DialogClose
             onClick={handleDelete}
             className={`w-full bg-gray-800 text-sm text-white ${label === 'Edit' ? 'hidden' : 'inline-block py-2'}`}
+            disabled={isSubmitting}
           >
             Confirm
           </DialogClose>
