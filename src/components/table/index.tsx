@@ -30,17 +30,17 @@ import { MdCheckCircleOutline } from 'react-icons/md'
 import { MdCheckCircle } from 'react-icons/md'
 import DeleteModal from '../shared/delete-modal'
 
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import IconButton from '@mui/material/IconButton'
+// import { BsThreeDotsVertical } from 'react-icons/bs'
+// import IconButton from '@mui/material/IconButton'
 
-import { LuChevronDown, LuChevronUp } from 'react-icons/lu'
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-import Collapse from '@mui/material/Collapse'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+// import { LuChevronDown, LuChevronUp } from 'react-icons/lu'
+// import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+// import Collapse from '@mui/material/Collapse'
+// import Menu from '@mui/material/Menu'
+// import MenuItem from '@mui/material/MenuItem'
 
 // import { MdEdit } from 'react-icons/md'
-import { RiDeleteBin6Fill } from 'react-icons/ri'
+// import { RiDeleteBin6Fill } from 'react-icons/ri'
 import { Dialog, DialogTrigger } from '../ui/dialog'
 
 export default function EnhancedTable<T extends { [key: string]: any }>({
@@ -49,7 +49,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   title,
   dense: defaultDense,
   rowHeight,
-  ExpandedBody,
+  // ExpandedBody,
   config,
   dataFilters,
 }: EnhancedTableProps<T>) {
@@ -63,22 +63,22 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
   const [dense, setDense] = React.useState(false)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
-  const [expandedRows, setExpandedRows] = React.useState<number[]>([])
+  // const [expandedRows, setExpandedRows] = React.useState<number[]>([])
 
   const [toDelete, setToDelete] = React.useState<boolean>(false)
   
   const { ModifyComponent } = config || {}
   const [openDialog, setOpenDialog] = React.useState<boolean>(false)
 
-  const [anchorActionEl, setAnchorActionEl] =
-    React.useState<null | HTMLElement>(null)
-  const open = Boolean(anchorActionEl)
-  const handleActionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorActionEl(event.currentTarget)
-  }
-  const handleActionClose = () => {
-    setAnchorActionEl(null)
-  }
+  // const [anchorActionEl, setAnchorActionEl] =
+  //   React.useState<null | HTMLElement>(null)
+  // const open = Boolean(anchorActionEl)
+  // const handleActionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   setAnchorActionEl(event.currentTarget)
+  // }
+  // const handleActionClose = () => {
+  //   setAnchorActionEl(null)
+  // }
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -148,13 +148,13 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
     [order, orderBy, page, rowsPerPage, data]
   )
 
-  const handleExpandClick = (index: number) => {
-    setExpandedRows((prevExpandedRows) =>
-      prevExpandedRows.includes(index)
-        ? prevExpandedRows.filter((row) => row !== index)
-        : [...prevExpandedRows, index]
-    )
-  }
+  // const handleExpandClick = (index: number) => {
+  //   setExpandedRows((prevExpandedRows) =>
+  //     prevExpandedRows.includes(index)
+  //       ? prevExpandedRows.filter((row) => row !== index)
+  //       : [...prevExpandedRows, index]
+  //   )
+  // }
 
   return (
     <>
@@ -222,7 +222,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
               <TableBody>
                 {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(index)
-                  const isExpanded = expandedRows.includes(index)
+                  // const isExpanded = expandedRows.includes(index)
                   const labelId = `enhanced-table-checkbox-${index}`
 
                   return (
@@ -288,7 +288,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             height: 'inherit',
                           }}
                         >
-                          {ExpandedBody && (
+                          {/* {ExpandedBody && (
                             <IconButton
                               aria-label='expand row'
                               size='small'
@@ -352,19 +352,10 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                                   <ModifyComponent data={row} setClose={setOpenDialog} />
                                 </Dialog>
                               ) : null}
-                              {/* <MenuItem
-                                onClick={handleActionClose}
-                                className='flex items-center gap-2'
-                              >
-                                <span>
-                                  <MdEdit />
-                                </span>
-                                My account
-                              </MenuItem> */}
                               <MenuItem
                                 onClick={handleActionClose}
                                 className='flex items-center gap-2'
-                                sx={{ color: 'red' }} // Apply lighter font weight
+                                sx={{ color: 'red' }} 
                               >
                                 <span>
                                   <RiDeleteBin6Fill />
@@ -372,10 +363,10 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                                 Delete
                               </MenuItem>
                             </Menu>
-                          </div>
+                          </div> */}
                         </TableCell>
                       </TableRow>
-                      {ExpandedBody && (
+                      {/* {ExpandedBody && (
                         <TableRow>
                           <TableCell
                             style={{ paddingBottom: 0, paddingTop: 0 }}
@@ -392,7 +383,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
                             </Collapse>
                           </TableCell>
                         </TableRow>
-                      )}
+                      )} */}
                     </React.Fragment>
                   )
                 })}

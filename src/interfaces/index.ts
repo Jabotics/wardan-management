@@ -16,6 +16,7 @@ import { IOtherMaterial } from './data/otherMaterials'
 import { IWastage } from './data/wastage'
 
 import { IRawMaterialStock, IPackagingProductStock, IOtherStock } from './data/rawStock'
+import { IReadyProductStock } from './data/readyProductStock'
 
 export type {
   // app
@@ -40,4 +41,6 @@ export type {
   IRawMaterialStock,
   IPackagingProductStock,
   IOtherStock,
+
+  IReadyProductStock,
 }

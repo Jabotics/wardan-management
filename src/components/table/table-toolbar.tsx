@@ -12,9 +12,6 @@ import Checkbox from '@mui/material/Checkbox'
 import ListItemText from '@mui/material/ListItemText'
 import { Button } from '../custom/button'
 
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
-
-import FilterAltIcon from '@mui/icons-material/FilterAlt'
 import { PiExportBold } from 'react-icons/pi'
 import { StyledMenu } from './style'
 import { EnhancedTableToolbarProps } from '@/interfaces'
@@ -223,71 +220,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           </div>
         )}
 
-        <span>
-          <Button
-            id='demo-customized-button'
-            aria-controls={columnsOpen ? 'demo-customized-menu' : undefined}
-            aria-haspopup='true'
-            aria-expanded={columnsOpen ? 'true' : undefined}
-            variant='ghost'
-            // disableElevation
-            onClick={handleColumnsClickColumns}
-            // endIcon={<KeyboardArrowDownIcon />}
-
-            className='flex h-fit items-center p-1 text-[13px] font-bold'
-          >
-            <RemoveRedEyeIcon className='mr-1' fontSize='small' />
-            Columns
-          </Button>
-          <StyledMenu
-            id='columns'
-            MenuListProps={{
-              'aria-labelledby': 'columns',
-            }}
-            anchorEl={columnsAnchorEl}
-            open={columnsOpen}
-            onClose={handleColumnsClose}
-          >
-            <MenuItem onClick={handleColumnsClose} disableRipple>
-              {/* <EditIcon /> */}
-              Edit
-            </MenuItem>
-          </StyledMenu>
-        </span>
-
-        <span>
-          <Button
-            id='demo-customized-button'
-            aria-controls={filtersOpen ? 'demo-customized-menu' : undefined}
-            aria-haspopup='true'
-            aria-expanded={filtersOpen ? 'true' : undefined}
-            variant='ghost'
-            // disableElevation
-            onClick={handleFiltersClickColumns}
-            // endIcon={<KeyboardArrowDownIcon />}
-
-            className='flex h-fit items-center p-1 text-[13px] font-bold'
-          >
-            <FilterAltIcon fontSize='small' />
-            Filters
-          </Button>
-          <StyledMenu
-            id='filters'
-            MenuListProps={{
-              'aria-labelledby': 'filters',
-            }}
-            anchorEl={filtersAnchorEl}
-            open={filtersOpen}
-            onClose={handleFiltersClose}
-          >
-            <MenuItem onClick={handleFiltersClose} disableRipple>
-              {/* <EditIcon /> */}
-              Edit
-            </MenuItem>
-          </StyledMenu>
-        </span>
-
-        <span>
+        <span className='hidden'>
           <Button
             id='demo-customized-button'
             aria-controls={exportOpen ? 'demo-customized-menu' : undefined}

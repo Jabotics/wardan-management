@@ -40,4 +40,5 @@ export interface IWastage {
   _id: string;
   category: Category;
   items: IItem[];
+  createdAt: string;
 }

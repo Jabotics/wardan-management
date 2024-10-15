@@ -1,0 +1,65 @@
+import { HeadCell, IReadyProductStock } from "@/interfaces";
+import { Price, Product, Quantity, Variant } from "./function";
+
+export interface Data extends IReadyProductStock {}
+
+export function createData(
+  _id: string,
+  product: {
+    _id: string,
+    name: string,
+  },
+  variant: {
+    _id: string,
+    name: string,
+  },
+  qty: number,
+  unit: string,
+  mrp: number,
+  count: number,
+): Data {
+  return {
+    _id,
+    product,
+    variant,
+    qty,
+    unit,
+    mrp,
+    count
+  }
+}
+
+export const headCells: HeadCell<Data>[] = [
+  {
+    id: 'product',
+    numeric: false,
+    disablePadding: true,
+    label: 'Product',
+    type: 'custom',
+    body: Product
+  },
+  {
+    id: 'variant',
+    numeric: false,
+    disablePadding: true,
+    label: 'Variant',
+    type: 'custom',
+    body: Variant
+  },
+  {
+    id: 'mrp',
+    numeric: false,
+    disablePadding: true,
+    label: 'M.R.P',
+    type: 'custom',
+    body: Price
+  },
+  {
+    id: 'qty',
+    numeric: false,
+    disablePadding: true,
+    label: 'Quantity',
+    type: 'custom',
+    body: Quantity
+  },
+]

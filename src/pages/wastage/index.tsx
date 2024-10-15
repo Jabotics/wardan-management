@@ -4,16 +4,20 @@ import WastageDetails from './wastage-details'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useRef, useEffect, useState } from 'react'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import ModifyWasteMaterial from './wastage-details/@modify-data'
 
 const WastagePage = () => {
   const tableRef = useRef<HTMLDivElement | null>(null)
   const { wastageTablesShow } = useAppSelector((state: RootState) => state.app)
   const [shouldScroll, setShouldScroll] = useState(false)
 
+  const [open, setOpen] = useState(false)
+
   useEffect(() => {
     if (shouldScroll && tableRef.current) {
       tableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setShouldScroll(false) 
+      setShouldScroll(false)
     }
   }, [shouldScroll])
 
@@ -33,10 +37,21 @@ const WastagePage = () => {
               />
 
               <div className='flex h-16 items-center justify-end border border-transparent border-t-indigo-300 px-3'>
-                <div className='flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-black px-10 py-1 text-white'>
-                  <FaPlus />
-                  Add New Category
-                </div>
+                <Dialog open={open}>
+                  <DialogTrigger asChild>
+                    <div
+                      onClick={() => {
+                        setOpen(true)
+                      }}
+                      className='flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-black px-10 py-1 text-white'
+                    >
+                      <FaPlus />
+                      Add New Wastage
+                    </div>
+                  </DialogTrigger>
+
+                  <ModifyWasteMaterial setClose={setOpen} />
+                </Dialog>
               </div>
             </div>
           </div>

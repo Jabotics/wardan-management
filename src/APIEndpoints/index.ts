@@ -3,6 +3,7 @@ import { otherMaterialsEndpoints } from "./endpoints/otherMaterial";
 import { productsEndpoints } from "./endpoints/product";
 import { purchaseEndpoints } from "./endpoints/purchase";
 import { rawStockEndpoints } from "./endpoints/rawStock";
+import { readyProductStockEndpoints } from "./endpoints/readyProductStock";
 import { sellerEndpoints } from "./endpoints/seller";
 import { variantsEndpoints } from "./endpoints/variant";
 import { wastageEndpoints } from "./endpoints/wastage";
@@ -34,4 +35,7 @@ export const APIEndPoints = {
 
   // WASTAGE
   ...wastageEndpoints,
+
+  // READY PRODUCT STOCK
+  ...readyProductStockEndpoints,
 }

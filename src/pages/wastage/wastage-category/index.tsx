@@ -1,8 +1,7 @@
 import { transformString } from '@/lib/utils';
-import { RootState } from '@/store';
 import { setWastageTableShow } from '@/store/actions/slices/appSlice';
 import { useGetAllWastageQuery } from '@/store/actions/slices/wastageSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppDispatch } from '@/store/hooks';
 import { forwardRef, MutableRefObject } from 'react';
 
 interface WastageCategoryProps {
@@ -14,7 +13,6 @@ const WastageCategory = forwardRef<HTMLDivElement, WastageCategoryProps>(
     const dispatch = useAppDispatch();
 
     useGetAllWastageQuery({});
-    const { wastageCategories } = useAppSelector((state: RootState) => state.wastage);
 
     const handleCheckDetailsClick = (item: string) => {
       dispatch(setWastageTableShow(item as 'RAW_MATERIAL'));
@@ -27,9 +25,8 @@ const WastageCategory = forwardRef<HTMLDivElement, WastageCategoryProps>(
 
     return (
       <div className='w-full flex-1 py-5'>
-        {wastageCategories && wastageCategories.length > 0 ? (
           <div className='flex h-full items-center gap-3 overflow-x-auto overflow-y-hidden px-3'>
-            {wastageCategories.map((item, index) => (
+            {['RAW_MATERIAL', 'PACKAGING_PRODUCT'].map((item, index) => (
               <div key={index} className='flex h-full w-60 shrink-0 flex-col items-center justify-center rounded-3xl border border-indigo-300 bg-indigo-200'>
                 <h4 className='text-xl'>{transformString(item)}</h4>
                 <p
@@ -41,7 +38,6 @@ const WastageCategory = forwardRef<HTMLDivElement, WastageCategoryProps>(
               </div>
             ))}
           </div>
-        ) : null}
       </div>
     );
   }

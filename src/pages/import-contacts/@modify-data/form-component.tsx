@@ -11,33 +11,36 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { formSchema } from './form-schema'
-import { toast } from 'sonner'
-import { Fragment, useEffect, useState } from 'react'
+// import { toast } from 'sonner'
+import {
+  Fragment,
+  // useEffect,
+  // useState
+} from 'react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { GSTValidation } from '@/lib/utils'
 import {
   useAddImporterMutation,
   useEditImporterMutation,
-  useRemoveImporterMutation,
 } from '@/store/actions/slices/importersSlice'
 import { Button } from '@/components/ui/button'
 
 const FormComponent = ({
   data,
-  toEdit,
+  isSubmitting,
+  // toEdit,
   setOpen,
+  setIsSubmitting,
 }: {
   toEdit: boolean
+  isSubmitting: boolean
   data?: ISeller
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [Add] = useAddImporterMutation()
   const [Update] = useEditImporterMutation()
-  const [Delete] = useRemoveImporterMutation()
-
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
-  const [toStartEdit, setToStartEdit] = useState<boolean>(data ? true : false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,53 +51,36 @@ const FormComponent = ({
       phone: data?.phone ?? '',
     },
   })
-
-  async function handleDelete() {
-    if (data && data._id) {
-      setIsSubmitting(true)
-      try {
-        const res = await Delete({ id: data._id }).unwrap()
-
-        if (res.status === 'fail') throw new Error(res.message)
-      } catch (error) {
-        console.log(error)
-      } finally {
-        setIsSubmitting(false)
-      }
-    }
-  }
+  // console.log(setIsSubmitting)
 
   async function handleModifyProducts(formData: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
+    // setIsSubmitting(true)
 
-    // const payload: {
-    //   name: string
-    //   type: 'WHOLE' | 'MIXTURE'
-    //   ingredients?: string[]
-    //   _id?: string
-    //   is_active?: boolean
-    // } = {
-    //   name: formData.name,
-    //   type: formData.type as 'WHOLE' | 'MIXTURE',
-    //   ingredients: formData.ingredients?.map((ingredient) => ingredient._id),
-    // }
-
-    // if (formData.type === 'WHOLE') delete payload.ingredients
+    const payload: {
+      name: string
+      address: string
+      gst_number: string
+      _id?: string
+      phone: string
+    } = {
+      name: formData.name,
+      address: formData.address,
+      gst_number: formData.gst_number,
+      phone: formData.phone,
+    }
 
     try {
-      // if (data) {
-      //   payload._id = data[0]._id
-      //   payload.is_active = data[0].is_active
+      // setIsSubmitting(true)
+      if (data) {
+        payload._id = data._id
 
-      //   const res = await Update(payload).unwrap()
-      //   if (res.status === 'fail') throw new Error(res.message)
-      // } else {
-      //   console.log(payload)
-      //   const res = await Add(payload).unwrap()
-      //   if (res.status === 'fail') throw new Error(res.message)
-      // }
+        const res = await Update(payload as ISeller).unwrap()
+        if (res.status === 'fail') throw new Error(res.message)
+      } else {
+        const res = await Add(payload).unwrap()
+        if (res.status === 'fail') throw new Error(res.message)
+      }
 
-      console.log('first')
       setOpen(false)
     } catch (error) {
       console.log(error)
@@ -103,21 +89,12 @@ const FormComponent = ({
     }
   }
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    toast.promise(handleModifyProducts(data), {
-      loading: `${!toEdit ? 'Adding' : 'Updating '} Information...`,
-    })
-  }
-
-  // useEffect(() => {}, [data, form])
-
-  console.log(toStartEdit)
   return (
     <Fragment>
       <Form {...form}>
         <form
           action=''
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleModifyProducts)}
           className='h-full w-full'
         >
           <div className='flex w-full flex-1 flex-col gap-4'>
@@ -129,7 +106,6 @@ const FormComponent = ({
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={toStartEdit}
                       placeholder='Enter name'
                       {...field}
                       className='h-10'
@@ -144,11 +120,10 @@ const FormComponent = ({
               control={form.control}
               name='address'
               render={({ field }) => (
-                <FormItem className='flex w-full h-32 flex-col items-start gap-1 space-y-1'>
+                <FormItem className='flex h-32 w-full flex-col items-start gap-1 space-y-1'>
                   <FormLabel>Address</FormLabel>
                   <FormControl>
                     <Textarea
-                      disabled={toStartEdit}
                       placeholder='Enter Address'
                       {...field}
                       className='h-10 max-h-32'
@@ -168,7 +143,6 @@ const FormComponent = ({
                   <FormLabel>GST Number</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={toStartEdit}
                       placeholder='Enter GST Number'
                       {...field}
                       maxLength={15}
@@ -195,7 +169,6 @@ const FormComponent = ({
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={toStartEdit}
                       type='number'
                       placeholder='Enter phone number'
                       {...field}
@@ -216,15 +189,11 @@ const FormComponent = ({
           </div>
 
           <Button
-            className='h-10 w-full mt-5 rounded-xl bg-black text-gray-200 hover:bg-black/75'
+            className='mt-5 h-10 w-full rounded-xl bg-black text-gray-200 hover:bg-black/75'
             type='submit'
-            onClick={() => {
-              if (data) {
-                setToStartEdit(false)
-              }
-            }}
+            disabled={isSubmitting}
           >
-            {data ? !toStartEdit ? 'Submit' : 'Edit' : `Cancel`}
+            Submit
           </Button>
         </form>
       </Form>

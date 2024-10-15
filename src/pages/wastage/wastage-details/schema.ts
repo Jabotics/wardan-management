@@ -1,45 +1,37 @@
-import { HeadCell } from '@/interfaces'
-import { Product, Quantity } from './function';
+import { HeadCell, IWastage } from '@/interfaces'
+import { CreatedAt, Product } from './function';
 
-export interface Data {
-  _id: string
-  product: { _id: string; name: string }
-  qty: number
-  unit: string
-}
+export interface Data extends IWastage {}
 
 export function createData(
   _id: string,
-  qty: number,
-  unit: string,
-  product: {
-    _id: string
-    name: string
-  }
+  category: IWastage['category'],
+  items: IWastage['items'],
+  createdAt: string
 ): Data {
   return {
     _id,
-    product,
-    qty,
-    unit,
+    category,
+    items,
+    createdAt
   }
 }
 
 export const headCells: HeadCell<Data>[] = [
   {
-    id: 'product',
+    id: 'items',
     numeric: false,
     disablePadding: true,
-    label: 'Product',
+    label: 'Items',
     type: 'custom',
     body: Product,
   },
   {
-    id: 'qty',
+    id: 'createdAt',
     numeric: false,
     disablePadding: true,
-    label: 'Quantity',
+    label: '',
     type: 'custom',
-    body: Quantity,
+    body: CreatedAt,
   },
 ]
