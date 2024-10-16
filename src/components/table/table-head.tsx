@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
+// import Checkbox from '@mui/material/Checkbox'
 import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -8,18 +8,18 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { EnhancedTableHeadProps } from '@/interfaces'
 
-import { FaRegSquareCheck, FaSquareCheck } from 'react-icons/fa6'
-import { FaMinusSquare } from 'react-icons/fa'
+// import { FaRegSquareCheck, FaSquareCheck } from 'react-icons/fa6'
+// import { FaMinusSquare } from 'react-icons/fa'
 
 export function EnhancedTableHead<T extends { [key: string]: string | number }>(
   props: EnhancedTableHeadProps<T>
 ) {
   const {
-    onSelectAllClick,
+    // onSelectAllClick,
     order,
     orderBy,
-    numSelected,
-    rowCount,
+    // numSelected,
+    // rowCount,
     onRequestSort,
     headCells,
   } = props
@@ -32,7 +32,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
     <TableHead>
       <TableRow>
         <TableCell padding='checkbox' sx={{ borderBottom: 'none' }}>
-          <Checkbox
+          {/* <Checkbox
             color='primary'
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -41,7 +41,7 @@ export function EnhancedTableHead<T extends { [key: string]: string | number }>(
             icon={<FaRegSquareCheck />}
             checkedIcon={<FaSquareCheck />}
             indeterminateIcon={<FaMinusSquare />}
-          />
+          /> */}
         </TableCell>
         {headCells.map((headCell) => {
 

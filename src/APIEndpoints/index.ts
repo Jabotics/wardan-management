@@ -1,4 +1,5 @@
 import { buyerEndpoints } from "./endpoints/buyer";
+import { exportEndpoints } from "./endpoints/export";
 import { otherMaterialsEndpoints } from "./endpoints/otherMaterial";
 import { productsEndpoints } from "./endpoints/product";
 import { purchaseEndpoints } from "./endpoints/purchase";
@@ -38,4 +39,7 @@ export const APIEndPoints = {
 
   // READY PRODUCT STOCK
   ...readyProductStockEndpoints,
+
+  // EXPORT
+  ...exportEndpoints,
 }

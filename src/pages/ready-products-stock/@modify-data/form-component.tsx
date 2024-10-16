@@ -28,9 +28,9 @@ import {
   useAddReadyProductMutation,
 } from '@/store/actions/slices/readyProductStockSlice'
 import { Button } from '@/components/ui/button'
-import { 
-  // useAppDispatch, 
-  useAppSelector 
+import {
+  // useAppDispatch,
+  useAppSelector,
 } from '@/store/hooks'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { RootState } from '@/store'
@@ -297,7 +297,10 @@ const FormComponent = ({
                               const netWeight =
                                 (weight / 1000) * Number(enteredCount)
 
-                              form.setValue('qty', netWeight)
+                              form.setValue(
+                                'qty',
+                                parseFloat(netWeight.toPrecision(4))
+                              )
                             }}
                             autoComplete='off'
                           />
