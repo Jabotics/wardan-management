@@ -187,9 +187,9 @@ const OtherMaterial = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value='kg'>kg</SelectItem>
-                          <SelectItem value='gms'>gms</SelectItem>
+                          {/* <SelectItem value='gms'>gms</SelectItem>
                           <SelectItem value='ton'>ton</SelectItem>
-                          <SelectItem value='pcs'>pcs</SelectItem>
+                          <SelectItem value='pcs'>pcs</SelectItem> */}
                         </SelectContent>
                       </Select>
                     </FormControl>

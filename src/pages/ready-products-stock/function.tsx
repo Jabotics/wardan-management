@@ -41,6 +41,7 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
   const [Delete] = useRemoveReadyProductMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deleteText, setDeleteText] = useState<string>('')
 
   const [deleteOpen, setDeleteOpen] = useState(false)
 
@@ -64,8 +65,9 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
   return (
     <div className='flex items-center justify-center gap-2'>
-
       <TableToolbarActions
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         label='Delete'

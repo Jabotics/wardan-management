@@ -33,6 +33,7 @@ export const wastageApi = createApi({
       }
     },
   }),
+  tagTypes: ['Wastage'],
   endpoints: (builder) => ({
     getAllWastage: builder.query<IncomingData, QueryParams>({
       query: (params) => {
@@ -42,6 +43,7 @@ export const wastageApi = createApi({
           params: getCustomParams(params),
         }
       },
+      providesTags: ['Wastage']
     }),
 
     addWastage: builder.mutation<
@@ -60,6 +62,7 @@ export const wastageApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Wastage']
     }),
 
     removeWastage: builder.mutation<Partial<IncomingData>, { id: string }>({
@@ -70,6 +73,7 @@ export const wastageApi = createApi({
           method: 'DELETE',
         }
       },
+      invalidatesTags: ['Wastage']
     }),
   }),
 })
