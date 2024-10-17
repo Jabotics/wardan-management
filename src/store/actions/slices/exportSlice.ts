@@ -4,6 +4,7 @@ import {
   IAddSellItem,
   ISell,
   ISellItem,
+  IUpdateSellItem,
   TablePaginationConfig,
 } from '@/interfaces'
 import { getCustomParams } from '@/lib/utils'
@@ -90,7 +91,7 @@ export const exportsApi = createApi({
         const { ...rest } = body
         return {
           url: APIEndPoints.add_sell_item,
-          method: 'POST',
+          method: 'PUT',
           body: rest,
         }
       },
@@ -129,6 +130,18 @@ export const exportsApi = createApi({
         }
       },
       invalidatesTags: ['Sell']
+    }),
+
+    updateSellItem: builder.mutation<IncomingData, IUpdateSellItem>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.update_sell_item,
+          method: 'PUT',
+          body: rest
+        }
+      },
+      invalidatesTags: ['SellItems']
     })
   }),
 })
@@ -207,5 +220,6 @@ export const {
   useRemoveSellItemMutation,
   useUpdateSellMutation,
   useRemoveSellMutation,
+  useUpdateSellItemMutation
 } = exportsApi
 export const { setSellAddInfo, setNewSell } = ExportSlice.actions

@@ -9,14 +9,14 @@ import { Data } from './schema'
 import { RiAlignItemLeftLine } from 'react-icons/ri'
 import { Tooltip } from '@mui/material'
 
-import PurchaseItemsComponent from './purchase-item'
+import SoldItemsComponent from './sold-item'
 import { useState } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 import { formatDateToIST } from '@/lib/utils'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import { useRemoveSellMutation } from '@/store/actions/slices/exportSlice'
 import FormComponent from './@modify-data/form-component'
-import ModifySellItems from './purchase-item/modify-sell-item'
+import ModifySellItems from './sold-item/modify-sell-item'
 
 export const TotalAmount = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
@@ -68,7 +68,12 @@ export const SoldItems = ({ data }: { data: Data }) => {
           <DialogDescription className='sr-only'>
             All the items sold in this event
           </DialogDescription>
-          <PurchaseItemsComponent sellId={data._id} setClose={setOpen} />
+          <SoldItemsComponent
+            sellId={data._id}
+            setClose={setOpen}
+            totalAmount={data.total_amount}
+            totalQty={data.total_qty}
+          />
 
           <Drawer open={drawerOpen}>
             <DrawerTrigger asChild>
@@ -81,7 +86,7 @@ export const SoldItems = ({ data }: { data: Data }) => {
             </DrawerTrigger>
 
             <DrawerContent className='absolute h-[50%] w-full bg-white'>
-              <ModifySellItems setOpen={setDrawerOpen} />
+              <ModifySellItems setOpen={setDrawerOpen} sellId={data._id} />
             </DrawerContent>
           </Drawer>
         </DialogContent>

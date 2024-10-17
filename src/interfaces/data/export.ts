@@ -84,9 +84,8 @@ export interface IUpdateSell {
  * Interface for updating a specific sell item.
  * It includes item details and the total amounts post-update.
  */
-export interface IUpdateSellItem extends ISellItemDetail {
-  _id: string; 
-  total_amount: number; 
+export interface IUpdateSellItem extends ISellItemDetail, ISellBase {
+  _id: string;
 }
 
 /**
