@@ -72,7 +72,7 @@ const PurchaseItems = ({
                 <div className='flex w-full flex-1 items-center justify-between px-3 py-2'>
                   <div className='flex h-full w-full flex-col items-start justify-start'>
                     <div className='text-lg'>
-                      {item?.product?.name + ' Powder'}
+                      {item.material?.name ?? item?.product?.name + ' Powder'}
                     </div>
                     <div className='text-sm text-gray-800/75'>
                       {mapToCategory[item?.category]}

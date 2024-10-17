@@ -18,7 +18,11 @@ export interface IPurchase {
 export interface IPurchaseItem {
   _id: string
   category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
-  product: {
+  product?: {
+    _id: string
+    name: string
+  }
+  material?: {
     _id: string
     name: string
   }
