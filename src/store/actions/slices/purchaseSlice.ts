@@ -84,15 +84,16 @@ export const purchaseApi = createApi({
       invalidatesTags: ['PurchaseEntry'],
     }),
 
-    addPurchaseItem: builder.mutation<ResponseType, IPurchaseItem>({
+    addPurchaseItem: builder.mutation<ResponseType, object>({
       query: (body) => {
         const { ...rest } = body
         return {
           url: APIEndPoints.add_purchase_item,
-          method: 'PUT',
+          method: 'POST',
           body: rest,
         }
       },
+      invalidatesTags: ['PurchaseItems']
     }),
 
     removePurchaseItem: builder.mutation<unknown, { id: string }>({
@@ -130,7 +131,7 @@ export const purchaseApi = createApi({
       invalidatesTags: ['PurchaseEntry'],
     }),
 
-    updatePurchaseItem: builder.mutation<IncomingData, IPurchaseItem>({
+    updatePurchaseItem: builder.mutation<IncomingData, object>({
       query: (body) => {
         const { ...rest } = body
         return {

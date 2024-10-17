@@ -15,6 +15,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
+import ModifyPurchaseItems from './purchase-item/modify-purchase-item'
 
 export const Total = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
@@ -54,6 +55,8 @@ export const Seller = ({ data }: { data: Data }) => {
 export const PurchaseItems = ({ data }: { data: Data }) => {
   const [open, setOpen] = useState<boolean>(false)
 
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
+
   return (
     <>
       <Dialog open={open}>
@@ -72,17 +75,26 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
           <DialogDescription className='sr-only'>
             All the items purchased in this purchase
           </DialogDescription>
-          <PurchaseItemsComponent purchaseId={data._id} setClose={setOpen} />
+          <PurchaseItemsComponent purchaseId={data._id} setClose={setOpen} category={data.category} />
 
-          <Drawer>
+          <Drawer open={drawerOpen}>
             <DrawerTrigger asChild>
-              <div className='flex h-10 w-full cursor-pointer items-center justify-center bg-black text-white'>
+              <div
+                onClick={() => setDrawerOpen(true)}
+                className='flex h-10 w-full cursor-pointer items-center justify-center bg-black text-white'
+              >
                 Add Another Item
               </div>
             </DrawerTrigger>
 
             <DrawerContent className='absolute h-[50%] w-full bg-white'>
-              hey
+              <div className='flex h-full w-full items-center justify-center'>
+                <ModifyPurchaseItems
+                  setOpen={setDrawerOpen}
+                  purchaseId={data._id}
+                  category={data.category}
+                />
+              </div>
             </DrawerContent>
           </Drawer>
         </DialogContent>
@@ -94,6 +106,7 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
 export const ToolbarAction = ({ data }: { data: Data }) => {
   const [Delete] = useRemovePurchaseMutation()
 
+  const [deleteText, setDeleteText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
   const [editOpen, setEditOpen] = useState(false)
@@ -103,11 +116,13 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
     if (data && data._id) {
       setIsSubmitting(true)
       try {
-        const res = await Delete({ id: data._id }).unwrap()
+        if (deleteText === 'delete') {
+          const res = await Delete({ id: data._id }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+          if (res.status === 'fail') throw new Error(res.message)
 
-        setDeleteOpen(false)
+          setDeleteOpen(false)
+        }
       } catch (error) {
         console.log(error)
       } finally {
@@ -118,7 +133,13 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
   return (
     <div className='flex items-center justify-center gap-2'>
-      <TableToolbarActions open={editOpen} setOpen={setEditOpen} label='Edit'>
+      <TableToolbarActions
+        open={editOpen}
+        setOpen={setEditOpen}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+        label='Edit'
+      >
         <FormComponent
           data={data}
           setOpen={setEditOpen}
@@ -133,6 +154,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
         label='Delete'
         handleDelete={handleDelete}
         isSubmitting={isSubmitting}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
       />
     </div>
   )

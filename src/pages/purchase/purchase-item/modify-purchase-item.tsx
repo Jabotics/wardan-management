@@ -1,10 +1,6 @@
-import { ISellItem } from '@/interfaces'
-import {
-  useAddSellItemMutation,
-  useUpdateSellItemMutation,
-} from '@/store/actions/slices/exportSlice'
+import { IPurchaseItem } from '@/interfaces'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import {
@@ -27,100 +23,165 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import {
+  useAddPurchaseItemMutation,
+  useUpdatePurchaseItemMutation,
+} from '@/store/actions/slices/purchaseSlice'
+import { useGetOtherMaterialsQuery } from '@/store/actions/slices/otherMaterialsSlice'
 
-const sellItemsSchema = z.object({
-  product: z.string(),
-  variant: z.string(),
+const purchaseItemsAddSchema = z.object({
+  product: z.string().optional(),
+  variant: z.string().optional(),
+  material: z.string().optional(),
   qty: z.number(),
   amount: z.number(),
 })
 
-const ModifySellItems = ({
+const purchaseItemsEditSchema = z.object({
+  _id: z.string(),
+  qty: z.number(),
+  amount: z.number(),
+})
+
+const ModifyPurchaseItems = ({
   setOpen,
   data,
-  sellId,
-  totalAmount,
-  totalQty,
+  purchaseId,
+  category,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
-  data?: ISellItem
-  sellId?: string
-  totalAmount?: number
-  totalQty?: number
+  data?: IPurchaseItem
+  purchaseId?: string
+  category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
 }) => {
-  const [Add] = useAddSellItemMutation()
-  const [Edit] = useUpdateSellItemMutation()
+  const [Add] = useAddPurchaseItemMutation()
+  const [Edit] = useUpdatePurchaseItemMutation()
+
+  const toEdit = Boolean(data)
 
   useGetProductsQuery({})
   const { products } = useAppSelector((state: RootState) => state.products)
+
+  useGetOtherMaterialsQuery({})
+  const { materials } = useAppSelector((state: RootState) => state.materials)
 
   useGetAllVariantsQuery({})
   const { variants } = useAppSelector((state: RootState) => state.variants)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
-  const form = useForm<z.infer<typeof sellItemsSchema>>({
-    resolver: zodResolver(sellItemsSchema),
+  const form = useForm<
+    z.infer<typeof purchaseItemsAddSchema | typeof purchaseItemsEditSchema>
+  >({
+    resolver: zodResolver(
+      toEdit ? purchaseItemsEditSchema : purchaseItemsAddSchema
+    ),
     defaultValues: {
-      product: data?.product?._id ?? '',
-      variant: data?.variant?._id ?? '',
-      qty: data?.qty ?? 0,
-      amount: data?.amount ?? 0,
+      ...(toEdit
+        ? {
+            _id: data?._id ?? '',
+            qty: data?.qty ?? 0,
+            amount: data?.amount ?? 0,
+          }
+        : {
+            product: data?.product?._id ?? '',
+            variant: data?.variant?._id ?? '',
+            material: data?.material?._id ?? '',
+            qty: data?.qty ?? 0,
+            amount: data?.amount ?? 0,
+          }),
     },
   })
 
-  async function handleModifySellItem(
-    formData: z.infer<typeof sellItemsSchema>
+  async function handleSubmit(
+    formData: z.infer<
+      typeof purchaseItemsAddSchema | typeof purchaseItemsEditSchema
+    >
   ) {
     setIsSubmitting(true)
 
-    const payload: {
-      product: string
-      variant: string
-      amount: number
-      qty: number
-      _id?: string
-    } = {
-      product: formData.product,
-      amount: formData.amount,
-      qty: formData.qty,
-      variant: formData.variant,
-    }
-
     try {
-      if (data) {
+      if (toEdit) {
         const res = await Edit({
-          _id: data._id,
-          amount: payload.amount,
-          qty: payload.qty,
-          total_qty: totalAmount ?? 0,
-          total_amount: totalQty ?? 0,
+          _id: data?._id,
+          amount: formData.amount,
+          qty: formData.qty,
         }).unwrap()
 
         if (res.status === 'fail') throw new Error(res.message)
       } else {
-        const res = await Add({
-          ...payload,
-          sellId: sellId ?? '',
-        }).unwrap()
+        const { product, variant, material, qty, amount } = formData as z.infer<
+          typeof purchaseItemsAddSchema
+        >
+
+        const payload: {
+          purchaseId: string
+          category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
+          unit: string
+          qty: number
+          amount: number
+          product?: string
+          variant?: string
+          material?: string
+        } = {
+          purchaseId: purchaseId ?? '',
+          category,
+          unit: 'kg',
+          qty: qty ?? 0,
+          amount: amount ?? 0,
+        }
+
+        if (product !== '') {
+          payload.product = product
+        }
+
+        if (variant !== '') {
+          payload.variant = variant
+        }
+
+        if (material !== '') {
+          payload.material = material
+        }
+
+        const res = await Add(payload).unwrap()
 
         if (res.status === 'fail') throw new Error(res.message)
       }
 
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      console.error('Submission error:', error)
+      // Optionally set an error message in state to show to the user
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  useEffect(() => {
+    if (data) {
+      if ('product' in data) {
+        form.setValue('product', data.product?._id)
+      } else {
+        form.setValue('product', '')
+      }
+      if ('variant' in data) {
+        form.setValue('variant', data.variant?._id)
+      } else {
+        form.setValue('variant', '')
+      }
+      if ('material' in data) {
+        form.setValue('material', data.material?._id)
+      } else {
+        form.setValue('material', '')
+      }
+    }
+  }, [data, form])
+
   return (
     <div className='m-auto'>
       <Form {...form}>
         <form
-          action=''
-          onSubmit={form.handleSubmit(handleModifySellItem)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className='flex h-fit min-h-[35vh] w-[35vw] flex-col items-center justify-between'
         >
           <div className='flex w-full flex-col gap-2'>
@@ -128,7 +189,9 @@ const ModifySellItems = ({
               control={form.control}
               name={`product`}
               render={({ field }) => (
-                <FormItem>
+                <FormItem
+                  className={`${category === 'OTHER' ? 'hidden' : 'block'}`}
+                >
                   <FormLabel>Products</FormLabel>
                   <FormControl>
                     {products && products.length > 0 ? (
@@ -137,16 +200,14 @@ const ModifySellItems = ({
                         value={field.value}
                       >
                         <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Unit' />
+                          <SelectValue placeholder='Select a Product' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item, index) => {
-                            return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
-                              </SelectItem>
-                            )
-                          })}
+                          {products.map((item) => (
+                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     ) : (
@@ -161,9 +222,47 @@ const ModifySellItems = ({
 
             <FormField
               control={form.control}
+              name={`material`}
+              render={({ field }) => (
+                <FormItem
+                  className={`${category !== 'OTHER' ? 'hidden' : 'block'}`}
+                >
+                  <FormLabel>Other Materials</FormLabel>
+                  <FormControl>
+                    {materials && materials.length > 0 ? (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
+                        <SelectTrigger className='h-10 w-full border-amber-950/25'>
+                          <SelectValue placeholder='Select a Material' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {materials.map((item) => (
+                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className='text-sm text-gray-300'>
+                        TRY ADDING OTHER MATERIALS: Error in getting your other
+                        materials
+                      </div>
+                    )}
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name={`variant`}
               render={({ field }) => (
-                <FormItem>
+                <FormItem
+                  className={`${category !== 'PACKAGING_PRODUCT' ? 'hidden' : 'block'}`}
+                >
                   <FormLabel>Variant</FormLabel>
                   <FormControl>
                     {variants && variants.length > 0 ? (
@@ -172,21 +271,20 @@ const ModifySellItems = ({
                         value={field.value}
                       >
                         <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Variant' />
+                          <SelectValue placeholder='Select a Packaging Product' />
                         </SelectTrigger>
                         <SelectContent>
-                          {variants.map((item, index) => {
-                            return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
-                              </SelectItem>
-                            )
-                          })}
+                          {variants.map((item) => (
+                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                              {item.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     ) : (
                       <div className='text-sm text-gray-300'>
-                        TRY ADDING VARIANT: Error in getting your variants
+                        TRY ADDING PACKAGING PRODUCT: Error in getting your
+                        packaging product
                       </div>
                     )}
                   </FormControl>
@@ -209,7 +307,7 @@ const ModifySellItems = ({
                         type='number'
                         onFocus={() => {
                           if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
+                            field.onChange('')
                           }
                         }}
                         onBlur={() => {
@@ -217,7 +315,7 @@ const ModifySellItems = ({
                             field.value === null ||
                             field.value === undefined
                           ) {
-                            field.onChange(0) // Revert to default value if empty
+                            field.onChange(0)
                           }
                         }}
                         onChange={(e) => {
@@ -267,7 +365,7 @@ const ModifySellItems = ({
             </div>
           </div>
 
-          <div className='flex items-center gap-2 w-full'>
+          <div className='flex w-full items-center gap-2'>
             <Button
               className='mt-5 h-10 w-full rounded-xl'
               type='button'
@@ -282,7 +380,7 @@ const ModifySellItems = ({
               type='submit'
               disabled={isSubmitting}
             >
-              {data !== undefined ? 'Edit' : `Add`}
+              {toEdit ? 'Edit' : 'Add'}
             </Button>
           </div>
         </form>
@@ -291,4 +389,4 @@ const ModifySellItems = ({
   )
 }
 
-export default ModifySellItems
+export default ModifyPurchaseItems

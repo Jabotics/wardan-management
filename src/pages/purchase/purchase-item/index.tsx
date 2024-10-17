@@ -5,6 +5,7 @@ import {
 import { useEffect, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import ModifyPurchaseItems from './modify-purchase-item'
 
 const mapToCategory = {
   RAW_MATERIAL: 'Raw Material',
@@ -15,9 +16,11 @@ const mapToCategory = {
 const PurchaseItems = ({
   purchaseId,
   setClose,
+  category,
 }: {
   purchaseId: string
   setClose: React.Dispatch<React.SetStateAction<boolean>>
+  category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
 }) => {
   const [Delete] = useRemovePurchaseItemMutation()
   const { data, isLoading, isError } = useGetPurchaseEntryItemsQuery(
@@ -100,7 +103,11 @@ const PurchaseItems = ({
                       </DrawerTrigger>
 
                       <DrawerContent className='absolute h-[50%] w-full bg-white'>
-                        hey
+                        <ModifyPurchaseItems
+                          setOpen={() => setEditingItemId(null)}
+                          data={item}
+                          category={category}
+                        />
                       </DrawerContent>
                     </Drawer>
                     <div

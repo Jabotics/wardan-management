@@ -99,6 +99,7 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
   const [Delete] = useRemoveSellMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deleteText, setDeleteText] = useState<string>('')
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -122,7 +123,13 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
   return (
     <div className='flex items-center justify-center gap-2'>
-      <TableToolbarActions open={editOpen} setOpen={setEditOpen} label='Edit'>
+      <TableToolbarActions
+        open={editOpen}
+        setOpen={setEditOpen}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+        label='Edit'
+      >
         <FormComponent
           data={data}
           setOpen={setEditOpen}
@@ -133,6 +140,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
       <TableToolbarActions
         open={deleteOpen}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
         setOpen={setDeleteOpen}
         label='Delete'
         handleDelete={handleDelete}
