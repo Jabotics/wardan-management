@@ -6,6 +6,7 @@ import { useGetReadyProductStockQuery } from "@/store/actions/slices/readyProduc
 import { useAppSelector } from "@/store/hooks"
 import { RootState } from "@/store"
 import { TableDataFilters } from "@/interfaces"
+import { ReadyProductStockTableConfig } from "./settings.constant"
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
@@ -26,6 +27,7 @@ const RawMaterialStocks = () => {
           item.unit,
           item.mrp,
           item.count,
+          item.updatedAt
         )
       ) || [],
     [readyProducts]
@@ -48,7 +50,7 @@ const RawMaterialStocks = () => {
       title={t('Ready Product Stock')}
       dense
       rowHeight={65}
-      // config={ImportContactsTableConfig}
+      config={ReadyProductStockTableConfig}
       dataFilters={{ ...dataFilters }}
     />
   )

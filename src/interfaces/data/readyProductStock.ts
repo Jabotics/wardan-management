@@ -12,4 +12,5 @@ export interface IReadyProductStock {
   unit: string
   mrp: number
   count: number
+  updatedAt: string
 }
