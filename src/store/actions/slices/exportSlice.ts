@@ -84,6 +84,7 @@ export const exportsApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Sell']
     }),
 
     addSellItem: builder.mutation<ResponseType, IAddSellItem>({
@@ -95,6 +96,7 @@ export const exportsApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['SellItems']
     }),
 
     removeSellItem: builder.mutation<unknown, { id: string }>({

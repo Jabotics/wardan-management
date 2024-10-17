@@ -15,7 +15,6 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
-import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
@@ -27,6 +26,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { useGetReadyProductStockQuery } from '@/store/actions/slices/readyProductStockSlice'
 
 const sellItemsSchema = z.object({
   product: z.string(),
@@ -51,8 +51,8 @@ const ModifySellItems = ({
   const [Add] = useAddSellItemMutation()
   const [Edit] = useUpdateSellItemMutation()
 
-  useGetProductsQuery({})
-  const { products } = useAppSelector((state: RootState) => state.products)
+  useGetReadyProductStockQuery({})
+  const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
 
   useGetAllVariantsQuery({})
   const { variants } = useAppSelector((state: RootState) => state.variants)
@@ -131,7 +131,7 @@ const ModifySellItems = ({
                 <FormItem>
                   <FormLabel>Products</FormLabel>
                   <FormControl>
-                    {products && products.length > 0 ? (
+                    {readyProducts && readyProducts.length > 0 ? (
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -140,10 +140,10 @@ const ModifySellItems = ({
                           <SelectValue placeholder='Select a Unit' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item, index) => {
+                          {readyProducts.map((item, index) => {
                             return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
+                              <SelectItem value={item.product._id || ''} key={index}>
+                                {item.product.name}
                               </SelectItem>
                             )
                           })}

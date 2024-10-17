@@ -13,7 +13,7 @@ const ModifySell = ({
 }) => {
 
   return (
-    <DialogContent className='flex h-[65vh] w-[65vw] flex-col rounded-xl'>
+    <DialogContent className='flex h-fit max-h-[65vh] w-[65vw] flex-col rounded-xl'>
       <div className='flex h-8 flex-col items-start justify-between'>
         <DialogTitle className='h-fit'>{`New Sell`}</DialogTitle>
         <DialogDescription className='sr-only h-0'>

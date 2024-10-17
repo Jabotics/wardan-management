@@ -23,12 +23,12 @@ import {
 } from '@/components/ui/select'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
-import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import {
   setNewSell,
   useAddSellMutation,
 } from '@/store/actions/slices/exportSlice'
+import { useGetReadyProductStockQuery } from '@/store/actions/slices/readyProductStockSlice'
 
 const SellItemForm = ({
   setOpen,
@@ -37,8 +37,8 @@ const SellItemForm = ({
 }) => {
   const dispatch = useAppDispatch()
 
-  useGetProductsQuery({})
-  const { products } = useAppSelector((state: RootState) => state.products)
+  useGetReadyProductStockQuery({})
+  const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
 
   useGetAllVariantsQuery({})
   const { variants } = useAppSelector((state: RootState) => state.variants)
@@ -103,6 +103,7 @@ const SellItemForm = ({
     }
   }
 
+  console.log(form.watch())
   return (
     <Form {...form}>
       <form
@@ -121,19 +122,19 @@ const SellItemForm = ({
                 <FormItem>
                   <FormLabel>Products</FormLabel>
                   <FormControl>
-                    {products && products.length > 0 ? (
+                    {readyProducts && readyProducts.length > 0 ? (
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
                       >
                         <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Unit' />
+                          <SelectValue placeholder='Select a Product' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item, index) => {
+                          {readyProducts.map((item, index) => {
                             return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
+                              <SelectItem value={item.product._id || ''} key={index}>
+                                {item.product.name}
                               </SelectItem>
                             )
                           })}
@@ -162,7 +163,7 @@ const SellItemForm = ({
                         value={field.value}
                       >
                         <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Unit' />
+                          <SelectValue placeholder='Select a Variant' />
                         </SelectTrigger>
                         <SelectContent>
                           {variants.map((item, index) => {
@@ -190,7 +191,7 @@ const SellItemForm = ({
                 name={`sellItems.${index}.qty`}
                 render={({ field }) => (
                   <FormItem className='w-2/3'>
-                    <FormLabel>Quantity</FormLabel>
+                    <FormLabel># of pieces</FormLabel>
                     <FormControl>
                       <Input
                         placeholder='Quantity'

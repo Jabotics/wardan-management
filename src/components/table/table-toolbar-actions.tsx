@@ -87,7 +87,11 @@ const TableToolbarActions = ({
             Cancel
           </DialogClose>
           <DialogClose
-            onClick={handleDelete}
+            onClick={() => {
+              if (deleteText === 'delete') {
+                handleDelete?.()
+              }
+            }}
             className={`w-full bg-gray-800 text-sm text-white ${label === 'Edit' ? 'hidden' : 'inline-block py-2'}`}
             disabled={isSubmitting}
           >

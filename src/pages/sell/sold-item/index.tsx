@@ -65,7 +65,7 @@ const SoldItemsComponent = ({
         ? allItemsPurchased.map((item) => {
             const variantName = item?.variant?.name
             const weight = variantName ? parseInt(variantName) : 0
-            const netWeight = (weight / 1000) * Number(item?.qty)
+            const netWeight = parseFloat(((weight / 1000) * Number(item?.qty)).toPrecision(3))
 
             return (
               <div
