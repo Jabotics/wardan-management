@@ -63,10 +63,22 @@ const RawMaterial = ({
           amount: Number(item.amount),
         })),
       }
+      const transportation_charge = purchaseInfo?.transportation_charge || 0
+      const unloading_charge = purchaseInfo?.unloading_charge || 0
+
+      const invoice_amount = processedData.purchaseItems.reduce(
+        (total, item) => total + item.amount,
+        0
+      )
+
+      const total_amount =
+        invoice_amount + transportation_charge + unloading_charge
 
       const res: any = await Add({
-        ...purchaseInfo.purchaseEntry,
-        seller: purchaseInfo.purchaseEntry?.seller?._id || '',
+        ...purchaseInfo,
+        total_amount,
+        invoice_amount,
+        seller: purchaseInfo?.seller?._id || '',
         items: processedData.purchaseItems,
       }).unwrap()
 

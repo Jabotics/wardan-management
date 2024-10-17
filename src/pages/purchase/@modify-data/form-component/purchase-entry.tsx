@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { IPurchase, IPurchaseItem } from '@/interfaces'
+import { IPurchase, ISeller } from '@/interfaces'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -28,7 +28,10 @@ import {
 import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
-import { modifyPurchaseEntry } from '@/store/actions/slices/purchaseSlice'
+import {
+  modifyPurchaseEntry,
+  useUpdatePurchaseMutation,
+} from '@/store/actions/slices/purchaseSlice'
 
 const PurchaseEntry = ({
   category,
@@ -36,15 +39,14 @@ const PurchaseEntry = ({
   toEdit,
   data,
 }: {
-  category: 'Raw Material' | 'Packaging Material' | 'Other'
+  category?: 'Raw Material' | 'Packaging Material' | 'Other'
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   toEdit: boolean
-  data?: {
-    purchaseEntry?: Partial<IPurchase>
-    purchaseEntryItems?: Partial<IPurchaseItem>
-  }
+  data?: Partial<IPurchase>
 }) => {
   const dispatch = useAppDispatch()
+
+  const [Edit] = useUpdatePurchaseMutation()
 
   useGetAllImportersQuery({})
   const { importers } = useAppSelector((state: RootState) => state.importers)
@@ -52,16 +54,16 @@ const PurchaseEntry = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [toRedirect, setToRedirect] = useState<boolean>(false)
 
+  const [selectedSeller, setSelectedSeller] = useState<ISeller | null>(null)
+
   const form = useForm<z.infer<typeof purchaseSchema>>({
     resolver: zodResolver(purchaseSchema),
     defaultValues: {
-      category,
-      invoice_no: '',
-      seller: '',
-      invoice_amount: 0,
-      total_amount: 0,
-      transportation_charge: 0,
-      unloading_charge: 0,
+      category: data?.category ?? category,
+      invoice_no: data?.invoice_no ?? '',
+      seller: data?.seller?._id ?? '',
+      transportation_charge: data?.transportation_charge ?? 0,
+      unloading_charge: data?.unloading_charge ?? 0,
     },
   })
 
@@ -77,15 +79,13 @@ const PurchaseEntry = ({
           : formData.category === 'Packaging Material'
             ? 'PACKAGING_PRODUCT'
             : 'OTHER',
-      invoice_amount: formData.invoice_amount,
       invoice_no: formData.invoice_no,
       seller: {
         _id: formData.seller,
-        address: '',
-        gst_number: '',
-        name: '',
+        address: selectedSeller?.address ?? '',
+        gst_number: selectedSeller?.gst_number ?? '',
+        name: selectedSeller?.name ?? '',
       },
-      total_amount: formData.total_amount,
       transportation_charge: formData.transportation_charge,
       unloading_charge: formData.unloading_charge,
     }
@@ -96,8 +96,29 @@ const PurchaseEntry = ({
       if (payload.invoice_no === '')
         throw new Error('Please Valid Invoice Number')
 
-      dispatch(modifyPurchaseEntry(payload))
-      setToRedirect(true)
+      if (toEdit) {
+        const transportation_charge = formData?.transportation_charge || 0
+        const unloading_charge = formData?.unloading_charge || 0
+
+        const total_amount =
+          (data?.invoice_amount ?? 0) + transportation_charge + unloading_charge
+
+        const res = await Edit({
+          _id: data?._id,
+          invoice_no: formData.invoice_no,
+          seller: formData.seller,
+          invoice_amount: data?.invoice_amount ?? 0,
+          transportation_charge: formData.transportation_charge,
+          unloading_charge: formData.unloading_charge,
+          total_amount,
+        })
+
+        if (res.error) throw new Error('Something went wrong')
+        setOpen(false)
+      } else {
+        dispatch(modifyPurchaseEntry(payload))
+        setToRedirect(true)
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -153,7 +174,7 @@ const PurchaseEntry = ({
                 )}
               />
 
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name='invoice_amount'
                 render={({ field }) => (
@@ -167,7 +188,7 @@ const PurchaseEntry = ({
                         type='number'
                         onFocus={() => {
                           if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
+                            field.onChange('') 
                           }
                         }}
                         onBlur={() => {
@@ -175,7 +196,7 @@ const PurchaseEntry = ({
                             field.value === null ||
                             field.value === undefined
                           ) {
-                            field.onChange(0) // Revert to default value if empty
+                            field.onChange(0) 
                           }
                         }}
                         onChange={(e) => {
@@ -187,7 +208,7 @@ const PurchaseEntry = ({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               <FormField
                 control={form.control}
@@ -201,6 +222,10 @@ const PurchaseEntry = ({
                           value={field.value || ''}
                           onValueChange={(val) => {
                             field.onChange(val)
+
+                            const seller = importers.find((i) => i._id === val)
+
+                            seller && setSelectedSeller(seller)
                           }}
                         >
                           <SelectTrigger className='w-full'>
@@ -241,7 +266,7 @@ const PurchaseEntry = ({
                         type='number'
                         onFocus={() => {
                           if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
+                            field.onChange('')
                           }
                         }}
                         onBlur={() => {
@@ -249,7 +274,7 @@ const PurchaseEntry = ({
                             field.value === null ||
                             field.value === undefined
                           ) {
-                            field.onChange(0) // Revert to default value if empty
+                            field.onChange(0)
                           }
                         }}
                         onChange={(e) => {
@@ -277,7 +302,7 @@ const PurchaseEntry = ({
                         type='number'
                         onFocus={() => {
                           if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
+                            field.onChange('')
                           }
                         }}
                         onBlur={() => {
@@ -285,7 +310,7 @@ const PurchaseEntry = ({
                             field.value === null ||
                             field.value === undefined
                           ) {
-                            field.onChange(0) // Revert to default value if empty
+                            field.onChange(0)
                           }
                         }}
                         onChange={(e) => {
@@ -305,7 +330,7 @@ const PurchaseEntry = ({
               type='submit'
               disabled={isSubmitting}
             >
-              {data?.purchaseEntry !== undefined ? 'Edit' : `Add`}
+              {data !== undefined ? 'Edit' : `Add`}
             </Button>
           </form>
         </Form>

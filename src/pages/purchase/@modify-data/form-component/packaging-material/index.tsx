@@ -41,6 +41,7 @@ const PackagingMaterial = ({
   const [Add] = useAddPurchaseMutation()
 
   const { purchaseInfo } = useAppSelector((state: RootState) => state.purchase)
+  console.log(purchaseInfo)
 
   const form = useForm<z.infer<typeof purchaseItemsSchemaforPackagingProduct>>({
     resolver: zodResolver(purchaseItemsSchemaforPackagingProduct),
@@ -69,10 +70,22 @@ const PackagingMaterial = ({
           amount: Number(item.amount),
         })),
       }
+      const transportation_charge = purchaseInfo?.transportation_charge || 0
+      const unloading_charge = purchaseInfo?.unloading_charge || 0
+
+      const invoice_amount = processedData.purchaseItems.reduce(
+        (total, item) => total + item.amount,
+        0
+      )
+
+      const total_amount =
+        invoice_amount + transportation_charge + unloading_charge
 
       const res: any = await Add({
-        ...purchaseInfo.purchaseEntry,
-        seller: purchaseInfo.purchaseEntry?.seller?._id || '',
+        ...purchaseInfo,
+        total_amount,
+        invoice_amount,
+        seller: purchaseInfo?.seller?._id || '',
         items: processedData.purchaseItems,
       }).unwrap()
 
@@ -273,7 +286,9 @@ const PackagingMaterial = ({
         <div className='flex w-full items-center justify-between gap-2'>
           <Button
             type='button'
-            onClick={() => append({ product: '', variant: '', unit: '', qty: 0, amount: 0 })}
+            onClick={() =>
+              append({ product: '', variant: '', unit: '', qty: 0, amount: 0 })
+            }
             className='w-full text-black'
           >
             Add Invoice

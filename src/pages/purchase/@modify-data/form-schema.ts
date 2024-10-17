@@ -4,10 +4,8 @@ export const purchaseSchema = z.object({
   category: z.string(),
   invoice_no: z.string(),
   seller: z.string(),
-  invoice_amount: z.number(),
   transportation_charge: z.number(),
   unloading_charge: z.number(),
-  total_amount: z.number(),
 })
 
 export const purchaseItemsSchemaforRawMaterial = z.object({

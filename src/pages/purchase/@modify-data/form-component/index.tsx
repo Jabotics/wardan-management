@@ -1,4 +1,4 @@
-import { IPurchase, IPurchaseItem } from '@/interfaces'
+import { IPurchase } from '@/interfaces'
 import { Fragment } from 'react/jsx-runtime'
 import { HiMiniArrowLongRight } from 'react-icons/hi2'
 import { Cross2Icon } from '@radix-ui/react-icons'
@@ -6,23 +6,22 @@ import { useState } from 'react'
 import PurchaseEntry from './purchase-entry'
 
 const FormComponent = ({
-  toEdit,
   data,
   setOpen,
 }: {
-  toEdit: boolean
-  data?: {
-    purchaseEntry?: Partial<IPurchase>
-    purchaseEntryItems?: Partial<IPurchaseItem>
-  }
+  data?: Partial<IPurchase>
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isSubmitting?: boolean
+  setIsSubmitting?: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const toEdit = Boolean(data)
+
   const [purchaseCategory, setPurchaseCategory] = useState<
-    'Raw Material' | 'Packaging Material' | 'Other' | null
-  >(null)
+    'Raw Material' | 'Packaging Material' | 'Other' | undefined
+  >(undefined)
   const [toRedirect, setToRedirect] = useState(false)
 
-  if (toRedirect && purchaseCategory) {
+  if (toEdit || (toRedirect && purchaseCategory)) {
     return (
       <Fragment>
         <div
@@ -47,7 +46,7 @@ const FormComponent = ({
       <div
         onClick={() => {
           setOpen(false)
-          setPurchaseCategory(null)
+          setPurchaseCategory(undefined)
         }}
         className='absolute right-5 top-5 cursor-pointer'
       >

@@ -111,7 +111,7 @@ export const purchaseEndpoints = {
  * @payload {Number} qty   /// quantity of the purchase item
  * @payload {Number} amount   /// amount of the purchase item 
  */
-  update_item: '/api/purchase/update-item',
+  update_purchase_item: '/api/purchase/update-item',
 
   /**
  * 
@@ -120,7 +120,7 @@ export const purchaseEndpoints = {
  * 
  * @use to remove a purchase item
  */
-  remove_item: '/api/purchase/item',
+  remove_purchase_item: '/api/purchase/item',
 
   /**
  * 

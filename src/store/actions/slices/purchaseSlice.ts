@@ -23,6 +23,14 @@ interface QueryParams extends TablePaginationConfig {
   [key: string]: unknown
 }
 
+interface ResponseType {
+  message: string
+  status: 'success' | 'fail'
+  data: {
+    _id: string
+  }
+}
+
 export const purchaseApi = createApi({
   reducerPath: 'PurchaseApi',
   baseQuery: fetchBaseQuery({
@@ -47,7 +55,7 @@ export const purchaseApi = createApi({
           params: getCustomParams(params),
         }
       },
-      providesTags: ['PurchaseEntry']
+      providesTags: ['PurchaseEntry'],
     }),
 
     getPurchaseEntryItems: builder.query<
@@ -70,11 +78,69 @@ export const purchaseApi = createApi({
         return {
           url: APIEndPoints.add_purchase_entry,
           body: rest,
-          method: 'POST'
+          method: 'POST',
         }
       },
-      invalidatesTags: ['PurchaseEntry']
-    })
+      invalidatesTags: ['PurchaseEntry'],
+    }),
+
+    addPurchaseItem: builder.mutation<ResponseType, IPurchaseItem>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.add_purchase_item,
+          method: 'PUT',
+          body: rest,
+        }
+      },
+    }),
+
+    removePurchaseItem: builder.mutation<unknown, { id: string }>({
+      query: (body) => {
+        const { id } = body
+        return {
+          url: `${APIEndPoints.remove_purchase_item}/${id}`,
+          method: 'DELETE',
+        }
+      },
+      invalidatesTags: ['PurchaseItems'],
+    }),
+
+    updatePurchase: builder.mutation<unknown, object>({
+      query: (body) => {
+        const { ...rest } = body
+
+        return {
+          url: APIEndPoints.update_purchase_entry,
+          method: 'PUT',
+          body: rest,
+        }
+      },
+      invalidatesTags: ['PurchaseEntry'],
+    }),
+
+    removePurchase: builder.mutation<IncomingData, { id: string }>({
+      query: (body) => {
+        const { id } = body
+        return {
+          url: `${APIEndPoints.remove_purchase}/${id}`,
+          method: 'DELETE',
+        }
+      },
+      invalidatesTags: ['PurchaseEntry'],
+    }),
+
+    updatePurchaseItem: builder.mutation<IncomingData, IPurchaseItem>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.update_purchase_item,
+          method: 'PUT',
+          body: rest,
+        }
+      },
+      invalidatesTags: ['PurchaseItems'],
+    }),
   }),
 })
 
@@ -90,10 +156,7 @@ interface InitialData {
   allOtherPurchase: IPurchase[]
 
   // To Add / Edit Purchase
-  purchaseInfo: {
-    purchaseEntry?: Partial<IPurchase>
-    purchaseEntryItems?: Partial<IPurchaseItem>
-  }
+  purchaseInfo?: Partial<IPurchase>
 }
 
 const initialState: InitialData = {
@@ -107,22 +170,21 @@ const initialState: InitialData = {
   allPackagingProductPurchase: [],
   allOtherPurchase: [],
 
-  purchaseInfo: { purchaseEntry: undefined, purchaseEntryItems: undefined },
+  purchaseInfo: undefined,
 }
 
 export const PurchaseSlice = createSlice({
   name: 'PurchaseSlice',
   initialState,
   reducers: {
+    setPurchaseAddInfo: (state, action: PayloadAction<Partial<IPurchase>>) => {
+      state.purchaseInfo = action.payload
+    },
+    setNewPurchase: (state, action: PayloadAction<{ data: IPurchase }>) => {
+      const { data } = action.payload
+      state.allPurchase.unshift(data)
+    },
     modifyPurchaseEntry: (state, action: PayloadAction<Partial<IPurchase>>) => {
-      state.purchaseInfo.purchaseEntry = action.payload;
-    },
-
-    modifyPurchaseEntryItem: (state, action: PayloadAction<Partial<IPurchaseItem>>) => {
-      state.purchaseInfo.purchaseEntryItems = action.payload;
-    },
-    
-    toEditPurchaseInfo: (state, action: PayloadAction<{ purchaseEntry: IPurchase, purchaseEntryItems: IPurchaseItem }>) => {
       state.purchaseInfo = action.payload
     },
   },
@@ -165,7 +227,19 @@ export const PurchaseSlice = createSlice({
   },
 })
 
-export const { useGetPurchaseEntryQuery, useGetPurchaseEntryItemsQuery, useAddPurchaseMutation } =
-  purchaseApi
-export const { modifyPurchaseEntry, modifyPurchaseEntryItem, toEditPurchaseInfo } = PurchaseSlice.actions
+export const {
+  useGetPurchaseEntryQuery,
+  useGetPurchaseEntryItemsQuery,
+  useAddPurchaseMutation,
+  useAddPurchaseItemMutation,
+  useRemovePurchaseItemMutation,
+  useRemovePurchaseMutation,
+  useUpdatePurchaseItemMutation,
+  useUpdatePurchaseMutation
+} = purchaseApi
+export const {
+  setNewPurchase,
+  setPurchaseAddInfo,
+  modifyPurchaseEntry
+} = PurchaseSlice.actions
 export default PurchaseSlice.reducer

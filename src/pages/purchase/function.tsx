@@ -12,6 +12,9 @@ import { Tooltip } from '@mui/material'
 import PurchaseItemsComponent from './purchase-item'
 import { useState } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
+import TableToolbarActions from '@/components/table/table-toolbar-actions'
+import FormComponent from './@modify-data/form-component'
 
 export const Total = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
@@ -26,10 +29,7 @@ export const Unloading = ({ data }: { data: Data }) => {
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
-  const invoiceCharge =
-    Number(data.total_amount) -
-    (Number(data.transportation_charge) + Number(data.unloading_charge))
-  return <>{'₹ ' + invoiceCharge}</>
+  return <>{'₹ ' + data.invoice_amount}</>
 }
 
 export const Seller = ({ data }: { data: Data }) => {
@@ -76,13 +76,64 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
 
           <Drawer>
             <DrawerTrigger asChild>
-              <div className='h-10 w-full bg-black'></div>
+              <div className='flex h-10 w-full cursor-pointer items-center justify-center bg-black text-white'>
+                Add Another Item
+              </div>
             </DrawerTrigger>
 
-            <DrawerContent className='w-full h-[50%] bg-white absolute'>hey</DrawerContent>
+            <DrawerContent className='absolute h-[50%] w-full bg-white'>
+              hey
+            </DrawerContent>
           </Drawer>
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+export const ToolbarAction = ({ data }: { data: Data }) => {
+  const [Delete] = useRemovePurchaseMutation()
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  async function handleDelete() {
+    if (data && data._id) {
+      setIsSubmitting(true)
+      try {
+        const res = await Delete({ id: data._id }).unwrap()
+
+        if (res.status === 'fail') throw new Error(res.message)
+
+        setDeleteOpen(false)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <TableToolbarActions open={editOpen} setOpen={setEditOpen} label='Edit'>
+        <FormComponent
+          data={data}
+          setOpen={setEditOpen}
+          isSubmitting={isSubmitting}
+          setIsSubmitting={setIsSubmitting}
+        />
+      </TableToolbarActions>
+
+      <TableToolbarActions
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        label='Delete'
+        handleDelete={handleDelete}
+        isSubmitting={isSubmitting}
+      />
+    </div>
   )
 }

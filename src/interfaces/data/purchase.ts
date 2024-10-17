@@ -22,7 +22,7 @@ export interface IPurchaseItem {
     _id: string
     name: string
   }
-  qty: 'gms' | 'kg' |'ton' |'pcs'
+  qty: number
   unit: string
   amount: number
   price_per_kg: number

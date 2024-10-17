@@ -1,5 +1,8 @@
-import { useGetPurchaseEntryItemsQuery } from '@/store/actions/slices/purchaseSlice'
-import { useEffect } from 'react'
+import {
+  useGetPurchaseEntryItemsQuery,
+  useRemovePurchaseItemMutation,
+} from '@/store/actions/slices/purchaseSlice'
+import { useEffect, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 
@@ -16,11 +19,23 @@ const PurchaseItems = ({
   purchaseId: string
   setClose: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const [Delete] = useRemovePurchaseItemMutation()
   const { data, isLoading, isError } = useGetPurchaseEntryItemsQuery(
     { id: purchaseId },
     { skip: !purchaseId }
   )
   const allItemsPurchased = data?.data || []
+  const [editingItemId, setEditingItemId] = useState<string | null>(null)
+
+  const handleDeleteSellItems = async (toDeleteItemId: string) => {
+    try {
+      if (toDeleteItemId) {
+        await Delete({ id: toDeleteItemId })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     if (isError) {
@@ -40,7 +55,7 @@ const PurchaseItems = ({
   }
 
   return (
-    <div className='flex flex-1 w-full flex-col gap-3 overflow-y-auto overflow-x-hidden'>
+    <div className='flex w-full flex-1 flex-col gap-3 overflow-y-auto overflow-x-hidden'>
       <div
         onClick={() => setClose(false)}
         className='absolute right-5 top-5 cursor-pointer'
@@ -65,15 +80,21 @@ const PurchaseItems = ({
                   </div>
                   <div className='whitespace-nowrap'>
                     {`${item?.qty} ${item?.unit}`} ({' '}
-                    <span className='stacked-fractions'>₹{item?.price_per_kg}/kg</span> )
+                    <span className='stacked-fractions'>
+                      ₹{item?.price_per_kg}/kg
+                    </span>{' '}
+                    )
                   </div>
                 </div>
                 <div className='flex h-10 w-full items-center justify-between border-t-2 border-dashed border-white px-3'>
                   <div className='font-mono'>{`₹ ${item?.amount}`}</div>
                   <div className='flex h-full w-1/4 items-center justify-end gap-3 text-xs'>
-                    <Drawer>
+                    <Drawer open={editingItemId === item._id}>
                       <DrawerTrigger asChild>
-                        <div className='cursor-pointer underline hover:text-gray-600'>
+                        <div
+                          className='cursor-pointer underline hover:text-gray-600'
+                          onClick={() => setEditingItemId(item._id)}
+                        >
                           Edit
                         </div>
                       </DrawerTrigger>
@@ -82,7 +103,12 @@ const PurchaseItems = ({
                         hey
                       </DrawerContent>
                     </Drawer>
-                    <div className='cursor-pointer underline hover:text-rose-900'>
+                    <div
+                      className='cursor-pointer underline hover:text-rose-900'
+                      onClick={() => {
+                        handleDeleteSellItems(item._id)
+                      }}
+                    >
                       Delete
                     </div>
                   </div>
