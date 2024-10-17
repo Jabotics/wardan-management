@@ -18,11 +18,19 @@ export interface IPurchase {
 export interface IPurchaseItem {
   _id: string
   category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
-  product: {
+  product?: {
     _id: string
     name: string
   }
-  qty: 'gms' | 'kg' |'ton' |'pcs'
+  material?: {
+    _id: string
+    name: string
+  }
+  variant?: {
+    _id: string
+    name: string
+  }
+  qty: number
   unit: string
   amount: number
   price_per_kg: number

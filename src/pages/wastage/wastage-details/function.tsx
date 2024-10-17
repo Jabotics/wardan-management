@@ -9,6 +9,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Separator } from '@/components/ui/separator'
+import { useRemoveWastageMutation } from '@/store/actions/slices/wastageSlice'
+import TableToolbarActions from '@/components/table/table-toolbar-actions'
 
 export const Product = ({ data }: { data: Data }) => {
   const items = data?.items || []
@@ -59,4 +61,52 @@ export const Product = ({ data }: { data: Data }) => {
 
 export const CreatedAt = ({ data }: { data: Data }) => {
   return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
+}
+
+export const Quantity = ({ data }: { data: Data }) => {
+  const totalWastage = data.items.reduce((total, item) => total + item.qty, 0);
+  return <>{totalWastage ?? 0} kg</>
+}
+
+export const ToolbarAction = ({ data }: { data: Data }) => {
+  // const dispatch = useAppDispatch()
+
+  const [Delete] = useRemoveWastageMutation()
+
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deleteText, setDeleteText] = useState<string>('')
+
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  async function handleDelete() {
+    if (data && data._id) {
+      setIsSubmitting(true)
+      try {
+        const res = await Delete({ id: data._id }).unwrap()
+
+        if (res.status === 'fail') throw new Error(res.message)
+
+        // dispatch(removeReadyProduct({ id: data._id }))
+        setDeleteOpen(false)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <TableToolbarActions
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        label='Delete'
+        handleDelete={handleDelete}
+        isSubmitting={isSubmitting}
+      />
+    </div>
+  )
 }

@@ -12,6 +12,10 @@ import { Tooltip } from '@mui/material'
 import PurchaseItemsComponent from './purchase-item'
 import { useState } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
+import TableToolbarActions from '@/components/table/table-toolbar-actions'
+import FormComponent from './@modify-data/form-component'
+import ModifyPurchaseItems from './purchase-item/modify-purchase-item'
 
 export const Total = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
@@ -26,10 +30,7 @@ export const Unloading = ({ data }: { data: Data }) => {
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
-  const invoiceCharge =
-    Number(data.total_amount) -
-    (Number(data.transportation_charge) + Number(data.unloading_charge))
-  return <>{'₹ ' + invoiceCharge}</>
+  return <>{'₹ ' + data.invoice_amount}</>
 }
 
 export const Seller = ({ data }: { data: Data }) => {
@@ -54,6 +55,8 @@ export const Seller = ({ data }: { data: Data }) => {
 export const PurchaseItems = ({ data }: { data: Data }) => {
   const [open, setOpen] = useState<boolean>(false)
 
+  const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
+
   return (
     <>
       <Dialog open={open}>
@@ -72,17 +75,88 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
           <DialogDescription className='sr-only'>
             All the items purchased in this purchase
           </DialogDescription>
-          <PurchaseItemsComponent purchaseId={data._id} setClose={setOpen} />
+          <PurchaseItemsComponent purchaseId={data._id} setClose={setOpen} category={data.category} />
 
-          <Drawer>
+          <Drawer open={drawerOpen}>
             <DrawerTrigger asChild>
-              <div className='h-10 w-full bg-black'></div>
+              <div
+                onClick={() => setDrawerOpen(true)}
+                className='flex h-10 w-full cursor-pointer items-center justify-center bg-black text-white'
+              >
+                Add Another Item
+              </div>
             </DrawerTrigger>
 
-            <DrawerContent className='w-full h-[50%] bg-white absolute'>hey</DrawerContent>
+            <DrawerContent className='absolute h-[50%] w-full bg-white'>
+              <div className='flex h-full w-full items-center justify-center'>
+                <ModifyPurchaseItems
+                  setOpen={setDrawerOpen}
+                  purchaseId={data._id}
+                  category={data.category}
+                />
+              </div>
+            </DrawerContent>
           </Drawer>
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+export const ToolbarAction = ({ data }: { data: Data }) => {
+  const [Delete] = useRemovePurchaseMutation()
+
+  const [deleteText, setDeleteText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
+  async function handleDelete() {
+    if (data && data._id) {
+      setIsSubmitting(true)
+      try {
+        if (deleteText === 'delete') {
+          const res = await Delete({ id: data._id }).unwrap()
+
+          if (res.status === 'fail') throw new Error(res.message)
+
+          setDeleteOpen(false)
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <TableToolbarActions
+        open={editOpen}
+        setOpen={setEditOpen}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+        label='Edit'
+      >
+        <FormComponent
+          data={data}
+          setOpen={setEditOpen}
+          isSubmitting={isSubmitting}
+          setIsSubmitting={setIsSubmitting}
+        />
+      </TableToolbarActions>
+
+      <TableToolbarActions
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+        label='Delete'
+        handleDelete={handleDelete}
+        isSubmitting={isSubmitting}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+      />
+    </div>
   )
 }

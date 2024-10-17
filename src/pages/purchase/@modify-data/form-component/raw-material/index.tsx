@@ -63,10 +63,22 @@ const RawMaterial = ({
           amount: Number(item.amount),
         })),
       }
+      const transportation_charge = purchaseInfo?.transportation_charge || 0
+      const unloading_charge = purchaseInfo?.unloading_charge || 0
+
+      const invoice_amount = processedData.purchaseItems.reduce(
+        (total, item) => total + item.amount,
+        0
+      )
+
+      const total_amount =
+        invoice_amount + transportation_charge + unloading_charge
 
       const res: any = await Add({
-        ...purchaseInfo.purchaseEntry,
-        seller: purchaseInfo.purchaseEntry?.seller?._id || '',
+        ...purchaseInfo,
+        total_amount,
+        invoice_amount,
+        seller: purchaseInfo?.seller?._id || '',
         items: processedData.purchaseItems,
       }).unwrap()
 
@@ -104,7 +116,7 @@ const RawMaterial = ({
                           <SelectValue placeholder='Select a Unit' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item, index) => {
+                          {products.filter(i => i.type === 'WHOLE').map((item, index) => {
                             return (
                               <SelectItem value={item._id || ''} key={index}>
                                 {item.name}
@@ -175,9 +187,9 @@ const RawMaterial = ({
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value='kg'>kg</SelectItem>
-                          <SelectItem value='gms'>gms</SelectItem>
+                          {/* <SelectItem value='gms'>gms</SelectItem>
                           <SelectItem value='ton'>ton</SelectItem>
-                          <SelectItem value='pcs'>pcs</SelectItem>
+                          <SelectItem value='pcs'>pcs</SelectItem> */}
                         </SelectContent>
                       </Select>
                     </FormControl>

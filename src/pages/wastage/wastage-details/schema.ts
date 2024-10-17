@@ -1,5 +1,5 @@
 import { HeadCell, IWastage } from '@/interfaces'
-import { CreatedAt, Product } from './function';
+import { CreatedAt, Product, Quantity, ToolbarAction } from './function';
 
 export interface Data extends IWastage {}
 
@@ -27,11 +27,27 @@ export const headCells: HeadCell<Data>[] = [
     body: Product,
   },
   {
+    id: 'category',
+    numeric: false,
+    disablePadding: true,
+    label: 'Total Waste',
+    type: 'custom',
+    body: Quantity,
+  },
+  {
     id: 'createdAt',
+    numeric: false,
+    disablePadding: true,
+    label: 'Created At',
+    type: 'custom',
+    body: CreatedAt,
+  },
+  {
+    id: '_id',
     numeric: false,
     disablePadding: true,
     label: '',
     type: 'custom',
-    body: CreatedAt,
+    body: ToolbarAction
   },
 ]

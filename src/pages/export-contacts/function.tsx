@@ -3,12 +3,17 @@ import { Data } from './schema'
 import { useState } from 'react'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
-import { removeExporter, useRemoveExporterMutation } from '@/store/actions/slices/exportersSlice'
+import {
+  removeExporter,
+  useRemoveExporterMutation,
+} from '@/store/actions/slices/exportersSlice'
 
 export const Address = ({ data }: { data: Data }) => {
-  return <div className='w-full h-full flex items-center justify-center'>
-    <span className='w-[400px] text-xs'>{data.address}</span>
-  </div>
+  return (
+    <div className='flex h-full w-full items-center justify-center'>
+      <span className='w-[400px] text-xs'>{data.address}</span>
+    </div>
+  )
 }
 
 export const GSTNumber = ({ data }: { data: Data }) => {
@@ -16,11 +21,12 @@ export const GSTNumber = ({ data }: { data: Data }) => {
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   const [Delete] = useRemoveExporterMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deleteText, setDeleteText] = useState<string>('')
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -45,7 +51,13 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
   return (
     <div className='flex items-center justify-center gap-2'>
-      <TableToolbarActions open={editOpen} setOpen={setEditOpen} label='Edit'>
+      <TableToolbarActions
+        open={editOpen}
+        setOpen={setEditOpen}
+        label='Edit'
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+      >
         <FormComponent
           data={data}
           setOpen={setEditOpen}
@@ -60,6 +72,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
         setOpen={setDeleteOpen}
         label='Delete'
         handleDelete={handleDelete}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
       />
     </div>
   )

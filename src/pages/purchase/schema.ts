@@ -7,6 +7,7 @@ import {
   PurchaseItems,
   Seller,
   Invoice,
+  ToolbarAction,
 } from './function'
 
 export interface Data extends IPurchase {}
@@ -49,7 +50,7 @@ export const headCells: HeadCell<Data>[] = [
     type: 'string',
   },
   {
-    id: '_id',
+    id: 'category',
     numeric: true,
     disablePadding: true,
     label: 'Items',
@@ -95,5 +96,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Net Total',
     type: 'custom',
     body: Total,
+  },
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: ToolbarAction
   },
 ]

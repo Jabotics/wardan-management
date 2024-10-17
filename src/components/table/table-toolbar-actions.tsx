@@ -9,6 +9,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { MdEdit, MdDeleteOutline } from 'react-icons/md'
 import { Button } from '../custom/button'
+import { Input } from '../ui/input'
 
 const TableToolbarActions = ({
   label,
@@ -16,7 +17,9 @@ const TableToolbarActions = ({
   setOpen,
   children,
   handleDelete,
-  isSubmitting
+  isSubmitting,
+  deleteText,
+  setDeleteText
 }: {
   label: 'Edit' | 'Delete'
   open: boolean
@@ -24,7 +27,11 @@ const TableToolbarActions = ({
   children?: React.ReactNode
   handleDelete?: () => Promise<void>
   isSubmitting?: boolean
+  deleteText: string
+  setDeleteText: React.Dispatch<React.SetStateAction<string>>
 }) => {
+  
+
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>
@@ -45,7 +52,9 @@ const TableToolbarActions = ({
           {label === 'Edit' ? 'Update Details' : 'Delete Details'}
         </DialogTitle>
         <Separator />
-        <DialogDescription className='sr-only'>Table toolbar actions component</DialogDescription>
+        <DialogDescription className='sr-only'>
+          Table toolbar actions component
+        </DialogDescription>
 
         {children ?? (
           <span className='mb-5 flex flex-col gap-1'>
@@ -53,8 +62,19 @@ const TableToolbarActions = ({
               Are you sure, you want to delete this record?
             </span>
             <span className='text-sm text-gray-500'>
-              If you are sure, Confirm else Cancel.
+              If you are sure, type 'delete' then Confirm else Cancel.
             </span>
+            <Input
+              value={deleteText}
+              onChange={(e) => {
+                setDeleteText(e.target.value)
+              }}
+              className={`${deleteText.trim() === 'delete' ? 'border-black' : 'border-red-500'} h-6 w-fit outline-none`}
+              style={{
+                boxShadow: 'none',
+                outline: 'none',
+              }}
+            />
           </span>
         )}
 

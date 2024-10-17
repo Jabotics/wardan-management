@@ -2,7 +2,10 @@ import { Data } from './schema'
 import { useState } from 'react'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
-import { removeImporter, useRemoveImporterMutation } from '@/store/actions/slices/importersSlice'
+import {
+  removeImporter,
+  useRemoveImporterMutation,
+} from '@/store/actions/slices/importersSlice'
 import { useAppDispatch } from '@/store/hooks'
 
 export const Address = ({ data }: { data: Data }) => {
@@ -18,11 +21,12 @@ export const GSTNumber = ({ data }: { data: Data }) => {
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   const [Delete] = useRemoveImporterMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deleteText, setDeleteText] = useState<string>('')
 
   const [editOpen, setEditOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
@@ -47,7 +51,13 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
   return (
     <div className='flex items-center justify-center gap-2'>
-      <TableToolbarActions open={editOpen} setOpen={setEditOpen} label='Edit'>
+      <TableToolbarActions
+        open={editOpen}
+        setOpen={setEditOpen}
+        label='Edit'
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
+      >
         <FormComponent
           data={data}
           setOpen={setEditOpen}
@@ -62,6 +72,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
         setOpen={setDeleteOpen}
         label='Delete'
         handleDelete={handleDelete}
+        deleteText={deleteText}
+        setDeleteText={setDeleteText}
       />
     </div>
   )
