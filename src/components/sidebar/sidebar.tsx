@@ -83,7 +83,7 @@ export default function Sidebar2({
           onClick={() => setIsCollapsed((prev) => !prev)}
           size='icon'
           variant='outline'
-          className='absolute -right-5 top-20 hidden rounded-full md:inline-flex'
+          className='absolute -right-5 bottom-10 hidden rounded-full md:inline-flex'
         >
           <IconChevronsLeft
             stroke={1.5}

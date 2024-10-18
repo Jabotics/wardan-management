@@ -206,7 +206,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       </div>
 
       <div className='mr-4 flex items-end gap-2'>
-        {numSelected > 0 && (
+        {/* {numSelected > 0 && (
           <div
             className='mr-3 flex h-fit cursor-pointer items-center gap-1 p-1 text-[13px] font-bold text-rose-700'
             onClick={() => {
@@ -218,7 +218,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
             </span>
             <span>Delete ({numSelected})</span>
           </div>
-        )}
+        )} */}
 
         <span className='hidden'>
           <Button

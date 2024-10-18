@@ -25,6 +25,7 @@ const RawMaterialStocks = () => {
           item.variant,
           item.qty,
           item.unit,
+          item.count,
         )
       ) || [],
     [packagingStock]

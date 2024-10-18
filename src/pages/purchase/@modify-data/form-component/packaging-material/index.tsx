@@ -41,13 +41,12 @@ const PackagingMaterial = ({
   const [Add] = useAddPurchaseMutation()
 
   const { purchaseInfo } = useAppSelector((state: RootState) => state.purchase)
-  console.log(purchaseInfo)
 
   const form = useForm<z.infer<typeof purchaseItemsSchemaforPackagingProduct>>({
     resolver: zodResolver(purchaseItemsSchemaforPackagingProduct),
     defaultValues: {
       purchaseItems: [
-        { product: '', variant: '', unit: '', qty: 0, amount: 0 },
+        { product: '', variant: '', unit: 'kg', qty: 0, amount: 0 },
       ],
     },
   })
@@ -64,11 +63,15 @@ const PackagingMaterial = ({
     try {
       const processedData = {
         ...formData,
-        purchaseItems: formData.purchaseItems.map((item) => ({
-          ...item,
-          qty: Number(item.qty),
-          amount: Number(item.amount),
-        })),
+        purchaseItems: formData.purchaseItems.map((item) => {
+
+          return {
+            ...item,
+            qty: item.qty,
+            amount: Number(item.amount),
+            unit: 'kg'
+          }
+        }),
       }
       const transportation_charge = purchaseInfo?.transportation_charge || 0
       const unloading_charge = purchaseInfo?.unloading_charge || 0
@@ -177,16 +180,16 @@ const PackagingMaterial = ({
               )}
             />
 
-            <div className='flex w-full items-center gap-2'>
+            <div className='flex w-full items-center gap-2 my-5'>
               <FormField
                 control={control}
                 name={`purchaseItems.${index}.qty`}
                 render={({ field }) => (
                   <FormItem className='w-2/3'>
-                    <FormLabel>Quantity</FormLabel>
+                    <FormLabel>Quantity (kg)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder='Quantity'
+                        placeholder='Quantity in kg'
                         {...field}
                         className='h-10 w-full border-amber-950/25'
                         type='number'
@@ -215,62 +218,39 @@ const PackagingMaterial = ({
 
               <FormField
                 control={control}
-                name={`purchaseItems.${index}.unit`}
+                name={`purchaseItems.${index}.amount`}
                 render={({ field }) => (
                   <FormItem className='w-1/3'>
-                    <FormLabel>Unit</FormLabel>
+                    <FormLabel>Amount</FormLabel>
                     <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Unit' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value='kg'>kg</SelectItem>
-                          {/* <SelectItem value='gms'>gms</SelectItem>
-                          <SelectItem value='ton'>ton</SelectItem>
-                          <SelectItem value='pcs'>pcs</SelectItem> */}
-                        </SelectContent>
-                      </Select>
+                      <Input
+                        placeholder='Amount'
+                        {...field}
+                        className='h-10 border-amber-950/25'
+                        type='number'
+                        onFocus={() => {
+                          if (field.value === 0) {
+                            field.onChange('')
+                          }
+                        }}
+                        onBlur={() => {
+                          if (
+                            field.value === null ||
+                            field.value === undefined
+                          ) {
+                            field.onChange(0)
+                          }
+                        }}
+                        onChange={(e) => {
+                          field.onChange(Number(e.target.value))
+                        }}
+                        autoComplete='off'
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
-
-            <FormField
-              control={control}
-              name={`purchaseItems.${index}.amount`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Amount</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Amount'
-                      {...field}
-                      className='h-10 border-amber-950/25'
-                      type='number'
-                      onFocus={() => {
-                        if (field.value === 0) {
-                          field.onChange('')
-                        }
-                      }}
-                      onBlur={() => {
-                        if (field.value === null || field.value === undefined) {
-                          field.onChange(0)
-                        }
-                      }}
-                      onChange={(e) => {
-                        field.onChange(Number(e.target.value))
-                      }}
-                      autoComplete='off'
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
 
             {fields.length > 1 && (
               <Button

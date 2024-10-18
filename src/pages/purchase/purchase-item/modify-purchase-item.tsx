@@ -35,12 +35,14 @@ const purchaseItemsAddSchema = z.object({
   material: z.string().optional(),
   qty: z.number(),
   amount: z.number(),
+  count: z.number().optional(),
 })
 
 const purchaseItemsEditSchema = z.object({
   _id: z.string(),
   qty: z.number(),
   amount: z.number(),
+  count: z.number().optional(),
 })
 
 const ModifyPurchaseItems = ({
@@ -82,6 +84,7 @@ const ModifyPurchaseItems = ({
             _id: data?._id ?? '',
             qty: data?.qty ?? 0,
             amount: data?.amount ?? 0,
+            count: data?.count ?? 0,
           }
         : {
             product: data?.product?._id ?? '',
@@ -89,9 +92,11 @@ const ModifyPurchaseItems = ({
             material: data?.material?._id ?? '',
             qty: data?.qty ?? 0,
             amount: data?.amount ?? 0,
+            count: data?.count ?? 0,
           }),
     },
   })
+  console.log(data)
 
   async function handleSubmit(
     formData: z.infer<
@@ -102,17 +107,38 @@ const ModifyPurchaseItems = ({
 
     try {
       if (toEdit) {
-        const res = await Edit({
-          _id: data?._id,
-          amount: formData.amount,
-          qty: formData.qty,
-        }).unwrap()
+        const name = variants.find(i => i._id === data?.variant?._id)?.name;
+        const variantName = name ? parseInt(name) : 0;
+
+        const payload: {
+          _id: string
+          qty: number
+          amount: number
+          count?: number
+        } = {
+          _id: data?._id || '',
+          qty: formData.qty ?? 0,
+          amount: formData?.amount ?? 0,
+        }
+
+        console.log(formData.count)
+        if (data?.category === 'PACKAGING_PRODUCT' && formData.count !== 0 && formData.count !== undefined) {
+          console.log('first')
+          payload.count = formData.count
+          payload.qty = variantName * 0.001 * formData.count
+        }
+        
+        const res = await Edit(payload).unwrap()
 
         if (res.status === 'fail') throw new Error(res.message)
       } else {
-        const { product, variant, material, qty, amount } = formData as z.infer<
+    
+        const { product, variant, material, qty, amount, count } = formData as z.infer<
           typeof purchaseItemsAddSchema
         >
+
+        const name = variants.find(i => i._id === variant)?.name;
+        const variantName = name ? parseInt(name) : 0;
 
         const payload: {
           purchaseId: string
@@ -123,6 +149,7 @@ const ModifyPurchaseItems = ({
           product?: string
           variant?: string
           material?: string
+          count?: number
         } = {
           purchaseId: purchaseId ?? '',
           category,
@@ -141,6 +168,11 @@ const ModifyPurchaseItems = ({
 
         if (material !== '') {
           payload.material = material
+        }
+
+        if (category === 'PACKAGING_PRODUCT' && count !== 0 && count !== undefined) {
+          payload.count = count
+          payload.qty = variantName * 0.001 * count
         }
 
         const res = await Add(payload).unwrap()
@@ -204,7 +236,13 @@ const ModifyPurchaseItems = ({
                         </SelectTrigger>
                         <SelectContent>
                           {products.map((item) => (
-                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                            <SelectItem
+                              value={item._id || ''}
+                              key={item._id}
+                              disabled={
+                                toEdit ? item._id !== field.value : false
+                              }
+                            >
                               {item.name}
                             </SelectItem>
                           ))}
@@ -239,7 +277,13 @@ const ModifyPurchaseItems = ({
                         </SelectTrigger>
                         <SelectContent>
                           {materials.map((item) => (
-                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                            <SelectItem
+                              value={item._id || ''}
+                              key={item._id}
+                              disabled={
+                                toEdit ? item._id !== field.value : false
+                              }
+                            >
                               {item.name}
                             </SelectItem>
                           ))}
@@ -275,7 +319,13 @@ const ModifyPurchaseItems = ({
                         </SelectTrigger>
                         <SelectContent>
                           {variants.map((item) => (
-                            <SelectItem value={item._id || ''} key={item._id} disabled={toEdit ? item._id !== field.value : false}>
+                            <SelectItem
+                              value={item._id || ''}
+                              key={item._id}
+                              disabled={
+                                toEdit ? item._id !== field.value : false
+                              }
+                            >
                               {item.name}
                             </SelectItem>
                           ))}
@@ -297,8 +347,47 @@ const ModifyPurchaseItems = ({
                 control={form.control}
                 name={`qty`}
                 render={({ field }) => (
-                  <FormItem className='w-2/3'>
+                  <FormItem
+                    className={`w-2/3 ${category === 'PACKAGING_PRODUCT' ? 'hidden' : 'inline-block'}`}
+                  >
                     <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Quantity'
+                        {...field}
+                        className='h-10 w-full border-amber-950/25'
+                        type='number'
+                        onFocus={() => {
+                          if (field.value === 0) {
+                            field.onChange('')
+                          }
+                        }}
+                        onBlur={() => {
+                          if (
+                            field.value === null ||
+                            field.value === undefined
+                          ) {
+                            field.onChange(0)
+                          }
+                        }}
+                        onChange={(e) => {
+                          field.onChange(Number(e.target.value))
+                        }}
+                        autoComplete='off'
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`qty`}
+                render={({ field }) => (
+                  <FormItem
+                    className={`w-2/3 ${category !== 'PACKAGING_PRODUCT' ? 'hidden' : 'inline-block'}`}
+                  >
+                    <FormLabel>Quantity (kg)</FormLabel>
                     <FormControl>
                       <Input
                         placeholder='Quantity'

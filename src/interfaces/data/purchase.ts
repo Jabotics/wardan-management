@@ -34,4 +34,5 @@ export interface IPurchaseItem {
   unit: string
   amount: number
   price_per_kg: number
+  count?: number
 }

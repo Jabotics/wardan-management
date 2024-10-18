@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/select'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
-import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import {
   setNewSell,
   useAddSellMutation,
@@ -39,9 +38,6 @@ const SellItemForm = ({
 
   useGetReadyProductStockQuery({})
   const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
-
-  useGetAllVariantsQuery({})
-  const { variants } = useAppSelector((state: RootState) => state.variants)
 
   const [Add] = useAddSellMutation()
 
@@ -157,7 +153,7 @@ const SellItemForm = ({
                 <FormItem>
                   <FormLabel>Variant</FormLabel>
                   <FormControl>
-                    {variants && variants.length > 0 ? (
+                    {readyProducts && readyProducts.length > 0 ? (
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -166,10 +162,10 @@ const SellItemForm = ({
                           <SelectValue placeholder='Select a Variant' />
                         </SelectTrigger>
                         <SelectContent>
-                          {variants.map((item, index) => {
+                          {readyProducts.map((item, index) => {
                             return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
+                              <SelectItem value={item.variant._id || ''} key={index}>
+                                {item.variant.name}
                               </SelectItem>
                             )
                           })}

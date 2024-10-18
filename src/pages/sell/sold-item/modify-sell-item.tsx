@@ -17,7 +17,6 @@ import {
 import { Button } from '@/components/ui/button'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
-import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import {
   Select,
   SelectContent,
@@ -52,10 +51,9 @@ const ModifySellItems = ({
   const [Edit] = useUpdateSellItemMutation()
 
   useGetReadyProductStockQuery({})
-  const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
-
-  useGetAllVariantsQuery({})
-  const { variants } = useAppSelector((state: RootState) => state.variants)
+  const { readyProducts } = useAppSelector(
+    (state: RootState) => state.readyProducts
+  )
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
@@ -142,7 +140,10 @@ const ModifySellItems = ({
                         <SelectContent>
                           {readyProducts.map((item, index) => {
                             return (
-                              <SelectItem value={item.product._id || ''} key={index}>
+                              <SelectItem
+                                value={item.product._id || ''}
+                                key={index}
+                              >
                                 {item.product.name}
                               </SelectItem>
                             )
@@ -166,7 +167,7 @@ const ModifySellItems = ({
                 <FormItem>
                   <FormLabel>Variant</FormLabel>
                   <FormControl>
-                    {variants && variants.length > 0 ? (
+                    {readyProducts && readyProducts.length > 0 ? (
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
@@ -175,10 +176,13 @@ const ModifySellItems = ({
                           <SelectValue placeholder='Select a Variant' />
                         </SelectTrigger>
                         <SelectContent>
-                          {variants.map((item, index) => {
+                          {readyProducts.map((item, index) => {
                             return (
-                              <SelectItem value={item._id || ''} key={index}>
-                                {item.name}
+                              <SelectItem
+                                value={item.variant._id || ''}
+                                key={index}
+                              >
+                                {item.variant.name}
                               </SelectItem>
                             )
                           })}
@@ -267,7 +271,7 @@ const ModifySellItems = ({
             </div>
           </div>
 
-          <div className='flex items-center gap-2 w-full'>
+          <div className='flex w-full items-center gap-2'>
             <Button
               className='mt-5 h-10 w-full rounded-xl'
               type='button'

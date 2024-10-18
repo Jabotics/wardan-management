@@ -15,7 +15,8 @@ export function createData(
     name: string;
   },
   qty: number,
-  unit: string
+  unit: string,
+  count: number
 ): Data {
   return {
     _id,
@@ -23,7 +24,8 @@ export function createData(
     product,
     variant,
     qty,
-    unit
+    unit,
+    count
   }
 }
 

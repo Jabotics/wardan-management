@@ -13,7 +13,7 @@ const RawMaterialStocks = () => {
 
   const [search, setSearch] = useState<string>('')
 
-  useGetReadyProductStockQuery({})
+  useGetReadyProductStockQuery({}, { refetchOnMountOrArgChange: true })
   const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
 
   const rows = useMemo(
