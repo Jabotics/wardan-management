@@ -12,6 +12,7 @@ import {
   IconTruckDelivery,
   IconReceiptRefund,
   IconRotate3d,
+  IconBrandDatabricks,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -111,6 +112,14 @@ export const sidelinks: SideLink[] = [
         icon: <IconPackageImport size={18} />,
       },
     ],
+  },
+
+  // ASSETS
+  {
+    title: 'Assets',
+    label: '',
+    href: '/assets',
+    icon: <IconBrandDatabricks size={18} />,
   },
 
   // WASTAGE

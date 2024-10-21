@@ -136,8 +136,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       <TableToolbarActions
         open={editOpen}
         setOpen={setEditOpen}
-        deleteText={deleteText}
-        setDeleteText={setDeleteText}
+        text={deleteText}
+        setText={setDeleteText}
         label='Edit'
       >
         <FormComponent
@@ -154,8 +154,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
         label='Delete'
         handleDelete={handleDelete}
         isSubmitting={isSubmitting}
-        deleteText={deleteText}
-        setDeleteText={setDeleteText}
+        text={deleteText}
+        setText={setDeleteText}
       />
     </div>
   )

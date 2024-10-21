@@ -1,29 +1,24 @@
-import { useAppDispatch } from '@/store/hooks'
-import { Data } from './schema'
 import { useState } from 'react'
+import { Data } from './schema'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
+import { useRemoveAssetMutation } from '@/store/actions/slices/assetsSlice'
 import FormComponent from './@modify-data/form-component'
-import {
-  removeExporter,
-  useRemoveExporterMutation,
-} from '@/store/actions/slices/exportersSlice'
 
-export const Address = ({ data }: { data: Data }) => {
-  return (
-    <div className='flex h-full w-full items-center justify-center'>
-      <span className='w-[400px] text-xs'>{data.address}</span>
-    </div>
-  )
+export const ItemName = ({ data }: { data: Data }) => {
+  return <>{data?.item_name}</>
 }
 
-export const GSTNumber = ({ data }: { data: Data }) => {
-  return <>{data.gst_number}</>
+export const Amount = ({ data }: { data: Data }) => {
+  return <>{data?.amount}</>
+}
+
+export const Invoice = ({ data }: { data: Data }) => {
+  return <>{data?.invoice_no}</>
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {
-  const dispatch = useAppDispatch()
 
-  const [Delete] = useRemoveExporterMutation()
+  const [Delete] = useRemoveAssetMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [deleteText, setDeleteText] = useState<string>('')
@@ -39,7 +34,6 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
         if (res.status === 'fail') throw new Error(res.message)
 
-        dispatch(removeExporter({ id: data._id }))
         setDeleteOpen(false)
       } catch (error) {
         console.log(error)
@@ -68,13 +62,15 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       </TableToolbarActions>
 
       <TableToolbarActions
+        text={deleteText}
+        setText={setDeleteText}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         label='Delete'
         handleDelete={handleDelete}
-        text={deleteText}
-        setText={setDeleteText}
+        isSubmitting={isSubmitting}
       />
     </div>
   )
 }
+

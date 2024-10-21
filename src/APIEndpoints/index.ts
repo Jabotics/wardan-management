@@ -8,6 +8,7 @@ import { readyProductStockEndpoints } from "./endpoints/readyProductStock";
 import { sellerEndpoints } from "./endpoints/seller";
 import { variantsEndpoints } from "./endpoints/variant";
 import { wastageEndpoints } from "./endpoints/wastage";
+import { assetsEndpoints } from "./endpoints/assets";
 
 export const APIEndPoints = {
   // BackendURL: 'http://localhost:5000',
@@ -42,4 +43,7 @@ export const APIEndPoints = {
 
   // EXPORT
   ...exportEndpoints,
+
+  // ASSET
+  ...assetsEndpoints,
 }

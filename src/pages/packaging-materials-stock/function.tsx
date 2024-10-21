@@ -9,6 +9,5 @@ export const Variant = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  console.log(data)
-  return <>{`${data.qty} ${data.unit} (${data.count} pcs)`}</>
+  return <>{`${data.qty} ${data.unit}`}</>
 }

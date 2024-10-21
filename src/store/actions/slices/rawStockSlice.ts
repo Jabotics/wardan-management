@@ -36,6 +36,7 @@ export const rawStockApi = createApi({
       }
     },
   }),
+  tagTypes: ['RawStocks'],
   endpoints: (builder) => ({
     getRawStocks: builder.query<IncomingData, QueryParams>({
       query: (params) => {
@@ -45,6 +46,19 @@ export const rawStockApi = createApi({
           params: getCustomParams(params),
         }
       },
+      providesTags: ['RawStocks']
+    }),
+
+    resetRawMaterialStock: builder.mutation<IncomingData, { id: string }>({
+      query: (body) => {
+        const { id } = body
+
+        return {
+          url: `${APIEndPoints.reset_raw_material_stock}/${id}`,
+          method: 'PUT',
+        }
+      },
+      invalidatesTags: ['RawStocks']
     }),
   }),
 })
@@ -113,5 +127,5 @@ export const RawStockSlice = createSlice({
 })
 
 export default RawStockSlice.reducer
-export const { useGetRawStocksQuery } = rawStockApi
+export const { useGetRawStocksQuery, useResetRawMaterialStockMutation } = rawStockApi
 // export const {} = RawStockSlice.actions

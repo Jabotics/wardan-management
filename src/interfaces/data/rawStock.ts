@@ -20,7 +20,6 @@ export interface IPackagingProductStock extends IStock {
     _id: string;
     name: string;
   }
-  count: number
 }
 
 export interface IOtherStock extends IStock {

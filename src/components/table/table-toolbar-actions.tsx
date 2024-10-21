@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { MdEdit, MdDeleteOutline } from 'react-icons/md'
 import { Button } from '../custom/button'
 import { Input } from '../ui/input'
+import { GrPowerReset } from 'react-icons/gr'
 
 const TableToolbarActions = ({
   label,
@@ -17,21 +18,21 @@ const TableToolbarActions = ({
   setOpen,
   children,
   handleDelete,
+  handleReset,
   isSubmitting,
-  deleteText,
-  setDeleteText
+  text,
+  setText,
 }: {
-  label: 'Edit' | 'Delete'
+  label: 'Edit' | 'Delete' | 'Reset'
   open: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   children?: React.ReactNode
   handleDelete?: () => Promise<void>
+  handleReset?: () => Promise<void>
   isSubmitting?: boolean
-  deleteText: string
-  setDeleteText: React.Dispatch<React.SetStateAction<string>>
+  text: string
+  setText: React.Dispatch<React.SetStateAction<string>>
 }) => {
-  
-
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>
@@ -41,6 +42,8 @@ const TableToolbarActions = ({
         >
           {label === 'Edit' ? (
             <MdEdit size={15} />
+          ) : label === 'Reset' ? (
+            <GrPowerReset size={15} />
           ) : (
             <MdDeleteOutline size={15} />
           )}
@@ -49,14 +52,20 @@ const TableToolbarActions = ({
 
       <DialogContent>
         <DialogTitle>
-          {label === 'Edit' ? 'Update Details' : 'Delete Details'}
+          {label === 'Edit'
+            ? 'Update Details'
+            : label === 'Reset'
+              ? 'Reset Entry'
+              : 'Delete Details'}
         </DialogTitle>
         <Separator />
         <DialogDescription className='sr-only'>
           Table toolbar actions component
         </DialogDescription>
 
-        {children ?? (
+        {label === 'Edit' ? (
+          children
+        ) : label === 'Delete' ? (
           <span className='mb-5 flex flex-col gap-1'>
             <span className='text-lg'>
               Are you sure, you want to delete this record?
@@ -65,11 +74,31 @@ const TableToolbarActions = ({
               If you are sure, type 'delete' then Confirm else Cancel.
             </span>
             <Input
-              value={deleteText}
+              value={text}
               onChange={(e) => {
-                setDeleteText(e.target.value)
+                setText(e.target.value)
               }}
-              className={`${deleteText.trim() === 'delete' ? 'border-black' : 'border-red-500'} h-6 w-fit outline-none`}
+              className={`${text.trim() === 'delete' ? 'border-black' : 'border-red-500'} h-6 w-fit outline-none`}
+              style={{
+                boxShadow: 'none',
+                outline: 'none',
+              }}
+            />
+          </span>
+        ) : (
+          <span className='mb-5 flex flex-col gap-1'>
+            <span className='text-lg'>
+              Are you sure, you want to Reset this record?
+            </span>
+            <span className='text-sm text-gray-500'>
+              If you are sure, type 'reset' then Confirm else Cancel.
+            </span>
+            <Input
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value)
+              }}
+              className={`${text.trim() === 'reset' ? 'border-black' : 'border-red-500'} h-6 w-fit outline-none`}
               style={{
                 boxShadow: 'none',
                 outline: 'none',
@@ -88,9 +117,15 @@ const TableToolbarActions = ({
           </DialogClose>
           <DialogClose
             onClick={() => {
-              if (deleteText === 'delete') {
+              if (text === 'delete') {
                 handleDelete?.()
               }
+
+              if (text === 'reset') {
+                handleReset?.()
+              }
+
+              setText('')
             }}
             className={`w-full bg-gray-800 text-sm text-white ${label === 'Edit' ? 'hidden' : 'inline-block py-2'}`}
             disabled={isSubmitting}

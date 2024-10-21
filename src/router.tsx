@@ -86,6 +86,13 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'assets',
+        lazy: async () => ({
+          Component: (await import('./pages/assets')).default,
+        })
+      },
+
+      {
         path: 'wastage',
         lazy: async () => ({
           Component: (await import('./pages/wastage')).default,

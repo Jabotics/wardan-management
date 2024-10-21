@@ -66,8 +66,8 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
   return (
     <div className='flex items-center justify-center gap-2'>
       <TableToolbarActions
-        deleteText={deleteText}
-        setDeleteText={setDeleteText}
+        text={deleteText}
+        setText={setDeleteText}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         label='Delete'

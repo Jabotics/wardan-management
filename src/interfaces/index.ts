@@ -31,6 +31,12 @@ import {
   IUpdateSellItem,
 } from './data/export'
 
+import {
+  IAddAsset,
+  IAsset,
+  IUpdateAsset
+} from './data/assets'
+
 export type {
   // app
   EnhancedTableHeadProps,
@@ -63,4 +69,8 @@ export type {
   ISellItem,
   IUpdateSell,
   IUpdateSellItem,
+
+  IAddAsset,
+  IAsset,
+  IUpdateAsset,
 }

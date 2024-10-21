@@ -2,38 +2,37 @@ import EnhancedTable from "@/components/table"
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { createData, Data, headCells } from "./schema"
-import { useGetRawStocksQuery } from "@/store/actions/slices/rawStockSlice"
+import { useGetAllAssetsQuery } from "@/store/actions/slices/assetsSlice"
 import { useAppSelector } from "@/store/hooks"
 import { RootState } from "@/store"
 import { TableDataFilters } from "@/interfaces"
+import { ImportContactsTableConfig } from "./settings.constant"
 
-const RawMaterialStocks = () => {
+const Assets = () => {
   const { t } = useTranslation()
 
   const [search, setSearch] = useState<string>('')
 
-  useGetRawStocksQuery({}, { refetchOnMountOrArgChange: true })
-  const { packagingStock } = useAppSelector((state: RootState) => state.rawStocks)
+  useGetAllAssetsQuery({}, { refetchOnMountOrArgChange: true })
+  const { assets } = useAppSelector((state: RootState) => state.assets)
 
   const rows = useMemo(
     () =>
-      packagingStock?.map((item) =>
+      assets?.map((item) =>
         createData(
           item._id,
-          item.category,
-          item.product,
-          item.variant,
-          item.qty,
-          item.unit,
+          item.amount,
+          item.invoice_no,
+          item.item_name,
         )
       ) || [],
-    [packagingStock]
+    [assets]
   )
   
   const dataFilters: TableDataFilters = useMemo(
     () => ({
       searchBy: {
-        placeholderText: 'Search Packaging Material...',
+        placeholderText: 'Search for Assets...',
         actions: [search, setSearch],
       },
     }),
@@ -44,13 +43,13 @@ const RawMaterialStocks = () => {
     <EnhancedTable<Data>
       data={rows}
       headCells={headCells}
-      title={t('Packaging Material')}
+      title={t('Asset')}
       dense
       rowHeight={65}
-      // config={ImportContactsTableConfig}
+      config={ImportContactsTableConfig}
       dataFilters={{ ...dataFilters }}
     />
   )
 }
 
-export default RawMaterialStocks
+export default Assets

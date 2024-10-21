@@ -1,5 +1,5 @@
 import { HeadCell, IRawMaterialStock } from "@/interfaces";
-import { Product, Quantity } from "./function";
+import { Product, Quantity, ToolbarAction } from "./function";
 
 export interface Data extends IRawMaterialStock {}
 
@@ -38,5 +38,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Quantity',
     type: 'custom',
     body: Quantity
+  },
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: ToolbarAction
   },
 ]

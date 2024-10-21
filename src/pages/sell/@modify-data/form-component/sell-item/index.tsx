@@ -37,7 +37,9 @@ const SellItemForm = ({
   const dispatch = useAppDispatch()
 
   useGetReadyProductStockQuery({})
-  const { readyProducts } = useAppSelector((state: RootState) => state.readyProducts)
+  const { readyProducts } = useAppSelector(
+    (state: RootState) => state.readyProducts
+  )
 
   const [Add] = useAddSellMutation()
 
@@ -99,119 +101,70 @@ const SellItemForm = ({
     }
   }
 
-  console.log(form.watch())
   return (
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='h-full w-full overflow-y-auto overflow-x-hidden'
       >
-        {fields.map((_, index) => (
-          <div
-            key={index}
-            className='mb-10 rounded-3xl bg-amber-800/20 px-4 py-5'
-          >
-            <FormField
-              control={control}
-              name={`sellItems.${index}.product`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Products</FormLabel>
-                  <FormControl>
-                    {readyProducts && readyProducts.length > 0 ? (
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Product' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {readyProducts.map((item, index) => {
-                            return (
-                              <SelectItem value={item.product._id || ''} key={index}>
-                                {item.product.name}
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <div className='text-sm text-gray-300'>
-                        TRY ADDING PRODUCTS: Error in getting your products
-                      </div>
-                    )}
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+        {fields.map((_, index) => {
+          let selectedMrp: number
+          let selectedAvailableCount: number
 
-            <FormField
-              control={control}
-              name={`sellItems.${index}.variant`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Variant</FormLabel>
-                  <FormControl>
-                    {readyProducts && readyProducts.length > 0 ? (
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <SelectTrigger className='h-10 w-full border-amber-950/25'>
-                          <SelectValue placeholder='Select a Variant' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {readyProducts.map((item, index) => {
-                            return (
-                              <SelectItem value={item.variant._id || ''} key={index}>
-                                {item.variant.name}
-                              </SelectItem>
-                            )
-                          })}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <div className='text-sm text-gray-300'>
-                        TRY ADDING VARIANT: Error in getting your variants
-                      </div>
-                    )}
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+          const selectedProduct = form.getValues(`sellItems.${index}.product`)
+          const selectedVariant = form.getValues(`sellItems.${index}.variant`)
 
-            <div className='mb-5 mt-2 flex w-full items-center gap-2'>
+          if (selectedProduct !== '' && selectedVariant !== '') {
+            const selectedSellItem = readyProducts.find(
+              (i) =>
+                i.product._id === selectedProduct &&
+                i.variant._id === selectedVariant
+            )
+
+            if (selectedSellItem) {
+              selectedMrp = selectedSellItem.mrp
+              selectedAvailableCount = selectedSellItem.count
+            }
+          }
+
+          return (
+            <div
+              key={index}
+              className='mb-10 rounded-3xl bg-amber-800/20 px-4 py-5'
+            >
               <FormField
                 control={control}
-                name={`sellItems.${index}.qty`}
+                name={`sellItems.${index}.product`}
                 render={({ field }) => (
-                  <FormItem className='w-2/3'>
-                    <FormLabel># of pieces</FormLabel>
+                  <FormItem>
+                    <FormLabel>Products</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Quantity'
-                        {...field}
-                        className='h-10 w-full border-amber-950/25'
-                        type='number'
-                        onFocus={() => {
-                          if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
-                          }
-                        }}
-                        onBlur={() => {
-                          if (
-                            field.value === null ||
-                            field.value === undefined
-                          ) {
-                            field.onChange(0) // Revert to default value if empty
-                          }
-                        }}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value))
-                        }}
-                        autoComplete='off'
-                      />
+                      {readyProducts && readyProducts.length > 0 ? (
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className='h-10 w-full border-amber-950/25'>
+                            <SelectValue placeholder='Select a Product' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {readyProducts.map((item, index) => {
+                              return (
+                                <SelectItem
+                                  value={item.product._id || ''}
+                                  key={index}
+                                >
+                                  {item.product.name}
+                                </SelectItem>
+                              )
+                            })}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className='text-sm text-gray-300'>
+                          TRY ADDING PRODUCTS: Error in getting your products
+                        </div>
+                      )}
                     </FormControl>
                   </FormItem>
                 )}
@@ -219,51 +172,144 @@ const SellItemForm = ({
 
               <FormField
                 control={control}
-                name={`sellItems.${index}.amount`}
+                name={`sellItems.${index}.variant`}
                 render={({ field }) => (
-                  <FormItem className='h-full w-1/3'>
-                    <FormLabel>Amount</FormLabel>
+                  <FormItem>
+                    <FormLabel>Variant</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Amount'
-                        {...field}
-                        className='h-10 border-amber-950/25'
-                        type='number'
-                        onFocus={() => {
-                          if (field.value === 0) {
-                            field.onChange('')
-                          }
-                        }}
-                        onBlur={() => {
-                          if (
-                            field.value === null ||
-                            field.value === undefined
-                          ) {
-                            field.onChange(0)
-                          }
-                        }}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value))
-                        }}
-                        autoComplete='off'
-                      />
+                      {readyProducts && readyProducts.length > 0 ? (
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className='h-10 w-full border-amber-950/25'>
+                            <SelectValue placeholder='Select a Variant' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {readyProducts.map((item, index) => {
+                              return (
+                                <SelectItem
+                                  value={item.variant._id || ''}
+                                  key={index}
+                                >
+                                  {item.variant.name}
+                                </SelectItem>
+                              )
+                            })}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className='text-sm text-gray-300'>
+                          TRY ADDING VARIANT: Error in getting your variants
+                        </div>
+                      )}
                     </FormControl>
                   </FormItem>
                 )}
               />
+
+              <div className='mb-5 mt-2 flex w-full items-center gap-2'>
+                <FormField
+                  control={control}
+                  name={`sellItems.${index}.qty`}
+                  render={({ field }) => (
+                    <FormItem className='w-2/3'>
+                      <FormLabel>
+                        <span>
+                          # of pieces{' '}
+                          <span
+                            className={`${selectedAvailableCount ? 'inline-block' : 'hidden'}`}
+                          >
+                            (Available: {selectedAvailableCount})
+                          </span>
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Quantity'
+                          {...field}
+                          className='h-10 w-full border-amber-950/25'
+                          type='number'
+                          onFocus={() => {
+                            if (field.value === 0) {
+                              field.onChange('') // Clear the input on focus
+                            }
+                          }}
+                          onBlur={() => {
+                            if (
+                              field.value === null ||
+                              field.value === undefined
+                            ) {
+                              field.onChange(0) // Revert to default value if empty
+                            }
+                          }}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value))
+                          }}
+                          autoComplete='off'
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`sellItems.${index}.amount`}
+                  render={({ field }) => (
+                    <FormItem className='h-full w-1/3'>
+                      <FormLabel>
+                        <span>
+                          Amount{' '}
+                          <span
+                            className={`${selectedMrp ? 'inline-block' : 'hidden'}`}
+                          >
+                            (Mrp: ₹{selectedMrp})
+                          </span>
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Amount'
+                          {...field}
+                          className='h-10 border-amber-950/25'
+                          type='number'
+                          onFocus={() => {
+                            if (field.value === 0) {
+                              field.onChange('')
+                            }
+                          }}
+                          onBlur={() => {
+                            if (
+                              field.value === null ||
+                              field.value === undefined
+                            ) {
+                              field.onChange(0)
+                            }
+                          }}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value))
+                          }}
+                          autoComplete='off'
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {fields.length > 1 && (
+                <Button
+                  type='button'
+                  onClick={() => remove(index)}
+                  className='mt-10 bg-red-800'
+                >
+                  <RiDeleteBinLine className='text-white' />
+                </Button>
+              )}
             </div>
-
-            {fields.length > 1 && (
-              <Button
-                type='button'
-                onClick={() => remove(index)}
-                className='mt-10 bg-red-800'
-              >
-                <RiDeleteBinLine className='text-white' />
-              </Button>
-            )}
-          </div>
-        ))}
+          )
+        })}
         <div className='flex w-full items-center justify-between gap-2'>
           <Button
             type='button'
