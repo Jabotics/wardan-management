@@ -21,43 +21,43 @@ import {
 import FormComponent from './@modify-data/form-component'
 import ModifySellItems from './sold-item/modify-sell-item'
 import { APIEndPoints } from '@/APIEndpoints'
+import { Link } from 'react-router-dom'
 
 export const TotalAmount = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleClickInvoice = async () => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
+      const pdfUrl = `${APIEndPoints.BackendURL}/${APIEndPoints.generate_sell_invoice}/${data?._id}`
 
-      const pdfUrl = `${APIEndPoints.BackendURL}/${APIEndPoints.generate_sell_invoice}/${data?._id}`;
-
-      const newTab = window.open(pdfUrl, '_blank');
+      const newTab = window.open(pdfUrl, '_blank')
       if (newTab) {
-        newTab.document.title = `invoice_${data?.invoice_no}.pdf`; 
+        newTab.document.title = `invoice_${data?.invoice_no}.pdf`
       }
 
-      setIsLoading(false);
+      setIsLoading(false)
     } catch (err) {
-      console.error('Error generating invoice:', err);
-      setError('Error generating invoice');
-      setIsLoading(false);
+      console.error('Error generating invoice:', err)
+      setError('Error generating invoice')
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <span onClick={handleClickInvoice} className='underline'>
       {isLoading ? 'Generating...' : data?.invoice_no}
-      {error && <span className="error-message">{error}</span>}
+      {error && <span className='error-message'>{error}</span>}
     </span>
-  );
-};
+  )
+}
 
 export const CreatedAt = ({ data }: { data: Data }) => {
   return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
@@ -67,17 +67,19 @@ export const Buyer = ({ data }: { data: Data }) => {
   return (
     <Tooltip
       title={
-        <div className='flex flex-col items-center justify-center gap-1 px-5 py-1'>
-          <p className='font-medium'>{data?.buyer?.name}</p>
-          <p className='font-mono font-light tracking-wide'>
+        <div className='flex flex-col items-center justify-center gap-1 bg-white px-5 py-1'>
+          <p className='font-medium text-black'>{data?.buyer?.name}</p>
+          <p className='font-mono font-light tracking-wide text-black'>
             {'GST no. ' + data?.buyer?.gst_number}
           </p>
-          <p className='text-xs'>{data?.buyer?.address}</p>
+          <p className='text-xs text-black'>{data?.buyer?.address}</p>
         </div>
       }
       placement='top'
     >
-      <div className='text-center underline'>{data?.buyer?.name}</div>
+      <Link to={'/export-contacts'} className='text-center underline'>
+        {data?.buyer?.name}
+      </Link>
     </Tooltip>
   )
 }

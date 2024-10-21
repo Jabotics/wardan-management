@@ -16,38 +16,83 @@ import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
 import ModifyPurchaseItems from './purchase-item/modify-purchase-item'
+import { formatDateToIST } from '@/lib/utils'
+import { Link } from 'react-router-dom'
+import { Separator } from '@/components/ui/separator'
 
 export const Total = ({ data }: { data: Data }) => {
-  return <>{'₹ ' + data.total_amount}</>
+  return (
+    <Tooltip
+      title={
+        <div className='flex flex-col items-center justify-center gap-1 px-5 py-1'>
+          <div className='flex items-center gap-2 text-white'>
+            <p>Loading-Unloading:</p>
+            <p>{'₹ ' + data.unloading_charge}</p>
+          </div>
+          <div className='flex items-center gap-2 text-white'>
+            <p>Transportation:</p>
+            <p>{'₹ ' + data.transportation_charge}</p>
+          </div>
+        </div>
+      }
+      placement='bottom'
+    >
+      <span className='underline'>{'₹ ' + data.total_amount}</span>
+    </Tooltip>
+  )
 }
 
 export const Transportation = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.transportation_charge}</>
 }
 
-export const Unloading = ({ data }: { data: Data }) => {
-  return <>{'₹ ' + data.unloading_charge}</>
+export const UploadInvoice = ({ data }: { data: Data }) => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger asChild>
+          <span className='border px-5 py-3'>Upload Invoice</span>
+        </DialogTrigger>
+
+        <DialogContent className=''>
+          <DialogTitle>Images</DialogTitle>
+          <DialogDescription className='sr-only'>
+            Images of the invoices
+          </DialogDescription>
+          <Separator />
+
+          <div className='h-[45vh] w-full'></div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.invoice_amount}</>
 }
 
+export const CreatedAt = ({ data }: { data: Data }) => {
+  return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
+}
+
 export const Seller = ({ data }: { data: Data }) => {
   return (
     <Tooltip
       title={
-        <div className='flex flex-col items-center justify-center gap-1 px-5 py-1'>
-          <p className='font-medium'>{data.seller.name}</p>
-          <p className='font-mono font-light tracking-wide'>
-            {'GST no. ' + data.seller.gst_number}
+        <div className='flex flex-col items-center justify-center gap-1 bg-white px-5 py-1'>
+          <p className='font-medium text-black'>{data?.seller?.name}</p>
+          <p className='font-mono font-light tracking-wide text-black'>
+            {'GST no. ' + data?.seller?.gst_number}
           </p>
-          <p className='text-xs'>{data.seller.address}</p>
+          <p className='text-xs text-black'>{data?.seller?.address}</p>
         </div>
       }
       placement='top'
     >
-      <div className='text-center underline'>{data.seller.name}</div>
+      <Link to={'/import-contacts'} className='text-center underline'>
+        {data?.seller?.name}
+      </Link>
     </Tooltip>
   )
 }
@@ -75,7 +120,11 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
           <DialogDescription className='sr-only'>
             All the items purchased in this purchase
           </DialogDescription>
-          <PurchaseItemsComponent purchaseId={data._id} setClose={setOpen} category={data.category} />
+          <PurchaseItemsComponent
+            purchaseId={data._id}
+            setClose={setOpen}
+            category={data.category}
+          />
 
           <Drawer open={drawerOpen}>
             <DrawerTrigger asChild>

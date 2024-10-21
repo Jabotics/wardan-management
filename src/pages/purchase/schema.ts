@@ -1,9 +1,9 @@
 import { HeadCell } from '@/interfaces'
 import { IPurchase } from '@/interfaces'
 import {
-  Transportation,
   Total,
-  Unloading,
+  UploadInvoice,
+  CreatedAt,
   PurchaseItems,
   Seller,
   Invoice,
@@ -74,28 +74,28 @@ export const headCells: HeadCell<Data>[] = [
     body: Invoice,
   },
   {
-    id: 'transportation_charge',
-    numeric: true,
-    disablePadding: true,
-    label: 'Transportation',
-    type: 'custom',
-    body: Transportation,
-  },
-  {
-    id: 'unloading_charge',
-    numeric: true,
-    disablePadding: true,
-    label: 'Loading-Unloading',
-    type: 'custom',
-    body: Unloading,
-  },
-  {
     id: 'total_amount',
     numeric: true,
     disablePadding: true,
     label: 'Net Total',
     type: 'custom',
     body: Total,
+  },
+  {
+    id: 'createdAt',
+    numeric: true,
+    disablePadding: true,
+    label: 'Created On',
+    type: 'custom',
+    body: CreatedAt,
+  },
+  {
+    id: 'unloading_charge',
+    numeric: true,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: UploadInvoice,
   },
   {
     id: '_id',
