@@ -1,6 +1,6 @@
 import { HeadCell } from '@/interfaces'
 import { ISeller } from '@/interfaces'
-import { Address, GSTNumber, ToolbarAction } from './function'
+import { Address, GSTNumber, ToolbarAction, ToPay } from './function'
 
 export interface Data extends ISeller {}
 
@@ -9,9 +9,10 @@ export function createData(
   name: string,
   address: string,
   gst_number: string,
-  phone: string
+  phone: string,
+  payable_amount?: number
 ): Data {
-  return { _id, name, address, gst_number, phone }
+  return { _id, name, address, gst_number, phone, payable_amount }
 }
 
 export const headCells: HeadCell<Data>[] = [
@@ -21,6 +22,14 @@ export const headCells: HeadCell<Data>[] = [
     disablePadding: true,
     label: 'Name',
     type: 'string',
+  },
+  {
+    id: 'payable_amount',
+    numeric: true,
+    disablePadding: false,
+    label: 'To Pay',
+    type: 'custom',
+    body: ToPay,
   },
   {
     id: 'address',

@@ -51,7 +51,8 @@ const Purchase = () => {
           item.buyer,
           item.total_qty,
           item.total_amount,
-          item.createdAt
+          item.createdAt,
+          item.invoice_no,
         )
       ) || [],
     [sell]

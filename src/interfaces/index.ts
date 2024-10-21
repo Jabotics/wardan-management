@@ -37,6 +37,18 @@ import {
   IUpdateAsset
 } from './data/assets'
 
+import {
+  IAddPayment,
+  IPayment,
+  IUpdatePayment
+} from './data/payments'
+
+import {
+  IAddReceipt,
+  IReceipt,
+  IUpdateReceipt
+} from './data/receipts'
+
 export type {
   // app
   EnhancedTableHeadProps,
@@ -73,4 +85,12 @@ export type {
   IAddAsset,
   IAsset,
   IUpdateAsset,
+
+  IPayment,
+  IAddPayment,
+  IUpdatePayment,
+
+  IReceipt,
+  IAddReceipt,
+  IUpdateReceipt,
 }

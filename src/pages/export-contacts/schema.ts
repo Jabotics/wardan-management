@@ -1,6 +1,6 @@
 import { HeadCell } from '@/interfaces'
 import { IBuyer } from '@/interfaces/data/traders'
-import { Address, GSTNumber, ToolbarAction } from './function'
+import { Address, ToReceive, GSTNumber, ToolbarAction } from './function'
 
 export interface Data extends IBuyer {}
 
@@ -9,9 +9,10 @@ export function createData(
   name: string,
   address: string,
   gst_number: string,
-  phone: string
+  phone: string,
+  outstanding_amount?: number
 ): Data {
-  return { _id, name, address, gst_number, phone }
+  return { _id, name, address, gst_number, phone, outstanding_amount }
 }
 
 export const headCells: HeadCell<Data>[] = [
@@ -21,6 +22,14 @@ export const headCells: HeadCell<Data>[] = [
     disablePadding: true,
     label: 'Name',
     type: 'string',
+  },
+  {
+    id: 'outstanding_amount',
+    numeric: true,
+    disablePadding: false,
+    label: 'To Receive',
+    type: 'custom',
+    body: ToReceive,
   },
   {
     id: 'address',

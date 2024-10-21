@@ -52,6 +52,7 @@ export interface ISell extends ISellBase {
   _id: string; 
   buyer: IBuyer; 
   createdAt: string; 
+  invoice_no?: string;
 }
 
 /**

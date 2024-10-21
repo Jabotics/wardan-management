@@ -1,5 +1,5 @@
 import { HeadCell, ISell } from '@/interfaces'
-import { Buyer, CreatedAt, SoldItems, ToolbarAction, TotalAmount } from './function'
+import { Buyer, CreatedAt, Invoice, SoldItems, ToolbarAction, TotalAmount } from './function'
 
 export interface Data extends ISell {}
 
@@ -13,7 +13,8 @@ export function createData(
   },
   total_qty: number,
   total_amount: number,
-  createdAt: string
+  createdAt: string,
+  invoice_no?: string
 ): Data {
   return {
     _id,
@@ -21,6 +22,7 @@ export function createData(
     total_qty,
     total_amount,
     createdAt,
+    invoice_no
   }
 }
 
@@ -56,6 +58,14 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Created On',
     type: 'custom',
     body: CreatedAt,
+  },
+  {
+    id: 'invoice_no',
+    numeric: true,
+    disablePadding: true,
+    label: 'Invoice',
+    type: 'custom',
+    body: Invoice,
   },
   {
     id: '_id',

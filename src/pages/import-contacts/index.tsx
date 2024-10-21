@@ -9,7 +9,7 @@ import { ImportContactsTableConfig } from './settings.constant';
 const ImportersPage = () => {
   const { t } = useTranslation();
 
-  useGetAllImportersQuery({});
+  useGetAllImportersQuery({}, { refetchOnMountOrArgChange: true });
   const { importers } = useAppSelector((state: RootState) => state.importers)
 
   const rows = importers?.map((item) =>
@@ -18,7 +18,8 @@ const ImportersPage = () => {
       item.name,
       item.address,
       item.gst_number,
-      item.phone
+      item.phone,
+      item.payable_amount
     )
   )
 

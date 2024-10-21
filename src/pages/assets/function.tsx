@@ -9,7 +9,7 @@ export const ItemName = ({ data }: { data: Data }) => {
 }
 
 export const Amount = ({ data }: { data: Data }) => {
-  return <>{data?.amount}</>
+  return <>{`₹ ${data?.amount}`}</>
 }
 
 export const Invoice = ({ data }: { data: Data }) => {

@@ -9,7 +9,7 @@ import { ExportContactsTableConfig } from './settings.constant';
 const ImportersPage = () => {
   const { t } = useTranslation();
 
-  useGetAllExportersQuery({});
+  useGetAllExportersQuery({}, { refetchOnMountOrArgChange: true });
   const { exporters } = useAppSelector((state: RootState) => state.exporters)
 
   const rows = exporters?.map((item) =>
@@ -18,7 +18,8 @@ const ImportersPage = () => {
       item.name,
       item.address,
       item.gst_number,
-      item.phone
+      item.phone,
+      item.outstanding_amount
     )
   )
 

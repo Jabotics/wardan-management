@@ -133,5 +133,7 @@ export const exportEndpoints = {
  * 
  * @apiSuccess {String} message   /// Confirmation message indicating successful removal
  */
-  remove_sell: '/api/sell/remove-sell'
+  remove_sell: '/api/sell/remove-sell',
+
+  generate_sell_invoice: 'api/sell/generate-invoice'
 }

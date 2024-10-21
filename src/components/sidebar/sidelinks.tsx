@@ -4,15 +4,18 @@ import {
   IconHexagonNumber1,
   IconHexagonNumber2,
   IconHexagonNumber3,
-  IconStack2Filled,
+  IconBrandDatabricks,
   IconAddressBook,
   IconPackageImport,
   IconPackageExport,
   IconCreditCardPay,
+  IconCubeSend,
   IconTruckDelivery,
   IconReceiptRefund,
   IconRotate3d,
-  IconBrandDatabricks,
+  IconAsset,
+  IconCurrencyRupee,
+  IconReceiptRupee,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -41,7 +44,7 @@ export const sidelinks: SideLink[] = [
     title: 'Stock',
     label: '',
     href: '',
-    icon: <IconStack2Filled size={18} />,
+    icon: <IconBrandDatabricks size={18} />,
     sub: [
       {
         title: 'Raw Materials',
@@ -70,12 +73,12 @@ export const sidelinks: SideLink[] = [
     ],
   },
 
-  // TRANSACTION
+  // SHIPMENT
   {
-    title: 'Transactions',
+    title: 'Shipments',
     label: '',
     href: '',
-    icon: <IconCreditCardPay size={18} />,
+    icon: <IconCubeSend size={24} />,
     sub: [
       {
         title: 'Purchase',
@@ -88,6 +91,36 @@ export const sidelinks: SideLink[] = [
         label: '',
         href: '/sell',
         icon: <IconTruckDelivery size={18} />,
+      },
+    ],
+  },
+
+  // ASSETS
+  {
+    title: 'Assets',
+    label: '',
+    href: '/assets',
+    icon: <IconAsset size={18} />,
+  },
+
+  // TRANSACTION
+  {
+    title: 'Transactions',
+    label: '',
+    href: '',
+    icon: <IconCurrencyRupee size={18} />,
+    sub: [
+      {
+        title: 'Payment',
+        label: '',
+        href: '/payments',
+        icon: <IconCreditCardPay size={18} />,
+      },
+      {
+        title: 'Receipt',
+        label: '',
+        href: '/receipts',
+        icon: <IconReceiptRupee size={18} />,
       },
     ],
   },
@@ -112,14 +145,6 @@ export const sidelinks: SideLink[] = [
         icon: <IconPackageImport size={18} />,
       },
     ],
-  },
-
-  // ASSETS
-  {
-    title: 'Assets',
-    label: '',
-    href: '/assets',
-    icon: <IconBrandDatabricks size={18} />,
   },
 
   // WASTAGE

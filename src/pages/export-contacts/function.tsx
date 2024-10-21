@@ -20,6 +20,10 @@ export const GSTNumber = ({ data }: { data: Data }) => {
   return <>{data.gst_number}</>
 }
 
+export const ToReceive = ({ data }: { data: Data }) => {
+  return <span className='text-green-700'>{`₹ ${data?.outstanding_amount}` || ''}</span>
+}
+
 export const ToolbarAction = ({ data }: { data: Data }) => {
   const dispatch = useAppDispatch()
 

@@ -27,6 +27,10 @@ import {
   exportsSlice,
   assetsApi,
   assetsSlice,
+  paymentsApi,
+  paymentsSlice,
+  receiptsApi,
+  receiptsSlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
@@ -47,6 +51,8 @@ export const rootReducer = combineReducers({
   readyProducts: readyProductStocksSlice,
   sell: exportsSlice,
   assets: assetsSlice,
+  payments: paymentsSlice,
+  receipts: receiptsSlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
@@ -60,5 +66,7 @@ export const rootReducer = combineReducers({
   [readyProductStocksApi.reducerPath]: readyProductStocksApi.reducer,
   [exportsApi.reducerPath]: exportsApi.reducer,
   [assetsApi.reducerPath]: assetsApi.reducer,
+  [paymentsApi.reducerPath]: paymentsApi.reducer,
+  [receiptsApi.reducerPath]: receiptsApi.reducer,
   
 })

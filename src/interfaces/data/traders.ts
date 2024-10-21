@@ -8,6 +8,10 @@ interface Traders {
   is_active?: boolean
 }
 
-export interface ISeller extends Traders {}
+export interface ISeller extends Traders {
+  payable_amount?: number
+}
 
-export interface IBuyer extends Traders {}
+export interface IBuyer extends Traders {
+  outstanding_amount?: number
+}

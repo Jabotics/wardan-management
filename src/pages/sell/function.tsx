@@ -14,13 +14,50 @@ import { useState } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 import { formatDateToIST } from '@/lib/utils'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
-import { useRemoveSellMutation } from '@/store/actions/slices/exportSlice'
+import {
+  // useGenerateInvoiceQuery,
+  useRemoveSellMutation,
+} from '@/store/actions/slices/exportSlice'
 import FormComponent from './@modify-data/form-component'
 import ModifySellItems from './sold-item/modify-sell-item'
+import { APIEndPoints } from '@/APIEndpoints'
 
 export const TotalAmount = ({ data }: { data: Data }) => {
   return <>{'₹ ' + data.total_amount}</>
 }
+
+export const Invoice = ({ data }: { data: Data }) => {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClickInvoice = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+
+      const pdfUrl = `${APIEndPoints.BackendURL}/${APIEndPoints.generate_sell_invoice}/${data?._id}`;
+
+      const newTab = window.open(pdfUrl, '_blank');
+      if (newTab) {
+        newTab.document.title = `invoice_${data?.invoice_no}.pdf`; 
+      }
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error generating invoice:', err);
+      setError('Error generating invoice');
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <span onClick={handleClickInvoice} className='underline'>
+      {isLoading ? 'Generating...' : data?.invoice_no}
+      {error && <span className="error-message">{error}</span>}
+    </span>
+  );
+};
 
 export const CreatedAt = ({ data }: { data: Data }) => {
   return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>

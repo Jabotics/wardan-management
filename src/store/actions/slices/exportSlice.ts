@@ -72,7 +72,7 @@ export const exportsApi = createApi({
           method: 'GET',
         }
       },
-      providesTags: ['SellItems']
+      providesTags: ['SellItems'],
     }),
 
     addSell: builder.mutation<ResponseType, IAddSell>({
@@ -84,7 +84,7 @@ export const exportsApi = createApi({
           body: rest,
         }
       },
-      invalidatesTags: ['Sell']
+      invalidatesTags: ['Sell'],
     }),
 
     addSellItem: builder.mutation<ResponseType, IAddSellItem>({
@@ -96,7 +96,7 @@ export const exportsApi = createApi({
           body: rest,
         }
       },
-      invalidatesTags: ['SellItems']
+      invalidatesTags: ['SellItems'],
     }),
 
     removeSellItem: builder.mutation<unknown, { id: string }>({
@@ -107,20 +107,28 @@ export const exportsApi = createApi({
           method: 'DELETE',
         }
       },
-      invalidatesTags: ['SellItems']
+      invalidatesTags: ['SellItems'],
     }),
 
-    updateSell: builder.mutation<unknown, { _id: string, buyer: string }>({
+    generateInvoice: builder.query({
+      query: (id) => ({
+        url: `/invoices/${id}`,
+        method: 'GET',
+        responseType: 'blob',
+      }),
+    }),
+
+    updateSell: builder.mutation<unknown, { _id: string; buyer: string }>({
       query: (body) => {
         const { ...rest } = body
 
         return {
           url: APIEndPoints.update_sell,
           method: 'PUT',
-          body: rest
+          body: rest,
         }
       },
-      invalidatesTags: ['Sell']
+      invalidatesTags: ['Sell'],
     }),
 
     removeSell: builder.mutation<IncomingData, { id: string }>({
@@ -131,7 +139,7 @@ export const exportsApi = createApi({
           method: 'DELETE',
         }
       },
-      invalidatesTags: ['Sell']
+      invalidatesTags: ['Sell'],
     }),
 
     updateSellItem: builder.mutation<IncomingData, IUpdateSellItem>({
@@ -140,11 +148,11 @@ export const exportsApi = createApi({
         return {
           url: APIEndPoints.update_sell_item,
           method: 'PUT',
-          body: rest
+          body: rest,
         }
       },
-      invalidatesTags: ['SellItems']
-    })
+      invalidatesTags: ['SellItems'],
+    }),
   }),
 })
 
@@ -222,6 +230,7 @@ export const {
   useRemoveSellItemMutation,
   useUpdateSellMutation,
   useRemoveSellMutation,
-  useUpdateSellItemMutation
+  useUpdateSellItemMutation,
+  useGenerateInvoiceQuery,
 } = exportsApi
 export const { setSellAddInfo, setNewSell } = ExportSlice.actions

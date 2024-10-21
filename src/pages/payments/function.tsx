@@ -1,33 +1,39 @@
-import { Data } from './schema'
 import { useState } from 'react'
+import { Data } from './schema'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
+import { useRemovePaymentMutation } from '@/store/actions/slices/paymentSlice'
 import FormComponent from './@modify-data/form-component'
-import {
-  removeImporter,
-  useRemoveImporterMutation,
-} from '@/store/actions/slices/importersSlice'
-import { useAppDispatch } from '@/store/hooks'
+import { formatDateToIST } from '@/lib/utils'
 
-export const Address = ({ data }: { data: Data }) => {
+export const Amount = ({ data }: { data: Data }) => {
+  return <>{`₹ ${data?.amount}`}</>
+}
+
+export const Seller = ({ data }: { data: Data }) => {
+  return <>{`${data?.seller?.name}`}</>
+}
+
+export const Remarks = ({ data }: { data: Data }) => {
+  const remarks = data?.remarks || '';
+  const isLong = remarks.length > 40;
+
+  if (data?.remarks === '') return <span className='text-gray-400 font-semibold'>NO REMARKS</span>
+
   return (
-    <div className='flex h-full w-full items-center justify-center'>
-      <span className='w-[400px] text-xs'>{data.address}</span>
-    </div>
-  )
-}
+    <span className='text-xs text-gray-400'>
+      {isLong ? `${remarks.substring(0, 40)}...` : remarks}
+    </span>
+  );
+};
 
-export const GSTNumber = ({ data }: { data: Data }) => {
-  return <>{data.gst_number}</>
-}
 
-export const ToPay = ({ data }: { data: Data }) => {
-  return <span className='text-red-700'>{`₹ ${data?.payable_amount}` || ''}</span>
+export const CreatedAt = ({ data }: { data: Data }): JSX.Element => {
+  return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {
-  const dispatch = useAppDispatch()
 
-  const [Delete] = useRemoveImporterMutation()
+  const [Delete] = useRemovePaymentMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [deleteText, setDeleteText] = useState<string>('')
@@ -43,7 +49,6 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
         if (res.status === 'fail') throw new Error(res.message)
 
-        dispatch(removeImporter({ id: data._id }))
         setDeleteOpen(false)
       } catch (error) {
         console.log(error)
@@ -72,13 +77,15 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       </TableToolbarActions>
 
       <TableToolbarActions
+        text={deleteText}
+        setText={setDeleteText}
         open={deleteOpen}
         setOpen={setDeleteOpen}
         label='Delete'
         handleDelete={handleDelete}
-        text={deleteText}
-        setText={setDeleteText}
+        isSubmitting={isSubmitting}
       />
     </div>
   )
 }
+

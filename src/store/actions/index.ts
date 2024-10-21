@@ -11,6 +11,8 @@ import wastageSlice, { wastageApi } from "./slices/wastageSlice"
 import exportsSlice, { exportsApi } from "./slices/exportSlice"
 import readyProductStocksSlice, { readyProductStocksApi } from "./slices/readyProductStockSlice"
 import assetsSlice, { assetsApi } from "./slices/assetsSlice"
+import paymentsSlice, { paymentsApi } from "./slices/paymentSlice"
+import receiptsSlice, { receiptsApi } from "./slices/receiptsSlice"
 
 export {
   appSlice,
@@ -37,5 +39,9 @@ export {
   exportsApi,
   exportsSlice,
   assetsApi,
-  assetsSlice
+  assetsSlice,
+  paymentsApi,
+  paymentsSlice,
+  receiptsApi,
+  receiptsSlice,
 }
