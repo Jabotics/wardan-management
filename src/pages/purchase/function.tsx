@@ -39,13 +39,13 @@ export const Total = ({ data }: { data: Data }) => {
       }
       placement='bottom'
     >
-      <span className='underline'>{'₹ ' + data.total_amount}</span>
+      <span className='underline whitespace-nowrap mx-5'>{'₹ ' + data.total_amount}</span>
     </Tooltip>
   )
 }
 
 export const Transportation = ({ data }: { data: Data }) => {
-  return <>{'₹ ' + data.transportation_charge}</>
+  return <span className='whitespace-nowrap mx-5'>{'₹ ' + data.transportation_charge}</span>
 }
 
 export const UploadInvoice = ({ data }: { data: Data }) => {
@@ -61,7 +61,7 @@ export const Invoice = ({ data }: { data: Data }) => {
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {
-  return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
+  return <span className='whitespace-nowrap'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
 }
 
 export const Seller = ({ data }: { data: Data }) => {
@@ -78,7 +78,7 @@ export const Seller = ({ data }: { data: Data }) => {
       }
       placement='top'
     >
-      <Link to={'/import-contacts'} className='text-center underline'>
+      <Link to={'/import-contacts'} className='text-center underline mx-5 whitespace-nowrap'>
         {data?.seller?.name}
       </Link>
     </Tooltip>
@@ -95,7 +95,7 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
       <Dialog open={open}>
         <DialogTrigger asChild>
           <div
-            className='flex items-center justify-center'
+            className='flex items-center justify-center mx-10'
             onClick={() => {
               setOpen(true)
             }}

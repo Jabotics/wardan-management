@@ -7,6 +7,7 @@ import {
   removeExporter,
   useRemoveExporterMutation,
 } from '@/store/actions/slices/exportersSlice'
+import { Link } from 'react-router-dom'
 
 export const Address = ({ data }: { data: Data }) => {
   return (
@@ -21,7 +22,14 @@ export const GSTNumber = ({ data }: { data: Data }) => {
 }
 
 export const ToReceive = ({ data }: { data: Data }) => {
-  return <span className='text-green-700'>{`₹ ${data?.outstanding_amount}` || ''}</span>
+  return (
+    <Link
+      to={`/receipts?buyer=${data._id}`}
+      className='text-green-700 underline'
+    >
+      {`₹ ${data?.outstanding_amount}` || ''}
+    </Link>
+  )
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {

@@ -7,6 +7,7 @@ import {
   useRemoveImporterMutation,
 } from '@/store/actions/slices/importersSlice'
 import { useAppDispatch } from '@/store/hooks'
+import { Link } from 'react-router-dom'
 
 export const Address = ({ data }: { data: Data }) => {
   return (
@@ -21,7 +22,14 @@ export const GSTNumber = ({ data }: { data: Data }) => {
 }
 
 export const ToPay = ({ data }: { data: Data }) => {
-  return <span className='text-red-700'>{`₹ ${data?.payable_amount}` || ''}</span>
+  return (
+    <Link
+      to={`/payments?seller=${data._id}`}
+      className='text-red-700 underline'
+    >
+      {`₹ ${data?.payable_amount}` || ''}
+    </Link>
+  )
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {

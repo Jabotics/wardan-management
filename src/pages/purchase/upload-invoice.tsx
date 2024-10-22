@@ -135,7 +135,7 @@ export const UploadInvoiceComponent = ({ data }: { data: Data }) => {
       <Dialog open={open}>
         <DialogTrigger asChild>
           <div
-            className='flex items-center justify-center border px-5 py-3'
+            className='flex items-center justify-center border px-5 py-3 whitespace-nowrap mx-5'
             onClick={() => {
               setOpen(true)
             }}
