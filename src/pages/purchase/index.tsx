@@ -55,7 +55,8 @@ const Purchase = () => {
           item.transportation_charge,
           item.unloading_charge,
           item.total_amount,
-          item.createdAt
+          item.createdAt,
+          item.invoice_url
         )
       ) || [],
     [allPurchase]

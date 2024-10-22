@@ -27,7 +27,7 @@ const ModifyImporters = ({
       </div>
 
       <div className='flex w-full flex-1 flex-col overflow-hidden'>
-        <FormComponent data={purchaseInfo} setOpen={setClose} toEdit={true} />
+        <FormComponent data={purchaseInfo} setOpen={setClose} />
       </div>
     </DialogContent>
   )

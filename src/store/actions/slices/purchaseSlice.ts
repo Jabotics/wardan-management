@@ -142,6 +142,31 @@ export const purchaseApi = createApi({
       },
       invalidatesTags: ['PurchaseItems'],
     }),
+
+    uploadInvoice: builder.mutation<IncomingData, FormData>({
+      query: (formData) => {
+        const _id = formData.get('_id'); 
+        return {
+          url: `${APIEndPoints.upload_invoice}/${_id}`,
+          method: 'PUT',
+          body: formData,
+          formData: true,
+        };
+      },
+      invalidatesTags: ['PurchaseEntry'],
+    }),
+
+    removeInvoice: builder.mutation<IncomingData, { purchaseId: string, invoice_url: string }>({
+      query: (body) => {
+        const { ...rest } = body
+        return {
+          url: APIEndPoints.remove_invoice,
+          method: 'DELETE',
+          body: rest,
+        }
+      },
+    })
+
   }),
 })
 
@@ -188,6 +213,12 @@ export const PurchaseSlice = createSlice({
     modifyPurchaseEntry: (state, action: PayloadAction<Partial<IPurchase>>) => {
       state.purchaseInfo = action.payload
     },
+    deleteInvoiceImages: (state, action: PayloadAction<{id: string, url: string}>) => {
+      const { id, url } = action.payload
+      const selectedPurchase = state.allPurchase.findIndex(i => i._id === id)
+
+      state.allPurchase[selectedPurchase].invoice_url = state.allPurchase[selectedPurchase].invoice_url?.filter(i => i !== url);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -236,11 +267,14 @@ export const {
   useRemovePurchaseItemMutation,
   useRemovePurchaseMutation,
   useUpdatePurchaseItemMutation,
-  useUpdatePurchaseMutation
+  useUpdatePurchaseMutation,
+  useUploadInvoiceMutation,
+  useRemoveInvoiceMutation,
 } = purchaseApi
 export const {
   setNewPurchase,
   setPurchaseAddInfo,
-  modifyPurchaseEntry
+  modifyPurchaseEntry,
+  deleteInvoiceImages
 } = PurchaseSlice.actions
 export default PurchaseSlice.reducer

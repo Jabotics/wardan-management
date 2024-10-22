@@ -12,13 +12,15 @@ import { Tooltip } from '@mui/material'
 import PurchaseItemsComponent from './purchase-item'
 import { useState } from 'react'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
-import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
+import {
+  useRemovePurchaseMutation,
+} from '@/store/actions/slices/purchaseSlice'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
 import ModifyPurchaseItems from './purchase-item/modify-purchase-item'
 import { formatDateToIST } from '@/lib/utils'
 import { Link } from 'react-router-dom'
-import { Separator } from '@/components/ui/separator'
+import { UploadInvoiceComponent } from './upload-invoice'
 
 export const Total = ({ data }: { data: Data }) => {
   return (
@@ -49,21 +51,7 @@ export const Transportation = ({ data }: { data: Data }) => {
 export const UploadInvoice = ({ data }: { data: Data }) => {
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <span className='border px-5 py-3'>Upload Invoice</span>
-        </DialogTrigger>
-
-        <DialogContent className=''>
-          <DialogTitle>Images</DialogTitle>
-          <DialogDescription className='sr-only'>
-            Images of the invoices
-          </DialogDescription>
-          <Separator />
-
-          <div className='h-[45vh] w-full'></div>
-        </DialogContent>
-      </Dialog>
+      <UploadInvoiceComponent data={data} />
     </>
   )
 }

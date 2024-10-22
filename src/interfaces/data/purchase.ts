@@ -13,6 +13,7 @@ export interface IPurchase {
   unloading_charge: number
   total_amount: number
   createdAt?: string
+  invoice_url?: string[]
 }
 
 export interface IPurchaseItem {

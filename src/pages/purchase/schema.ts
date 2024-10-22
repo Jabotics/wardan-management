@@ -26,7 +26,8 @@ export function createData(
   transportation_charge: number,
   unloading_charge: number,
   total_amount: number,
-  createdAt?: string
+  createdAt?: string,
+  invoice_url?: string[]
 ): Data {
   return {
     _id,
@@ -38,6 +39,7 @@ export function createData(
     unloading_charge,
     total_amount,
     createdAt,
+    invoice_url
   }
 }
 

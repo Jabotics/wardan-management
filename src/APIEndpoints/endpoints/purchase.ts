@@ -129,5 +129,8 @@ export const purchaseEndpoints = {
  * 
  * @use to remove the purchase
  */
-  remove_purchase: '/api/purchase'
+  remove_purchase: '/api/purchase',
+
+  upload_invoice: '/api/purchase/upload-invoice',
+  remove_invoice: '/api/purchase/remove-invoice'
 }
