@@ -35,7 +35,7 @@ const MenuPropsX = {
 }
 
 export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected, setDelete, dataFilters } = props
+  const { numSelected, setDelete, dataFilters, export: Export } = props
   const { searchBy, filters, handleFilterChange } = dataFilters || {}
 
   const [search, setSearch] = searchBy?.actions || []
@@ -206,6 +206,7 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       </div>
 
       <div className='mr-4 flex items-end gap-2'>
+        {Export && <Export />}
         {/* {numSelected > 0 && (
           <div
             className='mr-3 flex h-fit cursor-pointer items-center gap-1 p-1 text-[13px] font-bold text-rose-700'

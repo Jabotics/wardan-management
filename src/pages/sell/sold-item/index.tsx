@@ -84,7 +84,7 @@ const SoldItemsComponent = ({
                   <div className='whitespace-nowrap'>{`${netWeight} kg`}</div>
                 </div>
                 <div className='flex h-10 w-full items-center justify-between border-t-2 border-dashed border-white px-3'>
-                  <div className='font-mono'>{`₹ ${item?.amount}`}</div>
+                  <div className='font-mono'>{`₹ ${item?.amount} (C.T.C: ₹ ${item?.c2c_amount?.toFixed(2)})`}</div>
                   <div className='flex h-full w-1/4 items-center justify-end gap-3 text-xs'>
                     <Drawer open={editingItemId === item._id}>
                       <DrawerTrigger asChild>

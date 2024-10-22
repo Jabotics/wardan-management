@@ -5,5 +5,5 @@ export const Material = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty} ${data.unit}`}</>
+  return <>{`${data.qty?.toFixed(3)} ${data.unit}`}</>
 }

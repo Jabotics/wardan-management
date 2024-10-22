@@ -5,4 +5,5 @@ export const buyerEndpoints = {
   add_buyer: '/api/buyer/add-buyer',
   update_buyer: '/api/buyer/update-buyer',
   remove_buyer: '/api/buyer',
+  download_buyer_list: '/api/buyer/download-buyer-list'
 }

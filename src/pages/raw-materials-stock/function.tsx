@@ -8,7 +8,7 @@ export const Product = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty} ${data.unit}`}</>
+  return <>{`${data.qty.toFixed(3)} ${data.unit}`}</>
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {

@@ -32,6 +32,7 @@ const sellItemsSchema = z.object({
   variant: z.string(),
   qty: z.number(),
   amount: z.number(),
+  c2c: z.number(),
 })
 
 const ModifySellItems = ({
@@ -64,6 +65,7 @@ const ModifySellItems = ({
       variant: data?.variant?._id ?? '',
       qty: data?.qty ?? 0,
       amount: data?.amount ?? 0,
+      c2c: data?.c2c_amount ?? 0,
     },
   })
 
@@ -78,11 +80,13 @@ const ModifySellItems = ({
       amount: number
       qty: number
       _id?: string
+      c2c_amount: number
     } = {
       product: formData.product,
       amount: formData.amount,
       qty: formData.qty,
       variant: formData.variant,
+      c2c_amount: formData.c2c,
     }
 
     try {
@@ -93,6 +97,7 @@ const ModifySellItems = ({
           qty: payload.qty,
           total_qty: totalAmount ?? 0,
           total_amount: totalQty ?? 0,
+          c2c_amount: payload.c2c_amount,
         }).unwrap()
 
         if (res.status === 'fail') throw new Error(res.message)
@@ -113,6 +118,7 @@ const ModifySellItems = ({
     }
   }
 
+  // console.log(form.watch())
   return (
     <div className='m-auto'>
       <Form {...form}>
@@ -198,77 +204,92 @@ const ModifySellItems = ({
               )}
             />
 
-            <div className='mb-5 mt-2 flex w-full items-center gap-2'>
-              <FormField
-                control={form.control}
-                name={`qty`}
-                render={({ field }) => (
-                  <FormItem className='w-2/3'>
-                    <FormLabel>Quantity</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Quantity'
-                        {...field}
-                        className='h-10 w-full border-amber-950/25'
-                        type='number'
-                        onFocus={() => {
-                          if (field.value === 0) {
-                            field.onChange('') // Clear the input on focus
-                          }
-                        }}
-                        onBlur={() => {
-                          if (
-                            field.value === null ||
-                            field.value === undefined
-                          ) {
-                            field.onChange(0) // Revert to default value if empty
-                          }
-                        }}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value))
-                        }}
-                        autoComplete='off'
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+            {form.watch('product') && form.watch('variant') ? (
+              <div className='mb-5 mt-2 flex w-full items-center gap-2'>
+                <FormField
+                  control={form.control}
+                  name={`qty`}
+                  render={({ field }) => (
+                    <FormItem className='w-2/3'>
+                      <FormLabel>Quantity</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Quantity'
+                          {...field}
+                          className='h-10 w-full border-amber-950/25'
+                          type='number'
+                          onFocus={() => {
+                            if (field.value === 0) {
+                              field.onChange('') // Clear the input on focus
+                            }
+                          }}
+                          onBlur={() => {
+                            if (
+                              field.value === null ||
+                              field.value === undefined
+                            ) {
+                              field.onChange(0) // Revert to default value if empty
+                            }
+                          }}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value))
 
-              <FormField
-                control={form.control}
-                name={`amount`}
-                render={({ field }) => (
-                  <FormItem className='h-full w-1/3'>
-                    <FormLabel>Amount</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Amount'
-                        {...field}
-                        className='h-10 border-amber-950/25'
-                        type='number'
-                        onFocus={() => {
-                          if (field.value === 0) {
-                            field.onChange('')
-                          }
-                        }}
-                        onBlur={() => {
-                          if (
-                            field.value === null ||
-                            field.value === undefined
-                          ) {
-                            field.onChange(0)
-                          }
-                        }}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value))
-                        }}
-                        autoComplete='off'
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+                            const selectedReadyProduct = readyProducts.filter(
+                              (i) =>
+                                i.product._id === form.getValues('product') &&
+                                i.variant._id === form.getValues('variant')
+                            )
+
+                            const selectedCTC =
+                              selectedReadyProduct[0].c2c *
+                              Number(e.target.value)
+                            form.setValue('c2c', selectedCTC)
+                          }}
+                          autoComplete='off'
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`amount`}
+                  render={({ field }) => (
+                    <FormItem className='h-full w-1/3'>
+                      <FormLabel>Amount</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='Amount'
+                          {...field}
+                          className='h-10 border-amber-950/25'
+                          type='number'
+                          onFocus={() => {
+                            if (field.value === 0) {
+                              field.onChange('')
+                            }
+                          }}
+                          onBlur={() => {
+                            if (
+                              field.value === null ||
+                              field.value === undefined
+                            ) {
+                              field.onChange(0)
+                            }
+                          }}
+                          onChange={(e) => {
+                            field.onChange(Number(e.target.value))
+                          }}
+                          autoComplete='off'
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ) : null}
+
+            {form.watch('c2c') !== 0 && <div>C.T.C: ₹ {form.watch('c2c')}</div>}
           </div>
 
           <div className='flex w-full items-center gap-2'>

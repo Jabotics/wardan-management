@@ -65,6 +65,7 @@ const SellItemForm = ({
         variant: item.variant,
         qty: Number(item.qty),
         amount: Number(item.amount),
+        c2c_amount: Number(item.c2c),
       }))
 
       const totalAmount = items.reduce((total, item) => total + item.amount, 0)
@@ -110,6 +111,7 @@ const SellItemForm = ({
         {fields.map((_, index) => {
           let selectedMrp: number
           let selectedAvailableCount: number
+          let selectedCTC: number = 0
 
           const selectedProduct = form.getValues(`sellItems.${index}.product`)
           const selectedVariant = form.getValues(`sellItems.${index}.variant`)
@@ -124,6 +126,7 @@ const SellItemForm = ({
             if (selectedSellItem) {
               selectedMrp = selectedSellItem.mrp
               selectedAvailableCount = selectedSellItem.count
+              selectedCTC = selectedSellItem.c2c
             }
           }
 
@@ -244,7 +247,14 @@ const SellItemForm = ({
                             }
                           }}
                           onChange={(e) => {
-                            field.onChange(Number(e.target.value))
+                            const qtyValue = Number(e.target.value)
+                            field.onChange(qtyValue)
+
+                            const totalCTCAmount = selectedCTC * qtyValue
+                            form.setValue(
+                              `sellItems.${index}.c2c`,
+                              totalCTCAmount
+                            )
                           }}
                           autoComplete='off'
                         />
@@ -297,6 +307,11 @@ const SellItemForm = ({
                   )}
                 />
               </div>
+              {form.getValues(`sellItems.${index}.c2c`) > 0 && (
+                <div className='block my-3'>
+                  Cost To Company: ₹{form.getValues(`sellItems.${index}.c2c`)}
+                </div>
+              )}
 
               {fields.length > 1 && (
                 <Button
@@ -314,7 +329,7 @@ const SellItemForm = ({
           <Button
             type='button'
             onClick={() =>
-              append({ product: '', variant: '', qty: 0, amount: 0 })
+              append({ product: '', variant: '', qty: 0, amount: 0, c2c: 0 })
             }
             className='w-full text-black'
           >

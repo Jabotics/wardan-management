@@ -70,6 +70,15 @@ export const exportersApi = createApi({
         }
       },
     }),
+
+    downloadExporters: builder.query({
+      query: () => {
+        return {
+          url: APIEndPoints.download_buyer_list,
+          method: 'GET'
+        }
+      }
+    })
   }),
 })
 
@@ -143,6 +152,7 @@ export const {
   useEditExporterMutation,
   useGetAllExportersQuery,
   useRemoveExporterMutation,
+  useDownloadExportersQuery,
 } = exportersApi
 export const { addExporter, editExporter, removeExporter } = ExportersSlice.actions
 export default ExportersSlice.reducer

@@ -60,7 +60,8 @@ export interface ISell extends ISellBase {
  */
 interface ISellItemDetail {
   amount: number; 
-  qty: number; 
+  qty: number;
+  c2c_amount: number; 
 }
 
 /**

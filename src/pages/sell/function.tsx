@@ -24,7 +24,7 @@ import { APIEndPoints } from '@/APIEndpoints'
 import { Link } from 'react-router-dom'
 
 export const TotalAmount = ({ data }: { data: Data }) => {
-  return <>{'₹ ' + data.total_amount}</>
+  return <span className='text-green-800'>{'₹ ' + data.total_amount}</span>
 }
 
 export const Invoice = ({ data }: { data: Data }) => {

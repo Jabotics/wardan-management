@@ -14,7 +14,7 @@ export const Product = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty} ${data.unit} (${data.count} pieces)`}</>
+  return <>{`${data.qty.toFixed(3)} ${data.unit} (${data.count} pieces)`}</>
 }
 
 export const Variant = ({ data }: { data: Data }) => {

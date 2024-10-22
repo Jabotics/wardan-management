@@ -2,7 +2,7 @@
 const TransactionTab = () => {
   console.log('first')
   return (
-    <div className='h-full w-full text-black bg-black'>TransactionTab</div>
+    <div className='h-full w-full'>TransactionTab</div>
   )
 }
 

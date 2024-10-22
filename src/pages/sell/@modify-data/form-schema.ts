@@ -13,6 +13,7 @@ export const sellItemsSchema = z.object({
       variant: z.string(),
       qty: z.number(),
       amount: z.number(),
+      c2c: z.number(),
     })
   ),
 })

@@ -39,7 +39,7 @@ export const Total = ({ data }: { data: Data }) => {
       }
       placement='bottom'
     >
-      <span className='underline whitespace-nowrap mx-5'>{'₹ ' + data.total_amount}</span>
+      <span className='underline whitespace-nowrap mx-5 text-green-800'>{'₹ ' + data.total_amount}</span>
     </Tooltip>
   )
 }
@@ -57,7 +57,7 @@ export const UploadInvoice = ({ data }: { data: Data }) => {
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
-  return <>{'₹ ' + data.invoice_amount}</>
+  return <span className='text-green-700'>{'₹ ' + data.invoice_amount}</span>
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {

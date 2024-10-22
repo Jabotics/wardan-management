@@ -67,7 +67,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
 
   const [toDelete, setToDelete] = React.useState<boolean>(false)
   
-  const { ModifyComponent } = config || {}
+  const { ModifyComponent, ExportComponent } = config || {}
   const [openDialog, setOpenDialog] = React.useState<boolean>(false)
 
   // const [anchorActionEl, setAnchorActionEl] =
@@ -200,6 +200,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
             numSelected={selected.length}
             setDelete={setToDelete}
             dataFilters={dataFilters}
+            export={ExportComponent}
           />
           <TableContainer
             className='mt-5'

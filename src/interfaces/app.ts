@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from 'react'
+import React, { ComponentType } from 'react'
 
 export type Order = 'asc' | 'desc'
 
@@ -27,7 +27,8 @@ export interface EnhancedTableProps<T extends { [key: string]: any }> {
     }: {
       data?: T
       setClose: React.Dispatch<React.SetStateAction<boolean>>
-    }) => JSX.Element
+    }) => JSX.Element,
+    ExportComponent?: ComponentType
   }
   dataFilters?: TableDataFilters
 }
@@ -46,6 +47,7 @@ export interface EnhancedTableToolbarProps {
   numSelected: number
   setDelete: React.Dispatch<React.SetStateAction<boolean>>
   dataFilters?: TableDataFilters
+  export?: ComponentType
 }
 
 export interface TablePaginationConfig {
