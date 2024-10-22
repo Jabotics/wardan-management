@@ -104,7 +104,14 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
               <LuSearch className='text-gray-500' size={16} />
             </IconButton>
             <InputBase
-              sx={{ flex: 1 }}
+              sx={{
+                flex: 1,
+                fontSize: '0.75rem',
+                '& .MuiInputBase-input::placeholder': {
+                  fontSize: '0.9rem',
+                  color: 'gray',
+                },
+              }}
               placeholder={searchBy.placeholderText}
               inputProps={{ 'aria-label': 'search fields' }}
               value={search}
@@ -171,9 +178,9 @@ export function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
                       }
                     }}
                     input={<OutlinedInput label='Tag' />}
-                    renderValue={(selected) => { 
+                    renderValue={(selected) => {
                       // if (item.type === 'array') {
-                        return selected
+                      return selected
                         .map((i) => {
                           return transformString(i)
                         })

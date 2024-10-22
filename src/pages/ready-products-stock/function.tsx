@@ -14,7 +14,12 @@ export const Product = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty.toFixed(3)} ${data.unit} (${data.count} pieces)`}</>
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <span className='text-green-600'>{`${Math.round(Number(data.qty))} ${data.unit} `}</span>{' '}
+      <span className='text-green-700'>{`(${data.count} pieces)`}</span>
+    </div>
+  )
 }
 
 export const Variant = ({ data }: { data: Data }) => {
@@ -24,7 +29,7 @@ export const Variant = ({ data }: { data: Data }) => {
 }
 
 export const Price = ({ data }: { data: Data }) => {
-  return <span className='text-lg'>{`₹${data.mrp} (CTC: ₹${data.c2c})`}</span>
+  return <span className='text-sm text-[#9F3D47]'>{`₹${data.mrp} (CTC: ₹${data.c2c})`}</span>
 }
 
 export const LastUpdated = ({ data }: { data: Data }) => {

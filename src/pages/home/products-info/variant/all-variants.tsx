@@ -5,6 +5,7 @@ import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import { useAppSelector } from '@/store/hooks'
 import { Fragment, useState } from 'react'
 import ModifyVariant from './modify-variant'
+import { useGetReadyProductStockQuery } from '@/store/actions/slices/readyProductStockSlice'
 
 const AllVariants = () => {
   const { isLoading } = useGetAllVariantsQuery(
@@ -13,6 +14,11 @@ const AllVariants = () => {
   )
   const { variants } = useAppSelector((state: RootState) => state.variants)
 
+  useGetReadyProductStockQuery({})
+  const { readyProducts } = useAppSelector(
+    (state: RootState) => state.readyProducts
+  )
+
   const [selectedVariant, setSelectedVariant] = useState<IVariant | null>(null)
   const [open, setOpen] = useState<boolean>(false)
 
@@ -20,6 +26,9 @@ const AllVariants = () => {
     <>
       {!isLoading
         ? variants?.map((item, index) => {
+            const totalProduct = readyProducts.filter(
+              (i) => i.variant._id === item._id
+            ).length
             return (
               <Fragment key={index}>
                 <Dialog open={open}>
@@ -32,8 +41,10 @@ const AllVariants = () => {
                         setSelectedVariant(item)
                       }}
                     >
-                      <p>{item.name}</p>
-                      <p className='text-xs text-gray-500'>4 Products</p>
+                      <p className='text-sm'>{item.name}</p>
+                      <p className='text-xs text-gray-500'>
+                        {totalProduct} Products
+                      </p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className='h-fit w-[65vw] bg-white'>

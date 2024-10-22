@@ -25,7 +25,7 @@ export const ToPay = ({ data }: { data: Data }) => {
   return (
     <Link
       to={`/payments?seller=${data._id}`}
-      className='text-red-700 underline'
+      className='text-[#9F3D47] underline'
     >
       {`₹ ${data?.payable_amount}` || ''}
     </Link>

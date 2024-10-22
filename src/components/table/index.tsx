@@ -167,11 +167,11 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
         numSelected={selected.length}
       />
       <div className='mb-8 flex items-center justify-between'>
-        <div className='text-3xl font-medium tracking-tighter'>{title}</div>
+        <div className='text-xl font-medium tracking-tighter'>{title}</div>
         {ModifyComponent ? (
           <Dialog open={openDialog}>
             <DialogTrigger asChild>
-              <Button variant={'new_secondary'} onClick={() => setOpenDialog(true)}>
+              <Button variant={'new_secondary'} onClick={() => setOpenDialog(true)} className='text-xs'>
                 <AddIcon /> {`${t('New')}`} {title}
               </Button>
             </DialogTrigger>
@@ -179,7 +179,7 @@ export default function EnhancedTable<T extends { [key: string]: any }>({
           </Dialog>
         ) : null}
       </div>
-      <div className='-mt-5 mb-8 flex h-8 items-start gap-3 text-sm font-medium tracking-tight text-gray-700'>
+      <div className='-mt-5 mb-8 flex h-8 items-start gap-3 text-xs font-medium tracking-tight text-gray-700'>
         <div className='flex items-center gap-3'>
           <span
             onClick={() => {

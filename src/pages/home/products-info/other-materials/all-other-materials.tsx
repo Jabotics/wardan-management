@@ -13,7 +13,8 @@ const AllOtherMaterials = () => {
   )
   const { materials } = useAppSelector((state: RootState) => state.materials)
 
-  const [selectedMaterial, setSelectedMaterial] = useState<IOtherMaterial | null>(null)
+  const [selectedMaterial, setSelectedMaterial] =
+    useState<IOtherMaterial | null>(null)
   const [open, setOpen] = useState<boolean>(false)
 
   return (
@@ -32,7 +33,7 @@ const AllOtherMaterials = () => {
                         setSelectedMaterial(item)
                       }}
                     >
-                      <p>{item.name}</p>
+                      <p className='text-sm'>{item.name}</p>
                     </div>
                   </DialogTrigger>
                   <DialogContent className='h-fit w-[65vw] bg-white'>

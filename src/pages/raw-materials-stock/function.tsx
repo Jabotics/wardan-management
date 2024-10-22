@@ -8,7 +8,7 @@ export const Product = ({ data }: { data: Data }) => {
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty.toFixed(3)} ${data.unit}`}</>
+  return <span className='text-green-700'>{`${Math.round(Number(data.qty))} ${data.unit}`}</span>
 }
 
 export const ToolbarAction = ({ data }: { data: Data }) => {

@@ -19,7 +19,7 @@ const AllProducts = () => {
                 className='flex h-16 w-full shrink-0 items-center justify-between rounded-xl border border-gray-200 bg-white/50 px-3 shadow-lg shadow-gray-100'
               >
                 <div className='cursor-default'>
-                  <div className='text-lg'>{item.name + ' Powder'}</div>
+                  <div className='text-sm'>{item.name + ' Powder'}</div>
                   <div
                     className={`text-[10px] text-gray-500 ${item.type === 'MIXTURE' ? 'underline' : ''} ml-0.5 tracking-widest`}
                   >

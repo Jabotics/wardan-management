@@ -52,7 +52,7 @@ export const Invoice = ({ data }: { data: Data }) => {
   }
 
   return (
-    <span onClick={handleClickInvoice} className='underline'>
+    <span onClick={handleClickInvoice} className='underline text-[#9F3D47]'>
       {isLoading ? 'Generating...' : data?.invoice_no}
       {error && <span className='error-message'>{error}</span>}
     </span>

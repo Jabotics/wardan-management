@@ -14,11 +14,12 @@ const data = [
   { name: 'Red Chilli', prev: 2000, curr: 9800, amt: 2290 },
   { name: 'Dhaniya', prev: 3000, curr: 1398, amt: 2210 },
   { name: 'Jeera', prev: 2000, curr: 9800, amt: 2290 },
+  { name: 'Garam', prev: 3000, curr: 1398, amt: 2210 },
 ]
 
 const Example = () => {
   return (
-    <ResponsiveContainer width='100%' height='100%' minWidth={600}>
+    <ResponsiveContainer width='95%' height='95%' minWidth={800}>
       <BarChart
         width={500}
         height={300}
@@ -37,7 +38,7 @@ const Example = () => {
           orientation='left'
           stroke='#8884d8'
           domain={[0, 10000]}
-          label={'Previous Stock'}
+          label={'.  Previous Stock'}
         />
         <YAxis
           yAxisId='right'

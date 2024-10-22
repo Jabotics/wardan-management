@@ -5,9 +5,9 @@ export const Product = ({ data }: { data: Data }) => {
 }
 
 export const Variant = ({ data }: { data: Data }) => {
-  return <>{data?.variant?.name}</>
+  return <span className='bg-gray-300 px-3 py-1 rounded-md'>{data?.variant?.name}</span>
 }
 
 export const Quantity = ({ data }: { data: Data }) => {
-  return <>{`${data.qty?.toFixed(3)} ${data.unit}`}</>
+  return <span className='text-green-700'>{`${Math.round(Number(data.qty))} ${data.unit}`}</span>
 }
