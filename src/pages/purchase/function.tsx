@@ -61,7 +61,7 @@ export const Invoice = ({ data }: { data: Data }) => {
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {
-  return <span className='whitespace-nowrap'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
+  return <span className='whitespace-nowrap text-xs text-gray-400'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
 }
 
 export const Seller = ({ data }: { data: Data }) => {

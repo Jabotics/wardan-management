@@ -1,24 +1,80 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import StocksChart from './stocks-chart'
+// import TransactionTab from './transaction'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/custom/button'
 
 export function TabsDemo() {
   return (
-    <Tabs defaultValue='stocks' className='h-full w-full overflow-hidden'>
+    <Tabs defaultValue='stocks' className='w-full'>
       <TabsList className='grid w-full grid-cols-3'>
         <TabsTrigger value='growth-chart'>Growth Chart</TabsTrigger>
         <TabsTrigger value='stocks'>Stocks</TabsTrigger>
         <TabsTrigger value='transactions'>Transactions</TabsTrigger>
       </TabsList>
-      <TabsContent value='growth-chart'></TabsContent>
-      <TabsContent
-        value='stocks'
-        className='flex h-full w-full items-center justify-center -mt-5'
-      >
+
+      <TabsContent value='growth-chart'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Account</CardTitle>
+            <CardDescription>
+              Make changes to your account here. Click save when you're done.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-2'>
+            <div className='space-y-1'>
+              <Label htmlFor='name'>Name</Label>
+              <Input id='name' defaultValue='Pedro Duarte' />
+            </div>
+            <div className='space-y-1'>
+              <Label htmlFor='username'>Username</Label>
+              <Input id='username' defaultValue='@peduarte' />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button>Save changes</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
+
+      <TabsContent value='stocks' className='flex h-full w-full items-center justify-center'>
         <div className='aspect-square h-[45vh]'>
           <StocksChart />
         </div>
       </TabsContent>
-      <TabsContent value='transactions'></TabsContent>
+
+      <TabsContent value='transactions'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Password</CardTitle>
+            <CardDescription>
+              Change your password here. After saving, you'll be logged out.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className='space-y-2'>
+            <div className='space-y-1'>
+              <Label htmlFor='current'>Current password</Label>
+              <Input id='current' type='password' />
+            </div>
+            <div className='space-y-1'>
+              <Label htmlFor='new'>New password</Label>
+              <Input id='new' type='password' />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button>Save password</Button>
+          </CardFooter>
+        </Card>
+      </TabsContent>
     </Tabs>
   )
 }

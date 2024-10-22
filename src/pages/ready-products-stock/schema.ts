@@ -17,6 +17,7 @@ export function createData(
   unit: string,
   mrp: number,
   count: number,
+  c2c: number,
   updatedAt: string
 ): Data {
   return {
@@ -27,6 +28,7 @@ export function createData(
     unit,
     mrp,
     count,
+    c2c,
     updatedAt,
   }
 }

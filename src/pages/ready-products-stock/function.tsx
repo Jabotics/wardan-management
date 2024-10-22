@@ -24,7 +24,7 @@ export const Variant = ({ data }: { data: Data }) => {
 }
 
 export const Price = ({ data }: { data: Data }) => {
-  return <span className='text-lg'>{`₹${data.mrp}`}</span>
+  return <span className='text-lg'>{`₹${data.mrp} (CTC: ₹${data.c2c})`}</span>
 }
 
 export const LastUpdated = ({ data }: { data: Data }) => {

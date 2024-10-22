@@ -60,7 +60,7 @@ export const Invoice = ({ data }: { data: Data }) => {
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {
-  return <>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</>
+  return <span className='text-xs text-gray-400'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
 }
 
 export const Buyer = ({ data }: { data: Data }) => {

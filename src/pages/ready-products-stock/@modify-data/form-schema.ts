@@ -6,5 +6,6 @@ export const formSchema = z.object({
   qty: z.number(),
   unit: z.string(),
   mrp: z.number(),
-  count: z.number()
+  count: z.number(),
+  c2c: z.number(),
 })

@@ -80,6 +80,7 @@ const FormComponent = ({
       count: 0,
       mrp: 0,
       qty: 0,
+      c2c: 0,
       unit: 'kg',
     },
   })
@@ -95,10 +96,12 @@ const FormComponent = ({
       unit: 'kg'
       mrp: number
       count: number
+      c2c: number
     } = {
       product: formData.product,
       variant: formData.variant,
       count: formData.count,
+      c2c: formData.c2c,
       mrp: formData.mrp,
       qty: formData.qty,
       unit: 'kg',
@@ -312,20 +315,20 @@ const FormComponent = ({
                   <div>Net Weight: {form.watch('qty')}kg</div>
                 </div>
 
-                <div className='h-full w-1/3'>
+                <div className='flex h-full w-1/3 flex-col items-start mt-5'>
                   <FormField
                     control={form.control}
                     name={`mrp`}
                     render={({ field }) => (
-                      <FormItem className='w-full'>
-                        <FormLabel>M.R.P</FormLabel>
+                      <FormItem className='flex w-full items-center gap-5'>
+                        <FormLabel className='mt-2'>M.R.P:</FormLabel>
                         <FormControl>
-                          <span className='flex items-center gap-2'>
+                          <div className='flex items-center gap-1'>
                             {'₹'}
                             <Input
                               placeholder='M.R.P'
                               {...field}
-                              className='h-10 w-full border-none border-amber-950/25 p-0 shadow-none outline-none'
+                              className='h-full w-full border-none border-amber-950/25 p-0 shadow-none outline-none'
                               style={{
                                 boxShadow: 'none',
                                 outline: 'none',
@@ -349,7 +352,49 @@ const FormComponent = ({
                               }}
                               autoComplete='off'
                             />
-                          </span>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name={`c2c`}
+                    render={({ field }) => (
+                      <FormItem className='flex w-full items-center gap-5'>
+                        <FormLabel className='mt-2'>C.T.C:</FormLabel>
+                        <FormControl>
+                          <div className='flex items-center gap-1'>
+                            {'₹'}
+                            <Input
+                              placeholder='C.T.C'
+                              {...field}
+                              className='h-full w-full border-none border-amber-950/25 p-0 shadow-none outline-none'
+                              style={{
+                                boxShadow: 'none',
+                                outline: 'none',
+                              }}
+                              type='number'
+                              onFocus={() => {
+                                if (field.value === 0) {
+                                  field.onChange('')
+                                }
+                              }}
+                              onBlur={() => {
+                                if (
+                                  field.value === null ||
+                                  field.value === undefined
+                                ) {
+                                  field.onChange(0)
+                                }
+                              }}
+                              onChange={(e) => {
+                                field.onChange(Number(e.target.value))
+                              }}
+                              autoComplete='off'
+                            />
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}

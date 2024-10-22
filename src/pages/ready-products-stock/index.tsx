@@ -27,6 +27,7 @@ const RawMaterialStocks = () => {
           item.unit,
           item.mrp,
           item.count,
+          item.c2c,
           item.updatedAt
         )
       ) || [],
