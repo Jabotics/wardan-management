@@ -27,9 +27,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAddWastageMutation } from '@/store/actions/slices/wastageSlice'
-import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
+import { useGetRawStocksQuery } from '@/store/actions/slices/rawStockSlice'
 
 const FormComponent = ({
   toEdit,
@@ -42,8 +42,8 @@ const FormComponent = ({
 }) => {
   const isLoading: boolean = !label
 
-  useGetProductsQuery({})
-  const { products } = useAppSelector((state: RootState) => state.products)
+  useGetRawStocksQuery({})
+  const { rawMaterialStock } = useAppSelector((state: RootState) => state.rawStocks)
 
   const [Add] = useAddWastageMutation()
 
@@ -129,7 +129,7 @@ const FormComponent = ({
                       <FormItem>
                         <FormLabel>Raw Material</FormLabel>
                         <FormControl>
-                          {products && products?.length > 0 ? (
+                          {rawMaterialStock && rawMaterialStock?.length > 0 ? (
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
@@ -138,13 +138,13 @@ const FormComponent = ({
                                 <SelectValue placeholder='Select a Unit' />
                               </SelectTrigger>
                               <SelectContent>
-                                {products?.map((item, index) => {
+                                {rawMaterialStock?.map((item, index) => {
                                   return (
                                     <SelectItem
-                                      value={item?._id || ''}
+                                      value={item?.product?._id || ''}
                                       key={index}
                                     >
-                                      {item?.name}
+                                      {item?.product?.name}
                                     </SelectItem>
                                   )
                                 })}

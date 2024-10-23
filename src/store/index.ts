@@ -17,6 +17,7 @@ import {
   assetsApi,
   paymentsApi,
   receiptsApi,
+  getStockHistoryApi,
 } from "./actions";
 
 import { persistStore } from 'redux-persist'
@@ -47,6 +48,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
         assetsApi.middleware,
         paymentsApi.middleware,
         receiptsApi.middleware,
+        getStockHistoryApi.middleware,
 
       );
 

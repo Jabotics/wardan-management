@@ -17,12 +17,14 @@ const Purchase = () => {
 
   const [search, setSearch] = useState<string>('')
   const [filterValues, setFilterValues] = useState<{
-    category: string[],
+    category: string[]
     importFrom: string[]
   }>({
     category: [],
     importFrom: [],
   })
+  const [limit, setLimit] = useState<number>(0)
+  const [offset, setOffset] = useState<number>(0)
 
   useGetPurchaseEntryQuery(
     {
@@ -35,10 +37,14 @@ const Purchase = () => {
         filterValues.importFrom.length > 0
           ? JSON.stringify(filterValues.importFrom)
           : null,
+      limit,
+      offset,
     },
     { refetchOnMountOrArgChange: true }
   )
-  const { allPurchase } = useAppSelector((state: RootState) => state.purchase)
+  const { allPurchase, total } = useAppSelector(
+    (state: RootState) => state.purchase
+  )
 
   useGetAllImportersQuery({})
   const { importers } = useAppSelector((state: RootState) => state.importers)
@@ -82,17 +88,15 @@ const Purchase = () => {
         {
           label: 'Category',
           type: 'array',
-          options: ['RAW_MATERIAL', 'PACKAGING_PRODUCT', 'OTHER'].map(
-            (i) => ({ [i]: i })
-          ),
+          options: ['RAW_MATERIAL', 'PACKAGING_PRODUCT', 'OTHER'].map((i) => ({
+            [i]: i,
+          })),
           value: filterValues.category, // need to change to incorporate, id to pass in payload, value to show in select
         },
         {
           label: 'Import From',
           type: 'object',
-          options: importers
-            ? importers.map((i) => ({ [i._id]: i.name })) 
-            : [],
+          options: importers ? importers.map((i) => ({ [i._id]: i.name })) : [],
           value: filterValues.importFrom,
         },
       ],
@@ -108,7 +112,12 @@ const Purchase = () => {
       title={t('Purchase')}
       dense
       rowHeight={65}
-      config={ImportContactsTableConfig}
+      config={{
+        ...ImportContactsTableConfig,
+        setLimit,
+        setOffset,
+        count: total || 0,
+      }}
       dataFilters={{ ...dataFilters, handleFilterChange }}
     />
   )

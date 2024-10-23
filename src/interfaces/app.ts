@@ -29,6 +29,9 @@ export interface EnhancedTableProps<T extends { [key: string]: any }> {
       setClose: React.Dispatch<React.SetStateAction<boolean>>
     }) => JSX.Element,
     ExportComponent?: ComponentType
+    setLimit?: React.Dispatch<React.SetStateAction<number>>
+    setOffset?: React.Dispatch<React.SetStateAction<number>>
+    count?: number
   }
   dataFilters?: TableDataFilters
 }

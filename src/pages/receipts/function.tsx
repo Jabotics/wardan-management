@@ -4,13 +4,15 @@ import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
 import { formatDateToIST } from '@/lib/utils'
 import { useRemoveReceiptMutation } from '@/store/actions/slices/receiptsSlice'
+import { useNavigate } from 'react-router-dom'
 
 export const Amount = ({ data }: { data: Data }) => {
   return <>{`₹ ${data?.amount}`}</>
 }
 
 export const Buyer = ({ data }: { data: Data }) => {
-  return <>{`${data?.buyer?.name}`}</>
+  const navigate = useNavigate();
+  return <span className='underline' onClick={() => navigate('/export-contacts')}>{`${data?.buyer?.name}`}</span>
 }
 
 export const Remarks = ({ data }: { data: Data }) => {

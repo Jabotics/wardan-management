@@ -42,6 +42,11 @@ export function transformString(input: string) {
 export function formatDateToIST(dateString: string): string {
   const date = new Date(dateString);
 
+  if (isNaN(date.getTime())) {
+    console.error(`Invalid date string: ${dateString}`);
+    return "Invalid date"; 
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
@@ -54,4 +59,9 @@ export function formatDateToIST(dateString: string): string {
   };
 
   return new Intl.DateTimeFormat('en-IN', options).format(date);
+}
+
+export function toFixedWithoutRounding(num: number) {
+  const factor = Math.pow(10, 2);
+  return (Math.floor(num * factor) / factor).toFixed(2);
 }

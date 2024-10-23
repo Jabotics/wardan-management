@@ -7,7 +7,7 @@ import {
   useRemoveReadyProductMutation,
 } from '@/store/actions/slices/readyProductStockSlice'
 import { useAppDispatch } from '@/store/hooks'
-import { formatDateToIST } from '@/lib/utils'
+import { formatDateToIST, toFixedWithoutRounding } from '@/lib/utils'
 
 export const Product = ({ data }: { data: Data }) => {
   return <>{data?.product?.name}</>
@@ -16,7 +16,7 @@ export const Product = ({ data }: { data: Data }) => {
 export const Quantity = ({ data }: { data: Data }) => {
   return (
     <div className='flex items-center justify-center gap-2'>
-      <span className='text-green-600'>{`${Math.round(Number(data.qty))} ${data.unit} `}</span>{' '}
+      <span className='text-green-600'>{`${toFixedWithoutRounding(data.qty)} ${data.unit} `}</span>{' '}
       <span className='text-green-700'>{`(${data.count} pieces)`}</span>
     </div>
   )

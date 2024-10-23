@@ -14,6 +14,7 @@ import { IVariant } from './data/variants'
 import { IPurchase, IPurchaseItem } from './data/purchase'
 import { IOtherMaterial } from './data/otherMaterials'
 import { IWastage } from './data/wastage'
+import { IStockHistory } from './data/getStockHistory'
 
 import {
   IRawMaterialStock,
@@ -68,6 +69,7 @@ export type {
   IPurchaseItem,
   IOtherMaterial,
   IWastage,
+  IStockHistory,
 
   IRawMaterialStock,
   IPackagingProductStock,

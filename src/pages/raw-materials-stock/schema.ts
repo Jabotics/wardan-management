@@ -35,7 +35,7 @@ export const headCells: HeadCell<Data>[] = [
     id: 'qty',
     numeric: false,
     disablePadding: true,
-    label: 'Quantity',
+    label: 'Current Stock',
     type: 'custom',
     body: Quantity
   },

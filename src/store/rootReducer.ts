@@ -31,6 +31,8 @@ import {
   paymentsSlice,
   receiptsApi,
   receiptsSlice,
+  getStockHistoryApi,
+  getStockHistorySlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
@@ -53,6 +55,7 @@ export const rootReducer = combineReducers({
   assets: assetsSlice,
   payments: paymentsSlice,
   receipts: receiptsSlice,
+  stockHistory: getStockHistorySlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
@@ -68,5 +71,6 @@ export const rootReducer = combineReducers({
   [assetsApi.reducerPath]: assetsApi.reducer,
   [paymentsApi.reducerPath]: paymentsApi.reducer,
   [receiptsApi.reducerPath]: receiptsApi.reducer,
+  [getStockHistoryApi.reducerPath]: getStockHistoryApi.reducer,
   
 })

@@ -40,6 +40,9 @@ const SellItemForm = ({
   const { readyProducts } = useAppSelector(
     (state: RootState) => state.readyProducts
   )
+  const uniqueProducts = Array.from(
+    new Map(readyProducts.map(item => [item.product._id, item])).values()
+  );
 
   const [Add] = useAddSellMutation()
 
@@ -151,7 +154,7 @@ const SellItemForm = ({
                             <SelectValue placeholder='Select a Product' />
                           </SelectTrigger>
                           <SelectContent>
-                            {readyProducts.map((item, index) => {
+                            {uniqueProducts.map((item, index) => {
                               return (
                                 <SelectItem
                                   value={item.product._id || ''}

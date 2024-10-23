@@ -13,6 +13,7 @@ import readyProductStocksSlice, { readyProductStocksApi } from "./slices/readyPr
 import assetsSlice, { assetsApi } from "./slices/assetsSlice"
 import paymentsSlice, { paymentsApi } from "./slices/paymentSlice"
 import receiptsSlice, { receiptsApi } from "./slices/receiptsSlice"
+import getStockHistorySlice, { getStockHistoryApi } from "./slices/getStockHistory"
 
 export {
   appSlice,
@@ -44,4 +45,6 @@ export {
   paymentsSlice,
   receiptsApi,
   receiptsSlice,
+  getStockHistoryApi,
+  getStockHistorySlice,
 }
