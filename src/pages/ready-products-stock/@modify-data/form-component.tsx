@@ -172,6 +172,12 @@ const FormComponent = ({
                                   i.variant._id === form.watch('variant')
                               )[0]?.mrp
 
+                              const selectedCTC = readyProducts.filter(
+                                (i) =>
+                                  i.product._id === value &&
+                                  i.variant._id === form.watch('variant')
+                              )[0]?.c2c
+
                               if (selectedMrp !== undefined) {
                                 form.setValue('mrp', Number(selectedMrp))
                               } else {
@@ -179,6 +185,15 @@ const FormComponent = ({
                                   'MRP is undefined for the selected product and variant.'
                                 )
                                 form.setValue('mrp', 0)
+                              }
+
+                              if (selectedCTC !== undefined) {
+                                form.setValue('c2c', Number(selectedCTC))
+                              } else {
+                                console.warn(
+                                  'CTC is undefined for the selected product and variant.'
+                                )
+                                form.setValue('c2c', 0)
                               }
                             }
                           }}
@@ -224,6 +239,12 @@ const FormComponent = ({
                                   i.variant._id === value
                               )[0]?.mrp
 
+                              const selectedCTC = readyProducts.filter(
+                                (i) =>
+                                  i.product._id === form.watch('product') &&
+                                  i.variant._id === value
+                              )[0]?.c2c
+
                               if (selectedMrp !== undefined) {
                                 form.setValue('mrp', Number(selectedMrp))
                               } else {
@@ -231,6 +252,15 @@ const FormComponent = ({
                                   'MRP is undefined for the selected product and variant.'
                                 )
                                 form.setValue('mrp', 0)
+                              }
+
+                              if (selectedCTC !== undefined) {
+                                form.setValue('c2c', Number(selectedCTC))
+                              } else {
+                                console.warn(
+                                  'CTC is undefined for the selected product and variant.'
+                                )
+                                form.setValue('c2c', 0)
                               }
                             }
                           }}

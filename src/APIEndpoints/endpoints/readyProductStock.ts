@@ -5,5 +5,5 @@ export const readyProductStockEndpoints = {
   add_ready_product: '/api/ready-product/add-ready-product',
   remove_ready_product: '/api/ready-product',
 
-  get_stock_history: '/api/ready-product/get-stock-history',
+  get_stock_history: '/api/stock-history',
 }

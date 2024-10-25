@@ -3,14 +3,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { createData, Data, headCells } from './schema'
 import { useGetRawStocksQuery } from '@/store/actions/slices/rawStockSlice'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { IRawMaterialStock, TableDataFilters } from '@/interfaces'
 import { PurchaseHistory } from './function'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
+import { resetStockHistory } from '@/store/actions/slices/getStockHistory'
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch();
 
   const [search, setSearch] = useState<string>('')
 
@@ -86,6 +88,10 @@ const RawMaterialStocks = () => {
         setRawMaterialNeverPurchased(newReadyStock);
     }
 }, [allRawMaterials, products]);
+
+useEffect(() => {
+  dispatch(resetStockHistory())
+}, [dispatch])
 
 
   return (

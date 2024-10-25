@@ -5,6 +5,9 @@ import { useResetRawMaterialStockMutation } from '@/store/actions/slices/rawStoc
 import { toFixedWithoutRounding } from '@/lib/utils'
 import PurchaseHistoryComponent from './purchase-history'
 
+import stockHistoryPNG from '@/assets/stock-history.png'
+import { useNavigate } from 'react-router-dom'
+
 export const Product = ({ data }: { data: Data }) => {
   return <>{data?.product?.name}</>
 }
@@ -58,10 +61,30 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 }
 
 export const PurchaseHistory = ({ data }: { data: Data }) => {
+  const navigate = useNavigate()
   const isRawMaterialNeverPurchased = data._id === ''
 
   if (isRawMaterialNeverPurchased) {
-    return <div className='h-20 w-full'></div>
+    return (
+      <div className='relative h-20 w-full px-5'>
+        <div className='absolute inset-0 flex items-center justify-center bg-gray-500/5 backdrop-blur-sm'>
+          <div className='flex w-[40%] items-center justify-between xl:w-[65%]'>
+            <span className='text-lg'>You have never purchased this item!</span>
+            <span
+              className='cursor-pointer bg-green-700 px-7 py-3 text-white'
+              onClick={() => navigate('/purchase')}
+            >
+              Go to Purchase
+            </span>
+          </div>
+        </div>
+        <img
+          src={stockHistoryPNG}
+          alt='stock-history'
+          className='h-full w-full object-cover'
+        />
+      </div>
+    )
   }
 
   return <PurchaseHistoryComponent data={data} />

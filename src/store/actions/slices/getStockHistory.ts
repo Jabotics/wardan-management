@@ -66,7 +66,11 @@ const initialState: InitialState = {
 export const GetStockHistorySlice = createSlice({
   name: 'GetStockHistorySlice',
   initialState,
-  reducers: {},
+  reducers: {
+    resetStockHistory: (state) => {
+      state.stockHistory = []
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addMatcher(
@@ -81,7 +85,15 @@ export const GetStockHistorySlice = createSlice({
           state.status = 'succeeded'
 
           state.total = action.payload.data.count
-          state.stockHistory = action.payload.data.records;
+
+          const existingTimestamps = new Set(
+            state.stockHistory.map((record) => record.createdAt)
+          )
+          const newRecords = action.payload.data.records.filter(
+            (record) => !existingTimestamps.has(record.createdAt)
+          )
+
+          state.stockHistory = [...state.stockHistory, ...newRecords]
         }
       )
       .addMatcher(
@@ -95,5 +107,5 @@ export const GetStockHistorySlice = createSlice({
 })
 
 export const { useGetStockHistoryQuery } = getStockHistoryApi
-// export const {} = GetStockHistorySlice.actions
+export const { resetStockHistory } = GetStockHistorySlice.actions
 export default GetStockHistorySlice.reducer
