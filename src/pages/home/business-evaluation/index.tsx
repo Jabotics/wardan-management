@@ -1,7 +1,7 @@
 import { DashboardTabs } from './business-evaluation-tabs'
 import StocksChart from './business-evaluation-tabs/stocks-chart'
 import Profit from './profit'
-// import StocksBarChart from './stocks-bar-chart'
+import StocksBarChart from './stocks-bar-chart'
 
 const BusinessEvaluation = () => {
   return (
@@ -9,7 +9,7 @@ const BusinessEvaluation = () => {
       <div className='flex h-[40%] w-full flex-row gap-5 overflow-hidden'>
         <div className='h-full w-[40vw] overflow-x-auto overflow-y-hidden flex flex-col items-center justify-start'>
           <span className='text-xs'>Comparison Of Stocks</span>
-          {/* <StocksBarChart /> */}
+          <StocksBarChart />
         </div>
         <div className='aspect-square h-full p-5'>
           <Profit />

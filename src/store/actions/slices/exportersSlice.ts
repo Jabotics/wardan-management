@@ -9,6 +9,7 @@ interface IncomingData {
   data: {
     count: number
     records: IBuyer[]
+    total_outstanding_amount: number
   }
   message: string
   status: 'success' | 'fail'
@@ -88,6 +89,8 @@ interface InitialState {
   total: number | null
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | undefined
+
+  total_outstanding_amount: number
 }
 
 const initialState: InitialState = {
@@ -96,6 +99,8 @@ const initialState: InitialState = {
   total: null,
   status: 'idle',
   error: undefined,
+
+  total_outstanding_amount: 0,
 }
 
 export const ExportersSlice = createSlice({
@@ -135,6 +140,8 @@ export const ExportersSlice = createSlice({
           state.status = 'succeeded'
           state.exporters = action.payload.data.records
           state.total = action.payload.data.count
+
+          state.total_outstanding_amount = action.payload.data.total_outstanding_amount
         }
       )
       .addMatcher(

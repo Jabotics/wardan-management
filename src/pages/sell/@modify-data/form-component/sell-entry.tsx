@@ -28,6 +28,7 @@ import {
 } from '@/store/actions/slices/exportSlice'
 import { useGetAllExportersQuery } from '@/store/actions/slices/exportersSlice'
 import SellItemForm from './sell-item'
+import { Input } from '@/components/ui/input'
 
 const SellEntry = ({
   setOpen,
@@ -42,7 +43,13 @@ const SellEntry = ({
 
   const [Edit] = useUpdateSellMutation()
 
-  useGetAllExportersQuery({})
+  const [searchExporter, setSearchExporter] = useState<string>('')
+
+  useGetAllExportersQuery({
+    search: searchExporter,
+  }, {
+    refetchOnMountOrArgChange: true
+  })
   const { exporters } = useAppSelector((state: RootState) => state.exporters)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -112,7 +119,7 @@ const SellEntry = ({
                   <FormItem className='mt-5 flex w-full flex-col items-start gap-1 space-y-1'>
                     <FormLabel>Whom did you sell it to?</FormLabel>
                     <FormControl>
-                      {exporters && exporters.length > 0 ? (
+                      {/* {exporters && exporters.length > 0 ? ( */}
                         <Select
                           value={field.value || ''}
                           onValueChange={(val) => {
@@ -123,6 +130,17 @@ const SellEntry = ({
                             <SelectValue placeholder='Select a Seller' />
                           </SelectTrigger>
                           <SelectContent>
+                            <div className='border-none p-3'>
+                              <Input
+                                className='border placeholder-gray-300 outline-none'
+                                style={{ outline: 'none', boxShadow: 'none' }}
+                                placeholder='Search by Name & Number'
+                                value={searchExporter}
+                                onChange={(e) => {
+                                  setSearchExporter(e.target.value)
+                                }}
+                              />
+                            </div>
                             {exporters.map((item, index) => {
                               return (
                                 <SelectItem value={item._id} key={index}>
@@ -132,11 +150,11 @@ const SellEntry = ({
                             })}
                           </SelectContent>
                         </Select>
-                      ) : (
+                      {/* ) : (
                         <div className='text-sm text-gray-400'>
                           TRY ADDING EXPORTER: Error in Getting your Exporters
                         </div>
-                      )}
+                      )} */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
