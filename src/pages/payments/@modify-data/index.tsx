@@ -26,9 +26,9 @@ const ModifyAssets = ({
         <Cross2Icon className='h-4 w-4' />
       </div>
       <div className='flex h-8 flex-col items-start justify-between'>
-        <DialogTitle className='h-fit'>{`Add Asset`}</DialogTitle>
+        <DialogTitle className='h-fit'>{`Add a Payment`}</DialogTitle>
         <DialogDescription className='sr-only h-0'>
-          Add / Edit dialog for assets
+          Add / Edit dialog for payments
         </DialogDescription>
 
         <div className='h-px w-3/4 bg-gray-400'></div>

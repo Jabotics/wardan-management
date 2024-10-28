@@ -29,6 +29,7 @@ export const importersApi = createApi({
       }
     },
   }),
+  tagTypes: ['Importers'],
   endpoints: (builder) => ({
     getAllImporters: builder.query<IncomingData, object>({
       query: (params) => {
@@ -38,6 +39,7 @@ export const importersApi = createApi({
           params: getCustomParams(params),
         }
       },
+      providesTags: ['Importers']
     }),
 
     addImporter: builder.mutation<any, { name: string, address: string, gst_number: string, phone: string }>({
@@ -49,6 +51,7 @@ export const importersApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Importers']
     }),
 
     editImporter: builder.mutation<Partial<IncomingData>, ISeller>({
@@ -60,6 +63,7 @@ export const importersApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Importers']
     }),
 
     removeImporter: builder.mutation<Partial<IncomingData>, { id: string }>({
@@ -70,6 +74,7 @@ export const importersApi = createApi({
           method: 'DELETE',
         }
       },
+      invalidatesTags: ['Importers']
     }),
   }),
 })

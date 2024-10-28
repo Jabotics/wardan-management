@@ -1,6 +1,6 @@
 import { HeadCell } from '@/interfaces'
 import { ISeller } from '@/interfaces'
-import { Address, GSTNumber, ToolbarAction, ToPay } from './function'
+import { Address, GSTNumber, ToolbarAction, ToPay, Mobile } from './function'
 
 export interface Data extends ISeller {}
 
@@ -52,7 +52,8 @@ export const headCells: HeadCell<Data>[] = [
     numeric: true,
     disablePadding: false,
     label: 'Phone',
-    type: 'string',
+    type: 'custom',
+    body: Mobile,
   },
   {
     id: '_id',
