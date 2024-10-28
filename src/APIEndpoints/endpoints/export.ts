@@ -135,5 +135,7 @@ export const exportEndpoints = {
  */
   remove_sell: '/api/sell/remove-sell',
 
-  generate_sell_invoice: 'api/sell/generate-invoice'
+  generate_sell_invoice: 'api/sell/generate-invoice',
+
+  get_shipment_logs: '/api/sell/item-wise-sell',
 }

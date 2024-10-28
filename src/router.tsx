@@ -112,6 +112,13 @@ const router = createBrowserRouter([
           Component: (await import('./pages/receipts')).default,
         })
       },
+
+      {
+        path: 'shipment-timestamp',
+        lazy: async () => ({
+          Component: (await import('./pages/shipment-timestamp')).default,
+        })
+      },
     ],
   },
 

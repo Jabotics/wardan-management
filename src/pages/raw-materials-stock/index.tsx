@@ -12,7 +12,7 @@ import { resetStockHistory } from '@/store/actions/slices/getStockHistory'
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   const [search, setSearch] = useState<string>('')
 
@@ -67,32 +67,38 @@ const RawMaterialStocks = () => {
 
   useEffect(() => {
     if (allRawMaterials.length > 0) {
-        const allRawMaterialsSet = new Set(allRawMaterials);
-        const newReadyStock = products.reduce<IRawMaterialStock[]>((acc, product) => {
-            const productId = product._id;
-            if (productId && !allRawMaterialsSet.has(productId)) {
-                acc.push({
-                    _id: '',
-                    category: 'RAW_MATERIAL',
-                    product: {
-                        _id: productId,
-                        name: product.name || '',
-                    },
-                    qty: 0,
-                    unit: 'kg',
-                });
-            }
-            return acc;
-        }, []);
+      const allRawMaterialsSet = new Set(allRawMaterials)
+      const newReadyStock = products.reduce<IRawMaterialStock[]>(
+        (acc, product) => {
+          const productId = product._id
+          if (
+            product.type !== 'MIXTURE' &&
+            productId &&
+            !allRawMaterialsSet.has(productId)
+          ) {
+            acc.push({
+              _id: '',
+              category: 'RAW_MATERIAL',
+              product: {
+                _id: productId,
+                name: product.name || '',
+              },
+              qty: 0,
+              unit: 'kg',
+            })
+          }
+          return acc
+        },
+        []
+      )
 
-        setRawMaterialNeverPurchased(newReadyStock);
+      setRawMaterialNeverPurchased(newReadyStock)
     }
-}, [allRawMaterials, products]);
+  }, [allRawMaterials, products])
 
-useEffect(() => {
-  dispatch(resetStockHistory())
-}, [dispatch])
-
+  useEffect(() => {
+    dispatch(resetStockHistory())
+  }, [dispatch])
 
   return (
     <EnhancedTable<Data>

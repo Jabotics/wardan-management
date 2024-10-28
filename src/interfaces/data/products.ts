@@ -4,7 +4,10 @@ export interface IProduct {
   is_active?: boolean
   type: 'WHOLE' | 'MIXTURE'
   ingredients?: {
-    _id: string
-    name: string
+    product: {
+      _id: string
+      name: string
+    }
+    qty: number
   }[]
 }

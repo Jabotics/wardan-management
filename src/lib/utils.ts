@@ -75,21 +75,14 @@ export function indianStyleAmount(num: number): string {
   let result = '';
   const length = integerPart.length;
 
-  if (length > 3) {
-    result += integerPart.slice(length - 3);
-    console.log(result)
-    
-    for (let i = length - 3; i > 0; i -= 2) {
-      result = integerPart.slice(i - 2, i) + ',' + result;
-    }
-    
-    if (length % 2 === 1) {
-      result = integerPart[0] + ',' + result;
-    }
-  } else {
-    result = integerPart;
+  const lastThreeDigits = integerPart.slice(length - 3, length)
+  for (let i = length - 3; i > 0; i -= 2) {
+    result = integerPart.slice(i - 2, i) + ',' + result;
   }
+  result = numStr[0] + result
 
-  return decimalPart ? `${result}.${decimalPart}` : result;
+  result += lastThreeDigits
+
+  return `${num === 0 ? numStr : integerPart.length <= 3 ? integerPart : result}.${decimalPart ?? '00'}`;
 }
 

@@ -95,8 +95,8 @@ const ModifySellItems = ({
           _id: data._id,
           amount: payload.amount,
           qty: payload.qty,
-          total_qty: totalAmount ?? 0,
-          total_amount: totalQty ?? 0,
+          total_qty: payload.qty ?? totalQty,
+          total_amount: payload.amount ?? totalAmount,
           c2c_amount: payload.c2c_amount,
         }).unwrap()
 

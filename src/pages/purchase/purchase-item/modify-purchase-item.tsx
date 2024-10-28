@@ -235,7 +235,7 @@ const ModifyPurchaseItems = ({
                           <SelectValue placeholder='Select a Product' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.map((item) => (
+                          {products.filter(i => i.type === 'WHOLE').map((item) => (
                             <SelectItem
                               value={item._id || ''}
                               key={item._id}

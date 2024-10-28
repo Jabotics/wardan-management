@@ -343,9 +343,35 @@ const FormComponent = ({
                   />
 
                   <div>Net Weight: {form.watch('qty')}kg</div>
+                  <div className='flex items-center gap-3'>
+                    <span>Ingredients:</span>
+                    {products.map((item, index) => {
+                      if (item._id === form.watch('product')) {
+                        if (item.type === 'MIXTURE') {
+                          return (
+                            <div
+                              key={index}
+                              className='flex items-center gap-2'
+                            >
+                              {item.ingredients?.map((ingredient, iindex) => {
+                                return (
+                                  <span key={iindex}>
+                                    {ingredient.product.name} <span className='text-gray-400 text-sm'>({Number(ingredient.qty * form.watch('qty')).toFixed(2)}kg)</span>
+                                  </span>
+                                )
+                              })}
+                            </div>
+                          )
+                        }
+
+                        return null
+                      }
+                      return null
+                    })}
+                  </div>
                 </div>
 
-                <div className='flex h-full w-1/3 flex-col items-start mt-5'>
+                <div className='mt-5 flex h-full w-1/3 flex-col items-start'>
                   <FormField
                     control={form.control}
                     name={`mrp`}

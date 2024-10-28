@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { formSchema } from './form-schema'
-import { toast } from 'sonner'
 import Input from '@mui/material/Input/Input'
 import { Fragment, useEffect, useState } from 'react'
 import { MenuItem, Select } from '@mui/material'
@@ -53,6 +52,7 @@ const FormComponent = ({
 
   const [addNewIngredient, setAddNewIngredient] = useState<boolean>(false)
   const [newIngredient, setNewIngredient] = useState<string | null>(null)
+  const [newIngredientPerc, setNewIngredientPerc] = useState<number>(0)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
@@ -67,9 +67,9 @@ const FormComponent = ({
   const excludedIds = data
     ? new Set([
         data[0]._id,
-        ...(form.watch('ingredients')?.map((i) => i._id) || []),
+        ...(form.watch('ingredients')?.map((i) => i.product._id) || []),
       ])
-    : new Set([...(form.watch('ingredients')?.map((i) => i._id) || [])])
+    : new Set([...(form.watch('ingredients')?.map((i) => i.product._id) || [])])
 
   const menuItems = allWholeProducts
     .filter((item) => !excludedIds.has(item._id))
@@ -82,24 +82,32 @@ const FormComponent = ({
   const watchIngredients = form.watch('ingredients')
   const handleAddNewIngredient = () => {
     if (!newIngredient) return
+    if (!newIngredientPerc) return
 
     const ingredient = allWholeProducts.find((i) => i._id === newIngredient)
     if (!ingredient) return
 
     const updatedIngredients = [
       ...(Array.isArray(watchIngredients) ? watchIngredients : []),
-      { name: ingredient.name, _id: newIngredient },
+      {
+        product: {
+          name: ingredient.name,
+          _id: newIngredient,
+        },
+        qty: Number(newIngredientPerc) / 100,
+      },
     ]
 
     form.setValue('ingredients', updatedIngredients)
     setAddNewIngredient(false)
+    setNewIngredientPerc(0)
     setNewIngredient(null)
   }
 
   const handleRemoveIngredient = (id: string) => {
     const newIngredientsList = form
       .watch('ingredients')
-      ?.filter((i) => i._id !== id)
+      ?.filter((i) => i.product._id !== id)
 
     form.setValue('ingredients', newIngredientsList)
   }
@@ -126,13 +134,20 @@ const FormComponent = ({
     const payload: {
       name: string
       type: 'WHOLE' | 'MIXTURE'
-      ingredients?: string[]
+      ingredients?: {
+        product: string
+      }[]
       _id?: string
       is_active?: boolean
     } = {
       name: formData.name,
       type: formData.type as 'WHOLE' | 'MIXTURE',
-      ingredients: formData.ingredients?.map((ingredient) => ingredient._id),
+      ingredients: formData.ingredients?.map((ingredient) => {
+        return {
+          product: ingredient.product._id,
+          qty: ingredient.qty,
+        }
+      }),
     }
 
     if (formData.type === 'WHOLE') delete payload.ingredients
@@ -158,10 +173,18 @@ const FormComponent = ({
     }
   }
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
-    toast.promise(handleModifyProducts(data), {
-      loading: `${!toEdit ? 'Adding' : 'Updating '} Information...`,
-    })
+  const handleNewIngredientPerc = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value)
+
+    if (value >= 1 && value <= 100) {
+      if (newIngredientPerc === 0) {
+        setNewIngredientPerc(Number(String(value).replace(/^0+/, '')))
+      } else {
+        setNewIngredientPerc(value)
+      }
+    } else if (e.target.value === '') {
+      setNewIngredientPerc(0)
+    }
   }
 
   useEffect(() => {
@@ -181,7 +204,7 @@ const FormComponent = ({
       <Form {...form}>
         <form
           action=''
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleModifyProducts)}
           className='flex flex-1 flex-col gap-4'
         >
           <div className='w-full flex-1'>
@@ -243,17 +266,22 @@ const FormComponent = ({
             {form.watch('type') === 'MIXTURE' ? (
               <div className='ingredientsGrid w-full'>
                 {form.watch('ingredients')?.map((item, index) => {
+                  console.log(item)
                   return (
                     <span
                       key={index}
                       className='flex w-full items-center justify-between rounded-2xl bg-stone-800 p-3'
                     >
-                      <span className='text-white'>{item.name}</span>
+                      <span className='flex items-center gap-3 text-white'>
+                        {item.product.name}
+                        <span className='text-gray-500'>{item.qty}%</span>
+                      </span>
+
                       <span
                         className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-stone-100'
                         onClick={() => {
-                          if (item?._id) {
-                            handleRemoveIngredient(item._id)
+                          if (item?.product?._id) {
+                            handleRemoveIngredient(item.product?._id)
                           }
                         }}
                       >
@@ -263,21 +291,35 @@ const FormComponent = ({
                   )
                 })}
                 {addNewIngredient ? (
-                  <span className='flex items-center gap-2'>
-                    <Select
-                      labelId='product-type-label'
-                      displayEmpty
-                      value={newIngredient || ''}
-                      className='h-full w-3/4'
-                      onChange={(e) => {
-                        setNewIngredient(e.target.value as string)
-                      }}
-                    >
-                      <MenuItem value='' disabled>
-                        Add Ingredient
-                      </MenuItem>
-                      {menuItems}
-                    </Select>
+                  <div className='flex items-center gap-2'>
+                    <div className='flex w-3/4 flex-col items-start justify-start'>
+                      <Select
+                        labelId='product-type-label'
+                        displayEmpty
+                        value={newIngredient || ''}
+                        className='h-3/4 w-full'
+                        onChange={(e) => {
+                          setNewIngredient(e.target.value as string)
+                        }}
+                      >
+                        <MenuItem value='' disabled>
+                          Add Ingredient
+                        </MenuItem>
+                        {menuItems}
+                      </Select>
+                      {newIngredient ? (
+                        <div className='flex h-1/4 w-full items-center gap-3'>
+                          <p>Percentage (%)</p>
+                          <Input
+                            placeholder='Enter percentage (out of 100)'
+                            className='flex-1'
+                            type='number'
+                            onChange={handleNewIngredientPerc}
+                            value={newIngredientPerc}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
                     <span className='flex h-full flex-1 items-center justify-end gap-4 px-2'>
                       <FcCheckmark
                         size={30}
@@ -293,7 +335,7 @@ const FormComponent = ({
                         }}
                       />
                     </span>
-                  </span>
+                  </div>
                 ) : null}
                 {!addNewIngredient ? (
                   <span

@@ -14,6 +14,8 @@ import assetsSlice, { assetsApi } from "./slices/assetsSlice"
 import paymentsSlice, { paymentsApi } from "./slices/paymentSlice"
 import receiptsSlice, { receiptsApi } from "./slices/receiptsSlice"
 import getStockHistorySlice, { getStockHistoryApi } from "./slices/getStockHistory"
+import getRemainingSlice, { getRemainingApi } from "./slices/getRemainingSlice"
+import shipmentLogsSlice, { shipmentLogsApi } from "./slices/shipmentLogsSlice"
 
 export {
   appSlice,
@@ -47,4 +49,8 @@ export {
   receiptsSlice,
   getStockHistoryApi,
   getStockHistorySlice,
+  getRemainingApi,
+  getRemainingSlice,
+  shipmentLogsApi,
+  shipmentLogsSlice,
 }
