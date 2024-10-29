@@ -10,6 +10,7 @@ interface IncomingData {
 
   data: {
     count: number
+    productId: string
     records: IStockHistory[]
   }
 }
@@ -51,7 +52,9 @@ interface InitialState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed'
   error: string | undefined
 
-  stockHistory: IStockHistory[]
+  stockHistory: {
+    [key: string]: IStockHistory[]
+  } | null
 }
 
 const initialState: InitialState = {
@@ -60,7 +63,7 @@ const initialState: InitialState = {
   status: 'idle',
   error: undefined,
 
-  stockHistory: [],
+  stockHistory: null,
 }
 
 export const GetStockHistorySlice = createSlice({
@@ -68,8 +71,8 @@ export const GetStockHistorySlice = createSlice({
   initialState,
   reducers: {
     resetStockHistory: (state) => {
-      state.stockHistory = []
-    }
+      state.stockHistory = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -83,17 +86,35 @@ export const GetStockHistorySlice = createSlice({
         getStockHistoryApi.endpoints.getStockHistory.matchFulfilled,
         (state, action) => {
           state.status = 'succeeded'
-
           state.total = action.payload.data.count
 
+          if (!state.stockHistory) {
+            state.stockHistory = {}
+          }
+
+          const productId = action.payload.data.productId
+
+          if (!state.stockHistory[productId]) {
+            state.stockHistory[productId] = []
+          }
+
           const existingTimestamps = new Set(
-            state.stockHistory.map((record) => record.createdAt)
+            state.stockHistory[productId].map((record) => record.createdAt)
           )
           const newRecords = action.payload.data.records.filter(
             (record) => !existingTimestamps.has(record.createdAt)
           )
 
-          state.stockHistory = [...state.stockHistory, ...newRecords]
+          const uniqueRecords = new Map()
+          state.stockHistory[productId].forEach((record) => {
+            uniqueRecords.set(record.createdAt, record)
+          })
+
+          newRecords.forEach((record) => {
+            uniqueRecords.set(record.createdAt, record)
+          })
+
+          state.stockHistory[productId] = Array.from(uniqueRecords.values())
         }
       )
       .addMatcher(

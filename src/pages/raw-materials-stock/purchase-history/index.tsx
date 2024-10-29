@@ -26,7 +26,6 @@ const PurchaseHistoryComponent = ({ data }: { data: Data }) => {
   const { stockHistory } = useAppSelector(
     (state: RootState) => state.stockHistory
   )
-  console.log(stockHistory)
 
   useGetStockHistoryQuery(
     {
@@ -37,47 +36,42 @@ const PurchaseHistoryComponent = ({ data }: { data: Data }) => {
     {
       skip: !isRawMaterialNeverPurchased,
       refetchOnMountOrArgChange: true,
-      refetchOnFocus: true
+      refetchOnFocus: true,
     }
   )
 
   useEffect(() => {
-    if (tableRef.current) {
-      const { clientHeight, scrollHeight } = tableRef.current;
-      console.log('Client Height:', clientHeight);
-      console.log('Scroll Height:', scrollHeight);
-    }
-  }, []);
-
-  useEffect(() => {
     const handleScroll = () => {
-      if (tableRef.current) {
-        const { scrollTop, clientHeight, scrollHeight } = tableRef.current;
+      if (stockHistory && tableRef.current) {
+        const { scrollTop, clientHeight, scrollHeight } = tableRef.current
 
-        if (scrollTop + clientHeight >= scrollHeight - 50 && offset < stockHistory.length) {
-          setOffset((prevOffset) => prevOffset + 7);
+        if (
+          scrollTop + clientHeight >= scrollHeight - 50 &&
+          offset < stockHistory[data.product._id].length
+        ) {
+          setOffset((prevOffset) => prevOffset + 7)
         }
       }
-    };
+    }
 
-    const tableElement = tableRef.current;
+    const tableElement = tableRef.current
     if (tableElement) {
-      tableElement.addEventListener('scroll', handleScroll);
+      tableElement.addEventListener('scroll', handleScroll)
     } else {
-      console.warn('Table element is null, cannot attach scroll listener.');
+      console.warn('Table element is null, cannot attach scroll listener.')
     }
 
     return () => {
-      tableElement?.removeEventListener('scroll', handleScroll);
-    };
-  }, [offset, stockHistory.length]);
+      tableElement?.removeEventListener('scroll', handleScroll)
+    }
+  }, [data.product._id, offset, stockHistory])
 
   return (
     <div className='flex h-60 w-full flex-col gap-2 overflow-y-auto overflow-x-hidden'>
       <div className='my-3 text-center text-xs text-gray-400'>
         Recent Activities
       </div>
-      <div ref={tableRef} className='overflow-y-auto h-full'>
+      <div ref={tableRef} className='h-full overflow-y-auto'>
         <Table>
           <TableHeader>
             <TableRow>
@@ -103,47 +97,49 @@ const PurchaseHistoryComponent = ({ data }: { data: Data }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {stockHistory.map((history, index) => {
-              const remarks =
-                history.status === 'wastage'
-                  ? 'Regretfully, it was not salvaged'
-                  : history.status === 'stock'
-                    ? 'Processed into Ready Products'
-                    : `Purchase from ${history.seller}`;
+            {stockHistory
+              ? stockHistory?.[data.product._id]?.map((history, index) => {
+                  const remarks =
+                    history.status === 'wastage'
+                      ? 'Regretfully, it was not salvaged'
+                      : history.status === 'stock'
+                        ? 'Processed into Ready Products'
+                        : `Purchase from ${history.seller}`
 
-              return (
-                <TableRow key={index}>
-                  <TableCell className='font-medium'>
-                    {history.status.charAt(0).toUpperCase() +
-                      history.status.substring(1)}
-                  </TableCell>
-                  <TableCell
-                    onClick={() => navigate('/import-contacts')}
-                    className={`${history.seller ? 'cursor-pointer underline' : 'text-gray-400'}`}
-                  >
-                    {history?.seller ?? 'N/A'}
-                  </TableCell>
-                  <TableCell className='text-xs text-gray-500'>
-                    {history?.createdAt
-                      ? formatDateToIST(history.createdAt)
-                      : null}
-                  </TableCell>
-                  <TableCell
-                    className={`${history.status === 'purchaseItem' ? 'text-green-700' : history.status === 'wastage' ? 'text-red-800/75' : 'text-amber-800/50'}`}
-                  >
-                    {remarks}
-                  </TableCell>
-                  <TableCell
-                    className={`text-right ${history.status === 'purchaseItem' ? 'text-green-700' : 'text-red-700'}`}
-                  >
-                    {history.status === 'purchaseItem'
-                      ? '+' + history.qty
-                      : '-' + history.qty}{' '}
-                    kg
-                  </TableCell>
-                </TableRow>
-              )
-            })}
+                  return (
+                    <TableRow key={index}>
+                      <TableCell className='font-medium'>
+                        {history.status.charAt(0).toUpperCase() +
+                          history.status.substring(1)}
+                      </TableCell>
+                      <TableCell
+                        onClick={() => navigate('/import-contacts')}
+                        className={`${history.seller ? 'cursor-pointer underline' : 'text-gray-400'}`}
+                      >
+                        {history?.seller ?? 'N/A'}
+                      </TableCell>
+                      <TableCell className='text-xs text-gray-500'>
+                        {history?.createdAt
+                          ? formatDateToIST(history.createdAt)
+                          : null}
+                      </TableCell>
+                      <TableCell
+                        className={`${history.status === 'purchaseItem' ? 'text-green-700' : history.status === 'wastage' ? 'text-red-800/75' : 'text-amber-800/50'}`}
+                      >
+                        {remarks}
+                      </TableCell>
+                      <TableCell
+                        className={`text-right ${history.status === 'purchaseItem' ? 'text-green-700' : 'text-red-700'}`}
+                      >
+                        {history.status === 'purchaseItem'
+                          ? '+' + history.qty
+                          : '-' + history.qty}{' '}
+                        kg
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              : null}
           </TableBody>
           <TableFooter>
             <TableRow>
@@ -159,4 +155,4 @@ const PurchaseHistoryComponent = ({ data }: { data: Data }) => {
   )
 }
 
-export default PurchaseHistoryComponent;
+export default PurchaseHistoryComponent
