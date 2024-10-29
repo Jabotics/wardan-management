@@ -28,6 +28,9 @@ import {
   useAddSellMutation,
 } from '@/store/actions/slices/exportSlice'
 import { useGetReadyProductStockQuery } from '@/store/actions/slices/readyProductStockSlice'
+import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const SellItemForm = ({
   setOpen,
@@ -41,8 +44,12 @@ const SellItemForm = ({
     (state: RootState) => state.readyProducts
   )
   const uniqueProducts = Array.from(
-    new Map(readyProducts.map(item => [item.product._id, item])).values()
-  );
+    new Map(readyProducts.map((item) => [item.product._id, item])).values()
+  )
+  const variantsInReadyProducts = uniqueProducts.map((i) => i.variant._id)
+
+  useGetAllVariantsQuery({})
+  const { variants } = useAppSelector((state: RootState) => state.variants)
 
   const [Add] = useAddSellMutation()
 
@@ -98,10 +105,14 @@ const SellItemForm = ({
           },
         })
       )
-      console.log(res)
+      toast(res.message)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     }
   }
 
@@ -192,15 +203,17 @@ const SellItemForm = ({
                             <SelectValue placeholder='Select a Variant' />
                           </SelectTrigger>
                           <SelectContent>
-                            {readyProducts.map((item, index) => {
-                              return (
-                                <SelectItem
-                                  value={item.variant._id || ''}
-                                  key={index}
-                                >
-                                  {item.variant.name}
-                                </SelectItem>
-                              )
+                            {variants.map((item, index) => {
+                              if (variantsInReadyProducts.includes(item._id)) {
+                                return (
+                                  <SelectItem
+                                    value={item?._id || ''}
+                                    key={index}
+                                  >
+                                    {item?.name}
+                                  </SelectItem>
+                                )
+                              }
                             })}
                           </SelectContent>
                         </Select>
@@ -311,7 +324,7 @@ const SellItemForm = ({
                 />
               </div>
               {form.getValues(`sellItems.${index}.c2c`) > 0 && (
-                <div className='block my-3'>
+                <div className='my-3 block'>
                   Cost To Company: ₹{form.getValues(`sellItems.${index}.c2c`)}
                 </div>
               )}

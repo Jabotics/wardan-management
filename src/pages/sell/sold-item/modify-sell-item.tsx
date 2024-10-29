@@ -26,6 +26,9 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { useGetReadyProductStockQuery } from '@/store/actions/slices/readyProductStockSlice'
+import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const sellItemsSchema = z.object({
   product: z.string(),
@@ -55,6 +58,13 @@ const ModifySellItems = ({
   const { readyProducts } = useAppSelector(
     (state: RootState) => state.readyProducts
   )
+  const uniqueProducts = Array.from(
+    new Map(readyProducts.map((item) => [item.product._id, item])).values()
+  )
+  const variantsInReadyProducts = uniqueProducts.map((i) => i.variant._id)
+
+  useGetAllVariantsQuery({})
+  const { variants } = useAppSelector((state: RootState) => state.variants)
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
 
@@ -100,25 +110,28 @@ const ModifySellItems = ({
           c2c_amount: payload.c2c_amount,
         }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       } else {
         const res = await Add({
           ...payload,
           sellId: sellId ?? '',
         }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       }
 
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  // console.log(form.watch())
   return (
     <div className='m-auto'>
       <Form {...form}>
@@ -182,15 +195,14 @@ const ModifySellItems = ({
                           <SelectValue placeholder='Select a Variant' />
                         </SelectTrigger>
                         <SelectContent>
-                          {readyProducts.map((item, index) => {
-                            return (
-                              <SelectItem
-                                value={item.variant._id || ''}
-                                key={index}
-                              >
-                                {item.variant.name}
-                              </SelectItem>
-                            )
+                          {variants.map((item, index) => {
+                            if (variantsInReadyProducts.includes(item._id)) {
+                              return (
+                                <SelectItem value={item?._id || ''} key={index}>
+                                  {item?.name}
+                                </SelectItem>
+                              )
+                            }
                           })}
                         </SelectContent>
                       </Select>

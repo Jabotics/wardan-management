@@ -7,7 +7,8 @@ import {
   useRemoveReadyProductMutation,
 } from '@/store/actions/slices/readyProductStockSlice'
 import { useAppDispatch } from '@/store/hooks'
-import { formatDateToIST, toFixedWithoutRounding } from '@/lib/utils'
+import { formatDateToIST, isErrorWithMessage, toFixedWithoutRounding } from '@/lib/utils'
+import { toast } from 'sonner'
 
 export const Product = ({ data }: { data: Data }) => {
   return <>{data?.product?.name}</>
@@ -56,12 +57,16 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       try {
         const res = await Delete({ id: data._id }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
 
         dispatch(removeReadyProduct({ id: data._id }))
         setDeleteOpen(false)
       } catch (error) {
-        console.log(error)
+        if (isErrorWithMessage(error)) {
+          toast(error.data.message)
+        } else {
+          toast('An unexpected error occurred')
+        }
       } finally {
         setIsSubmitting(false)
       }

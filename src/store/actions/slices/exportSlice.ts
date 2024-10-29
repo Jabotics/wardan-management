@@ -99,7 +99,7 @@ export const exportsApi = createApi({
       invalidatesTags: ['SellItems'],
     }),
 
-    removeSellItem: builder.mutation<unknown, { id: string }>({
+    removeSellItem: builder.mutation<ResponseType, { id: string }>({
       query: (body) => {
         const { id } = body
         return {
@@ -118,7 +118,7 @@ export const exportsApi = createApi({
       }),
     }),
 
-    updateSell: builder.mutation<unknown, { _id: string; buyer: string }>({
+    updateSell: builder.mutation<ResponseType, { _id: string; buyer: string }>({
       query: (body) => {
         const { ...rest } = body
 
@@ -131,7 +131,7 @@ export const exportsApi = createApi({
       invalidatesTags: ['Sell'],
     }),
 
-    removeSell: builder.mutation<IncomingData, { id: string }>({
+    removeSell: builder.mutation<ResponseType, { id: string }>({
       query: (body) => {
         const { id } = body
         return {

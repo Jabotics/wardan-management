@@ -107,7 +107,7 @@ export const purchaseApi = createApi({
       invalidatesTags: ['PurchaseItems'],
     }),
 
-    updatePurchase: builder.mutation<unknown, object>({
+    updatePurchase: builder.mutation<ResponseType, object>({
       query: (body) => {
         const { ...rest } = body
 

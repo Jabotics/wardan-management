@@ -99,18 +99,28 @@ const PurchaseHistoryComponent = ({ data }: { data: Data }) => {
           <TableBody>
             {stockHistory
               ? stockHistory?.[data.product._id]?.map((history, index) => {
+                  let showStatus: string = ''
                   const remarks =
                     history.status === 'wastage'
                       ? 'Regretfully, it was not salvaged'
-                      : history.status === 'stock'
+                      : history.status === 'stock' || history.status === 'mixture_product'
                         ? 'Processed into Ready Products'
                         : `Purchase from ${history.seller}`
+
+                  if (history.status === 'purchaseItem') {
+                    showStatus = 'Purchase'
+                  }
+                  if (history.status === 'mixture_product' || history.status === 'stock') {
+                    showStatus = 'Stock';
+                  }
+                  if (history.status === 'wastage') {
+                    showStatus = 'Wastage';
+                  }
 
                   return (
                     <TableRow key={index}>
                       <TableCell className='font-medium'>
-                        {history.status.charAt(0).toUpperCase() +
-                          history.status.substring(1)}
+                        {showStatus}
                       </TableCell>
                       <TableCell
                         onClick={() => navigate('/import-contacts')}

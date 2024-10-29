@@ -29,6 +29,8 @@ import {
 import { useGetAllExportersQuery } from '@/store/actions/slices/exportersSlice'
 import SellItemForm from './sell-item'
 import { Input } from '@/components/ui/input'
+import { isErrorWithMessage } from '@/lib/utils'
+import { toast } from 'sonner'
 
 const SellEntry = ({
   setOpen,
@@ -83,18 +85,23 @@ const SellEntry = ({
         throw new Error('Please Select one of your Exporter')
 
       if (data) {
-        await Edit({
+        const res = await Edit({
           _id: data._id,
           buyer: payload.buyer?._id || '',
-        })
+        }).unwrap()
 
+        toast(res.message)
         setOpen(false)
       } else {
         dispatch(setSellAddInfo(payload))
         setToRedirect(true)
       }
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }

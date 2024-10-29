@@ -14,6 +14,14 @@ interface IncomingData {
   }
 }
 
+interface ResponseType {
+  message: string
+  status: 'success' | 'fail'
+  data: {
+    _id: string
+  }
+}
+
 export const readyProductStocksApi = createApi({
   reducerPath: 'ReadyProductStocksApi',
   baseQuery: fetchBaseQuery({
@@ -38,11 +46,11 @@ export const readyProductStocksApi = createApi({
           params: getCustomParams(params),
         }
       },
-      providesTags: ['ReadyProducts']
+      providesTags: ['ReadyProducts'],
     }),
 
     addReadyProduct: builder.mutation<
-      any,
+      ResponseType,
       {
         product: string
         variant: string
@@ -61,18 +69,20 @@ export const readyProductStocksApi = createApi({
           body: rest,
         }
       },
-      invalidatesTags: ['ReadyProducts']
+      invalidatesTags: ['ReadyProducts'],
     }),
 
-    removeReadyProduct: builder.mutation<Partial<IncomingData>, { id: string }>({
-      query: (body) => {
-        const { id } = body
-        return {
-          url: `${APIEndPoints.remove_ready_product}/${id}`,
-          method: 'DELETE',
-        }
-      },
-    }),
+    removeReadyProduct: builder.mutation<Partial<IncomingData>, { id: string }>(
+      {
+        query: (body) => {
+          const { id } = body
+          return {
+            url: `${APIEndPoints.remove_ready_product}/${id}`,
+            method: 'DELETE',
+          }
+        },
+      }
+    ),
   }),
 })
 
@@ -132,5 +142,10 @@ export const ReadyProductStocksSlice = createSlice({
 })
 
 export default ReadyProductStocksSlice.reducer
-export const { useGetReadyProductStockQuery, useAddReadyProductMutation, useRemoveReadyProductMutation } = readyProductStocksApi
-export const { addReadyProduct, removeReadyProduct } = ReadyProductStocksSlice.actions
+export const {
+  useGetReadyProductStockQuery,
+  useAddReadyProductMutation,
+  useRemoveReadyProductMutation,
+} = readyProductStocksApi
+export const { addReadyProduct, removeReadyProduct } =
+  ReadyProductStocksSlice.actions

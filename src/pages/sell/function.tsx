@@ -11,8 +11,8 @@ import { Tooltip } from '@mui/material'
 
 import SoldItemsComponent from './sold-item'
 import { useState } from 'react'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
-import { formatDateToIST } from '@/lib/utils'
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
+import { formatDateToIST, isErrorWithMessage } from '@/lib/utils'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import {
   // useGenerateInvoiceQuery,
@@ -22,6 +22,7 @@ import FormComponent from './@modify-data/form-component'
 import ModifySellItems from './sold-item/modify-sell-item'
 import { APIEndPoints } from '@/APIEndpoints'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const TotalAmount = ({ data }: { data: Data }) => {
   return <span className='text-green-800'>{'₹ ' + data.total_amount}</span>
@@ -52,7 +53,7 @@ export const Invoice = ({ data }: { data: Data }) => {
   }
 
   return (
-    <span onClick={handleClickInvoice} className='underline text-[#9F3D47]'>
+    <span onClick={handleClickInvoice} className='text-[#9F3D47] underline'>
       {isLoading ? 'Generating...' : data?.invoice_no}
       {error && <span className='error-message'>{error}</span>}
     </span>
@@ -60,7 +61,11 @@ export const Invoice = ({ data }: { data: Data }) => {
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {
-  return <span className='text-xs text-gray-400'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
+  return (
+    <span className='text-xs text-gray-400'>
+      {data?.createdAt ? formatDateToIST(data.createdAt) : null}
+    </span>
+  )
 }
 
 export const Buyer = ({ data }: { data: Data }) => {
@@ -125,6 +130,10 @@ export const SoldItems = ({ data }: { data: Data }) => {
             </DrawerTrigger>
 
             <DrawerContent className='absolute h-[50%] w-full bg-white'>
+              <DrawerTitle className='text-center'>Add Sold Item</DrawerTitle>
+              <DrawerDescription className='sr-only'>
+                Add Sold Item
+              </DrawerDescription>
               <ModifySellItems setOpen={setDrawerOpen} sellId={data._id} />
             </DrawerContent>
           </Drawer>
@@ -151,9 +160,14 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
 
         if (res.status === 'fail') throw new Error(res.message)
 
+        toast(res.message)
         setDeleteOpen(false)
       } catch (error) {
-        console.log(error)
+        if (isErrorWithMessage(error)) {
+          toast(error.data.message)
+        } else {
+          toast('An unexpected error occurred')
+        }
       } finally {
         setIsSubmitting(false)
       }

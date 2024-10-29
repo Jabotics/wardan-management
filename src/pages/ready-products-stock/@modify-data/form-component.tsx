@@ -32,6 +32,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
+import { isErrorWithMessage } from '@/lib/utils'
+import { toast } from 'sonner'
 
 const FormComponent = ({
   isSubmitting,
@@ -96,8 +98,7 @@ const FormComponent = ({
     }
 
     try {
-      const res = await Add(payload).unwrap()
-      if (res.status === 'fail') throw new Error(res.message)
+      const res = await Add(payload).unwrap();
 
       // dispatch(
       //   addReadyProduct({
@@ -115,9 +116,14 @@ const FormComponent = ({
       //   })
       // )
 
+      toast(res.message)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }

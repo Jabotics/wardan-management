@@ -31,6 +31,8 @@ import {
   modifyPurchaseEntry,
   useUpdatePurchaseMutation,
 } from '@/store/actions/slices/purchaseSlice'
+import { isErrorWithMessage } from '@/lib/utils'
+import { toast } from 'sonner'
 
 const PurchaseEntry = ({
   category,
@@ -112,14 +114,18 @@ const PurchaseEntry = ({
           total_amount,
         })
 
-        if (res.error) throw new Error('Something went wrong')
+        toast(res.data?.message)
         setOpen(false)
       } else {
         dispatch(modifyPurchaseEntry(payload))
         setToRedirect(true)
       }
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -238,6 +244,7 @@ const PurchaseEntry = ({
                           field.onChange(Number(e.target.value))
                         }}
                         autoComplete='off'
+                        disabled
                       />
                     </FormControl>
                     <FormMessage />
@@ -274,6 +281,7 @@ const PurchaseEntry = ({
                           field.onChange(Number(e.target.value))
                         }}
                         autoComplete='off'
+                        disabled
                       />
                     </FormControl>
                     <FormMessage />
