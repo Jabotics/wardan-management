@@ -101,7 +101,7 @@ export function TransactionTable() {
           <TableRow>
             <TableCell colSpan={2}>Total</TableCell>
             <TableCell className='text-right'>
-              ₹
+              {/* ₹ */}
               {indianStyleAmount(
                 Number(
                   selectedTable === 'to-pay'

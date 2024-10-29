@@ -68,21 +68,9 @@ export function toFixedWithoutRounding(num: number) {
 }
 
 export function indianStyleAmount(num: number): string {
-  const numStr = num.toString();
-
-  const [integerPart, decimalPart] = numStr.split('.');
-  
-  let result = '';
-  const length = integerPart.length;
-
-  const lastThreeDigits = integerPart.slice(length - 3, length)
-  for (let i = length - 3; i > 0; i -= 2) {
-    result = integerPart.slice(i - 2, i) + ',' + result;
-  }
-  result = numStr[0] + result
-
-  result += lastThreeDigits
-
-  return `${num === 0 ? numStr : integerPart.length <= 3 ? integerPart : result}.${decimalPart ?? '00'}`;
+  return num.toLocaleString('en-IN', {
+    maximumFractionDigits: 2,
+    style: 'currency',
+    currency: 'INR',
+  })
 }
-
