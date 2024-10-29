@@ -17,6 +17,7 @@ import {
   IconCurrencyRupee,
   IconReceiptRupee,
   IconArticleFilled,
+  IconRollercoaster,
 } from '@tabler/icons-react'
 
 export interface NavLink {
@@ -72,6 +73,14 @@ export const sidelinks: SideLink[] = [
         icon: <IconBusinessplan size={18} />,
       },
     ],
+  },
+
+  // MATERIAL DUMP
+  {
+    title: 'Material Usage',
+    label: '',
+    href: '/material-usage',
+    icon: <IconRollercoaster size={18} />,
   },
 
   // SHIPMENT

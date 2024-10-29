@@ -11,6 +11,7 @@ import { wastageEndpoints } from "./endpoints/wastage";
 import { assetsEndpoints } from "./endpoints/assets";
 import { paymentsEndpoints } from "./endpoints/payments";
 import { receiptsEndpoints } from "./endpoints/receipts";
+import { materialUsageEndpoints } from "./endpoints/materialUsage";
 
 export const APIEndPoints = {
   // BackendURL: 'http://localhost:5000',
@@ -54,4 +55,7 @@ export const APIEndPoints = {
 
   // RECEIPTS
   ...receiptsEndpoints,
+
+  // MATERIAL USAGE
+  ...materialUsageEndpoints,
 }
