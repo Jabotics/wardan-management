@@ -41,7 +41,10 @@ const FormComponent = ({
 }) => {
   const navigate = useNavigate()
 
-  useFetchProductsQuery()
+  const fetchProducts = useFetchProductsQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  )
   const { allWholeProducts } = useAppSelector(
     (state: RootState) => state.products
   )
@@ -59,8 +62,8 @@ const FormComponent = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: data ? data[0]?.name : '',
-      type: data ? data[0]?.type : '',
+      name: toEdit ? (data ? data[0]?.name : '') : '',
+      type: toEdit ? (data ? data[0]?.type : '') : '',
     },
   })
 
@@ -166,6 +169,8 @@ const FormComponent = ({
         if (res.status === 'fail') throw new Error(res.message)
         navigate(`/`)
       }
+
+      form.reset()
     } catch (error) {
       console.log(error)
     } finally {
@@ -239,6 +244,13 @@ const FormComponent = ({
                       <Select
                         labelId='product-type-label'
                         {...field}
+                        onChange={(val) => {
+                          field.onChange(val)
+
+                          if (String(val) === 'MIXTURE') {
+                            fetchProducts.refetch()
+                          }
+                        }}
                         displayEmpty
                         defaultValue=''
                         sx={{ width: '100%', height: 30 }}
@@ -351,7 +363,7 @@ const FormComponent = ({
           </div>
 
           <div className='flex h-20 w-full items-center justify-end gap-5 border-t border-stone-500'>
-            {data ? (
+            {toEdit ? (
               <Button
                 type='button'
                 disabled={isSubmitting}

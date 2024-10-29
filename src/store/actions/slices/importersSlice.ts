@@ -39,10 +39,13 @@ export const importersApi = createApi({
           params: getCustomParams(params),
         }
       },
-      providesTags: ['Importers']
+      providesTags: ['Importers'],
     }),
 
-    addImporter: builder.mutation<any, { name: string, address: string, gst_number: string, phone: string }>({
+    addImporter: builder.mutation<
+      any,
+      { name: string; address: string; gst_number: string; phone: string }
+    >({
       query: (body) => {
         const { ...rest } = body
         return {
@@ -51,7 +54,7 @@ export const importersApi = createApi({
           body: rest,
         }
       },
-      invalidatesTags: ['Importers']
+      invalidatesTags: ['Importers'],
     }),
 
     editImporter: builder.mutation<Partial<IncomingData>, ISeller>({
@@ -63,7 +66,7 @@ export const importersApi = createApi({
           body: rest,
         }
       },
-      invalidatesTags: ['Importers']
+      invalidatesTags: ['Importers'],
     }),
 
     removeImporter: builder.mutation<Partial<IncomingData>, { id: string }>({
@@ -74,7 +77,7 @@ export const importersApi = createApi({
           method: 'DELETE',
         }
       },
-      invalidatesTags: ['Importers']
+      invalidatesTags: ['Importers'],
     }),
   }),
 })
@@ -113,12 +116,12 @@ export const ImportersSlice = createSlice({
       const { id, data } = action.payload
       const importerIndex = state.importers.findIndex((i) => i._id === id)
 
-      state.importers[importerIndex] = data
+      state.importers[importerIndex] = { ...data, payable_amount: 0 }
     },
     removeImporter: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload
 
-      state.importers = state.importers.filter((i) => i._id !== id);
+      state.importers = state.importers.filter((i) => i._id !== id)
     },
   },
   extraReducers: (builder) => {
@@ -156,5 +159,6 @@ export const {
   useGetAllImportersQuery,
   useRemoveImporterMutation,
 } = importersApi
-export const { addImporter, editImporter, removeImporter } = ImportersSlice.actions
+export const { addImporter, editImporter, removeImporter } =
+  ImportersSlice.actions
 export default ImportersSlice.reducer

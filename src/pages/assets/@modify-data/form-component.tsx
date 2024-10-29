@@ -10,6 +10,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { formSchema } from './form-schema'
 import {
   Fragment,
@@ -22,6 +29,9 @@ import {
   useEditAssetMutation,
 } from '@/store/actions/slices/assetsSlice'
 import { Button } from '@/components/ui/button'
+import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice'
+import { useAppSelector } from '@/store/hooks'
+import { RootState } from '@/store'
 
 const FormComponent = ({
   data,
@@ -39,12 +49,16 @@ const FormComponent = ({
   const [Add] = useAddAssetMutation()
   const [Update] = useEditAssetMutation()
 
+  useGetAllImportersQuery({})
+  const { importers } = useAppSelector((state: RootState) => state.importers)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       item_name: data?.item_name ?? '',
       amount: data?.amount ?? 0,
       invoice_no: data?.invoice_no ?? '',
+      seller: data?.seller?._id ?? '',
     },
   })
 
@@ -56,18 +70,28 @@ const FormComponent = ({
       amount: number
       invoice_no: string
       _id?: string
+      seller: string
     } = {
       item_name: formData.item_name,
       amount: formData.amount,
       invoice_no: formData.invoice_no,
+      seller: formData.seller,
     }
 
     try {
       setIsSubmitting(true)
       if (data) {
         payload._id = data._id
+        const sellerName =
+          importers.find((i) => i._id === payload.seller)?.name ?? ''
 
-        const res = await Update(payload as IAsset).unwrap()
+        const res = await Update({
+          ...payload,
+          seller: {
+            _id: payload.seller,
+            name: sellerName,
+          },
+        } as IAsset).unwrap()
         if (res.status === 'fail') throw new Error(res.message)
       } else {
         const res = await Add(payload).unwrap()
@@ -111,6 +135,44 @@ const FormComponent = ({
 
             <FormField
               control={form.control}
+              name='seller'
+              render={({ field }) => (
+                <FormItem className='mt-5 flex w-full flex-col items-start gap-1 space-y-1'>
+                  <FormLabel>Who did you buy it from?</FormLabel>
+                  <FormControl>
+                    {importers && importers.length > 0 ? (
+                      <Select
+                        value={field.value || ''}
+                        onValueChange={(val) => {
+                          field.onChange(val)
+                        }}
+                      >
+                        <SelectTrigger className='w-full'>
+                          <SelectValue placeholder='Select a Seller' />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {importers.map((item, index) => {
+                            return (
+                              <SelectItem value={item._id} key={index}>
+                                {item.name}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <div className='text-sm text-gray-400'>
+                        TRY ADDING IMPORTERS: Error in Getting your Importers
+                      </div>
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name='amount'
               render={({ field }) => (
                 <FormItem className='flex w-full flex-col items-start gap-1 space-y-1'>
@@ -136,7 +198,7 @@ const FormComponent = ({
                       }}
                       onChange={(e) => {
                         const value = e.target.value
-                        field.onChange(value ? parseFloat(value) : 0) 
+                        field.onChange(value ? parseFloat(value) : 0)
                       }}
                       autoComplete='off'
                       className='h-10'

@@ -174,42 +174,6 @@ const PurchaseEntry = ({
                 )}
               />
 
-              {/* <FormField
-                control={form.control}
-                name='invoice_amount'
-                render={({ field }) => (
-                  <FormItem className='mt-5 flex w-full flex-col items-start gap-1 space-y-1'>
-                    <FormLabel>Invoice Amount (Rs)</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Enter Invoice amount'
-                        {...field}
-                        className='h-10'
-                        type='number'
-                        onFocus={() => {
-                          if (field.value === 0) {
-                            field.onChange('') 
-                          }
-                        }}
-                        onBlur={() => {
-                          if (
-                            field.value === null ||
-                            field.value === undefined
-                          ) {
-                            field.onChange(0) 
-                          }
-                        }}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value))
-                        }}
-                        autoComplete='off'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
               <FormField
                 control={form.control}
                 name='seller'

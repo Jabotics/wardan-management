@@ -1,5 +1,5 @@
 import { HeadCell, IAsset } from "@/interfaces";
-import { ItemName, Amount, Invoice, ToolbarAction } from "./function";
+import { ItemName, Amount, Invoice, ToolbarAction, Seller } from "./function";
 
 export interface Data extends IAsset {}
 
@@ -7,13 +7,18 @@ export function createData(
   _id: string,
   amount: number,
   invoice_no: string,
-  item_name: string
+  item_name: string,
+  seller: {
+    _id: string
+    name: string
+  }
 ): Data {
   return {
     _id,
     amount,
     invoice_no,
     item_name,
+    seller,
   }
 }
 
@@ -41,6 +46,14 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Invoice No',
     type: 'custom',
     body: Invoice
+  },
+  {
+    id: 'seller',
+    numeric: false,
+    disablePadding: true,
+    label: 'Import From',
+    type: 'custom',
+    body: Seller
   },
   {
     id: '_id',

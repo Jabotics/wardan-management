@@ -29,6 +29,7 @@ export const exportersApi = createApi({
       }
     },
   }),
+  tagTypes: ['Exporters'],
   endpoints: (builder) => ({
     getAllExporters: builder.query<IncomingData, object>({
       query: (params) => {
@@ -38,6 +39,7 @@ export const exportersApi = createApi({
           params: getCustomParams(params),
         }
       },
+      providesTags: ['Exporters']
     }),
 
     addExporter: builder.mutation<any, { name: string, address: string, gst_number: string, phone: string }>({
@@ -49,6 +51,7 @@ export const exportersApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Exporters']
     }),
 
     editExporter: builder.mutation<Partial<IncomingData>, IBuyer>({
@@ -60,6 +63,7 @@ export const exportersApi = createApi({
           body: rest,
         }
       },
+      invalidatesTags: ['Exporters']
     }),
 
     removeExporter: builder.mutation<Partial<IncomingData>, { id: string }>({
@@ -70,6 +74,7 @@ export const exportersApi = createApi({
           method: 'DELETE',
         }
       },
+      invalidatesTags: ['Exporters']
     }),
 
     downloadExporters: builder.query({
@@ -117,7 +122,7 @@ export const ExportersSlice = createSlice({
       const { id, data } = action.payload
       const exporterIndex = state.exporters.findIndex((i) => i._id === id)
 
-      state.exporters[exporterIndex] = data
+      state.exporters[exporterIndex] = { ...data, outstanding_amount: 0 }
     },
     removeExporter: (state, action: PayloadAction<{ id: string }>) => {
       const { id } = action.payload

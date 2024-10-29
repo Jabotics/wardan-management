@@ -18,7 +18,11 @@ export const Address = ({ data }: { data: Data }) => {
 }
 
 export const GSTNumber = ({ data }: { data: Data }) => {
-  return <>{data.gst_number}</>
+  return <span className='text-xs text-amber-800'>{data.gst_number}</span>
+}
+
+export const Mobile = ({ data }: { data: Data }) => {
+  return <span className='text-xs'>{data.phone}</span>
 }
 
 export const ToReceive = ({ data }: { data: Data }) => {

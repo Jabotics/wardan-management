@@ -45,7 +45,7 @@ export const productsApi = createApi({
       },
     }),
 
-    fetchProducts: builder.query<IncomingData, void>({
+    fetchProducts: builder.query<IncomingData, object>({
       query: () => {
         return {
           url: APIEndPoints.get_products,

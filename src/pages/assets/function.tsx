@@ -3,6 +3,7 @@ import { Data } from './schema'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import { useRemoveAssetMutation } from '@/store/actions/slices/assetsSlice'
 import FormComponent from './@modify-data/form-component'
+import { Link } from 'react-router-dom'
 
 export const ItemName = ({ data }: { data: Data }) => {
   return <>{data?.item_name}</>
@@ -16,8 +17,18 @@ export const Invoice = ({ data }: { data: Data }) => {
   return <>{data?.invoice_no}</>
 }
 
-export const ToolbarAction = ({ data }: { data: Data }) => {
+export const Seller = ({ data }: { data: Data }) => {
+  return (
+    <Link
+      to={'/import-contacts'}
+      className='mx-5 whitespace-nowrap text-center underline'
+    >
+      {data?.seller?.name}
+    </Link>
+  )
+}
 
+export const ToolbarAction = ({ data }: { data: Data }) => {
   const [Delete] = useRemoveAssetMutation()
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
@@ -73,4 +84,3 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
     </div>
   )
 }
-

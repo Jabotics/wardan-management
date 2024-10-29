@@ -24,6 +24,7 @@ const Assets = () => {
           item.amount,
           item.invoice_no,
           item.item_name,
+          item.seller,
         )
       ) || [],
     [assets]

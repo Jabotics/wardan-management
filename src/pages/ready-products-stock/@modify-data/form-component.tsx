@@ -9,20 +9,10 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  // FormMessage,
 } from '@/components/ui/form'
 import { formSchema } from './form-schema'
-// import { toast } from 'sonner'
-import {
-  Fragment,
-  // useEffect,
-  useState,
-  // useEffect,
-  // useState
-} from 'react'
+import { Fragment, useState } from 'react'
 import { Input } from '@/components/ui/input'
-// import { Textarea } from '@/components/ui/textarea'
-// import { GSTValidation } from '@/lib/utils'
 import {
   // addReadyProduct,
   useAddReadyProductMutation,
@@ -45,7 +35,6 @@ import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 
 const FormComponent = ({
   isSubmitting,
-  // toEdit,
   setOpen,
   setIsSubmitting,
 }: {
@@ -54,8 +43,6 @@ const FormComponent = ({
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
   setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  // const dispatch = useAppDispatch()
-
   const { readyProducts } = useAppSelector(
     (state: RootState) => state.readyProducts
   )
@@ -343,32 +330,41 @@ const FormComponent = ({
                   />
 
                   <div>Net Weight: {form.watch('qty')}kg</div>
-                  <div className='flex items-center gap-3'>
-                    <span>Ingredients:</span>
-                    {products.map((item, index) => {
-                      if (item._id === form.watch('product')) {
-                        if (item.type === 'MIXTURE') {
-                          return (
-                            <div
-                              key={index}
-                              className='flex items-center gap-2'
-                            >
-                              {item.ingredients?.map((ingredient, iindex) => {
-                                return (
-                                  <span key={iindex}>
-                                    {ingredient.product.name} <span className='text-gray-400 text-sm'>({Number(ingredient.qty * form.watch('qty')).toFixed(2)}kg)</span>
-                                  </span>
-                                )
-                              })}
-                            </div>
-                          )
-                        }
+                  {productType === 'MIXTURE' ? (
+                    <div className='flex items-center gap-3'>
+                      <span>Ingredients:</span>
+                      {products.map((item, index) => {
+                        if (item._id === form.watch('product')) {
+                          if (item.type === 'MIXTURE') {
+                            return (
+                              <div
+                                key={index}
+                                className='flex items-center gap-2'
+                              >
+                                {item.ingredients?.map((ingredient, iindex) => {
+                                  return (
+                                    <span key={iindex}>
+                                      {ingredient.product.name}{' '}
+                                      <span className='text-sm text-gray-400'>
+                                        (
+                                        {Number(
+                                          ingredient.qty * form.watch('qty')
+                                        ).toFixed(2)}
+                                        kg)
+                                      </span>
+                                    </span>
+                                  )
+                                })}
+                              </div>
+                            )
+                          }
 
+                          return null
+                        }
                         return null
-                      }
-                      return null
-                    })}
-                  </div>
+                      })}
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className='mt-5 flex h-full w-1/3 flex-col items-start'>

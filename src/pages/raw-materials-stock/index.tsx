@@ -66,34 +66,34 @@ const RawMaterialStocks = () => {
   }, [rawMaterialStock])
 
   useEffect(() => {
-    if (allRawMaterials.length > 0) {
-      const allRawMaterialsSet = new Set(allRawMaterials)
-      const newReadyStock = products.reduce<IRawMaterialStock[]>(
-        (acc, product) => {
-          const productId = product._id
-          if (
-            product.type !== 'MIXTURE' &&
-            productId &&
-            !allRawMaterialsSet.has(productId)
-          ) {
-            acc.push({
-              _id: '',
-              category: 'RAW_MATERIAL',
-              product: {
-                _id: productId,
-                name: product.name || '',
-              },
-              qty: 0,
-              unit: 'kg',
-            })
-          }
-          return acc
-        },
-        []
-      )
+    // if (allRawMaterials.length > 0) {
+    const allRawMaterialsSet = new Set(allRawMaterials)
+    const newReadyStock = products.reduce<IRawMaterialStock[]>(
+      (acc, product) => {
+        const productId = product._id
+        if (
+          product.type !== 'MIXTURE' &&
+          productId &&
+          !allRawMaterialsSet.has(productId)
+        ) {
+          acc.push({
+            _id: '',
+            category: 'RAW_MATERIAL',
+            product: {
+              _id: productId,
+              name: product.name || '',
+            },
+            qty: 0,
+            unit: 'kg',
+          })
+        }
+        return acc
+      },
+      []
+    )
 
-      setRawMaterialNeverPurchased(newReadyStock)
-    }
+    setRawMaterialNeverPurchased(newReadyStock)
+    // }
   }, [allRawMaterials, products])
 
   useEffect(() => {
