@@ -6,7 +6,7 @@ import {
   TablePaginationConfig,
 } from '@/interfaces'
 import { getCustomParams } from '@/lib/utils'
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 interface IncomingData {
@@ -46,7 +46,7 @@ export const rawStockApi = createApi({
           params: getCustomParams(params),
         }
       },
-      providesTags: ['RawStocks']
+      providesTags: ['RawStocks'],
     }),
 
     resetRawMaterialStock: builder.mutation<IncomingData, { id: string }>({
@@ -58,7 +58,29 @@ export const rawStockApi = createApi({
           method: 'PUT',
         }
       },
-      invalidatesTags: ['RawStocks']
+      invalidatesTags: ['RawStocks'],
+    }),
+
+    updatePackagingOrOtherStock: builder.mutation<
+      object,
+      {
+        category: 'PACKAGING_PRODUCT' | 'OTHER'
+        items: {
+          product?: string
+          variant?: string
+          material?: string
+          qty: number
+        }[]
+      }
+    >({
+      query: (body) => {
+        return {
+          url: `${APIEndPoints.edit_material_usage}`,
+          method: 'POST',
+          body,
+        }
+      },
+      invalidatesTags: ['RawStocks'],
     }),
   }),
 })
@@ -72,6 +94,9 @@ interface InitialState {
   rawMaterialStock: IRawMaterialStock[] | undefined
   packagingStock: IPackagingProductStock[] | undefined
   otherStock: IOtherStock[] | undefined
+
+  toEditPackagingAndOther: boolean
+  newQty: number
 }
 
 const initialState: InitialState = {
@@ -83,12 +108,29 @@ const initialState: InitialState = {
   rawMaterialStock: undefined,
   packagingStock: undefined,
   otherStock: undefined,
+
+  toEditPackagingAndOther: false,
+  newQty: 0,
+  
 }
 
 export const RawStockSlice = createSlice({
   name: 'RawStockSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    resetEditPackagingAndOther: (state) => {
+      state.toEditPackagingAndOther = false
+    },
+    setEditPackagingAndOther: (state) => {
+      state.toEditPackagingAndOther = true
+    },
+    // resetToSendNewQty: (state) => {
+    //   state.toSendNewQty = null
+    // },
+    setNewQty: (state, action: PayloadAction<number>) => {
+      state.newQty = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addMatcher(rawStockApi.endpoints.getRawStocks.matchPending, (state) => {
@@ -127,5 +169,14 @@ export const RawStockSlice = createSlice({
 })
 
 export default RawStockSlice.reducer
-export const { useGetRawStocksQuery, useResetRawMaterialStockMutation } = rawStockApi
-// export const {} = RawStockSlice.actions
+export const {
+  useGetRawStocksQuery,
+  useResetRawMaterialStockMutation,
+  useUpdatePackagingOrOtherStockMutation,
+} = rawStockApi
+export const {
+  resetEditPackagingAndOther,
+  setEditPackagingAndOther,
+  // resetToSendNewQty,
+  setNewQty,
+} = RawStockSlice.actions

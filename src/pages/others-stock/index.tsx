@@ -1,14 +1,15 @@
 import EnhancedTable from "@/components/table"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { createData, Data, headCells } from "./schema"
-import { useGetRawStocksQuery } from "@/store/actions/slices/rawStockSlice"
-import { useAppSelector } from "@/store/hooks"
+import { resetEditPackagingAndOther, useGetRawStocksQuery } from "@/store/actions/slices/rawStockSlice"
+import { useAppDispatch, useAppSelector } from "@/store/hooks"
 import { RootState } from "@/store"
 import { TableDataFilters } from "@/interfaces"
 
 const RawMaterialStocks = () => {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch();
 
   const [search, setSearch] = useState<string>('')
 
@@ -38,6 +39,10 @@ const RawMaterialStocks = () => {
     }),
     [search]
   )
+
+  useEffect(() => {
+    dispatch(resetEditPackagingAndOther())
+  }, [dispatch])
   
   return (
     <EnhancedTable<Data>

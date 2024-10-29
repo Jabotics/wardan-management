@@ -1,5 +1,5 @@
 import { HeadCell, IOtherStock } from "@/interfaces";
-import { Material, Quantity } from "./function";
+import { Material, Quantity, SaveOrCancel } from "./function";
 
 export interface Data extends IOtherStock {}
 
@@ -38,5 +38,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Quantity',
     type: 'custom',
     body: Quantity
+  },
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: SaveOrCancel
   },
 ]

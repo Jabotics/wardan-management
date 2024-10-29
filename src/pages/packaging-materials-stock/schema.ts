@@ -1,5 +1,5 @@
 import { HeadCell, IPackagingProductStock } from "@/interfaces";
-import { Product, Quantity, Variant } from "./function";
+import { Product, Quantity, Variant, SaveOrCancel } from "./function";
 
 export interface Data extends IPackagingProductStock {}
 
@@ -51,5 +51,13 @@ export const headCells: HeadCell<Data>[] = [
     label: 'Quantity',
     type: 'custom',
     body: Quantity
+  },
+  {
+    id: '_id',
+    numeric: false,
+    disablePadding: true,
+    label: '',
+    type: 'custom',
+    body: SaveOrCancel
   },
 ]

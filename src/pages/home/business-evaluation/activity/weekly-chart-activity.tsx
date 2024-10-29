@@ -102,7 +102,7 @@ const WeeklyActivityChart = ({
         { name: 'Current Month', icon: 'circle' },
       ],
       textStyle: { color: '#8783d8' },
-      left: 20,
+      left: '10%',
       top: 0,
       padding: [10, 20, 30, 40],
     },
