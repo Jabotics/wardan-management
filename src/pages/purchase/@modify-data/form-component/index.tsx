@@ -25,7 +25,9 @@ const FormComponent = ({
     return (
       <Fragment>
         <div
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+          }}
           className='absolute right-5 top-5 cursor-pointer'
         >
           <Cross2Icon className='h-4 w-4' />

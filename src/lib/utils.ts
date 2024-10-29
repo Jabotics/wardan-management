@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -73,4 +74,8 @@ export function indianStyleAmount(num: number): string {
     style: 'currency',
     currency: 'INR',
   })
+}
+
+export function isErrorWithMessage(error: unknown): error is { data: { message: string } } {
+  return typeof error === 'object' && error !== null && 'data' in error && typeof (error as any).data.message === 'string';
 }

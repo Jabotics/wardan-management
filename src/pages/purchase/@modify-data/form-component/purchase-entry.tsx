@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { purchaseSchema } from '../form-schema'
 import { Fragment, useState } from 'react'
-import { toast } from 'sonner'
 import {
   Form,
   FormControl,
@@ -126,12 +125,6 @@ const PurchaseEntry = ({
     }
   }
 
-  async function onSubmit(data: z.infer<typeof purchaseSchema>) {
-    toast.promise(handleModifyProducts(data), {
-      loading: `${!toEdit ? 'Adding' : 'Updating '} Information...`,
-    })
-  }
-
   if (toRedirect) {
     if (category === 'Packaging Material') {
       return <PackagingMaterial setOpen={setOpen} />
@@ -150,7 +143,7 @@ const PurchaseEntry = ({
         <Form {...form}>
           <form
             action=''
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleModifyProducts)}
             className='h-full w-full'
           >
             <div className='flex h-[85%] w-full flex-col gap-4 overflow-y-auto overflow-x-hidden pb-5 pl-1 pr-4'>

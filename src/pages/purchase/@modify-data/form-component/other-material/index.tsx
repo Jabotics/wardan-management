@@ -25,6 +25,8 @@ import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import { useGetOtherMaterialsQuery } from '@/store/actions/slices/otherMaterialsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const OtherMaterial = ({
   setOpen,
@@ -74,7 +76,7 @@ const OtherMaterial = ({
       const total_amount =
         invoice_amount + transportation_charge + unloading_charge
 
-      const res: any = await Add({
+      const res = await Add({
         ...purchaseInfo,
         invoice_amount,
         total_amount,
@@ -82,10 +84,14 @@ const OtherMaterial = ({
         items: processedData.purchaseItems,
       }).unwrap()
 
-      console.log(res)
+      toast(res.message)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message);
+      } else {
+        toast('An unexpected error occurred');
+      }
     }
   }
 

@@ -11,10 +11,8 @@ import { Tooltip } from '@mui/material'
 
 import PurchaseItemsComponent from './purchase-item'
 import { useState } from 'react'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
-import {
-  useRemovePurchaseMutation,
-} from '@/store/actions/slices/purchaseSlice'
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
+import { useRemovePurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import FormComponent from './@modify-data/form-component'
 import ModifyPurchaseItems from './purchase-item/modify-purchase-item'
@@ -39,13 +37,23 @@ export const Total = ({ data }: { data: Data }) => {
       }
       placement='bottom'
     >
-      <span className='underline whitespace-nowrap mx-5 text-green-800'>{'₹ ' + data.total_amount}</span>
+      <span className='mx-5 whitespace-nowrap text-green-800 underline'>
+        {'₹ ' + data.total_amount}
+      </span>
     </Tooltip>
   )
 }
 
 export const Transportation = ({ data }: { data: Data }) => {
-  return <span className='whitespace-nowrap mx-5'>{'₹ ' + data.transportation_charge}</span>
+  return (
+    <span className='mx-5 whitespace-nowrap'>
+      {'₹ ' + data.transportation_charge}
+    </span>
+  )
+}
+
+export const InvoiceNo = ({ data }: { data: Data }) => {
+  return <span className='mx-5 whitespace-nowrap'>{data.invoice_no}</span>
 }
 
 export const UploadInvoice = ({ data }: { data: Data }) => {
@@ -57,11 +65,19 @@ export const UploadInvoice = ({ data }: { data: Data }) => {
 }
 
 export const Invoice = ({ data }: { data: Data }) => {
-  return <span className='text-green-700'>{'₹ ' + data.invoice_amount}</span>
+  return (
+    <div className='whitespace-nowrap text-green-700'>
+      {'₹ ' + data.invoice_amount}
+    </div>
+  )
 }
 
 export const CreatedAt = ({ data }: { data: Data }) => {
-  return <span className='whitespace-nowrap text-xs text-gray-400'>{data?.createdAt ? formatDateToIST(data.createdAt) : null}</span>
+  return (
+    <span className='whitespace-nowrap text-xs text-gray-400'>
+      {data?.createdAt ? formatDateToIST(data.createdAt) : null}
+    </span>
+  )
 }
 
 export const Seller = ({ data }: { data: Data }) => {
@@ -78,7 +94,10 @@ export const Seller = ({ data }: { data: Data }) => {
       }
       placement='top'
     >
-      <Link to={'/import-contacts'} className='text-center underline mx-5 whitespace-nowrap'>
+      <Link
+        to={'/import-contacts'}
+        className='mx-5 whitespace-nowrap text-center underline'
+      >
         {data?.seller?.name}
       </Link>
     </Tooltip>
@@ -95,7 +114,7 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
       <Dialog open={open}>
         <DialogTrigger asChild>
           <div
-            className='flex items-center justify-center mx-10'
+            className='mx-10 flex items-center justify-center'
             onClick={() => {
               setOpen(true)
             }}
@@ -125,6 +144,10 @@ export const PurchaseItems = ({ data }: { data: Data }) => {
             </DrawerTrigger>
 
             <DrawerContent className='absolute h-[50%] w-full bg-white'>
+              <DrawerTitle className='text-center'>Add Purchase Item</DrawerTitle>
+              <DrawerDescription className='sr-only'>
+                Add Purchase Item
+              </DrawerDescription>
               <div className='flex h-full w-full items-center justify-center'>
                 <ModifyPurchaseItems
                   setOpen={setDrawerOpen}

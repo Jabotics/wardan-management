@@ -26,6 +26,8 @@ import { RootState } from '@/store'
 import { useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const PackagingMaterial = ({
   setOpen,
@@ -84,7 +86,7 @@ const PackagingMaterial = ({
       const total_amount =
         invoice_amount + transportation_charge + unloading_charge
 
-      const res: any = await Add({
+      const res = await Add({
         ...purchaseInfo,
         total_amount,
         invoice_amount,
@@ -92,10 +94,14 @@ const PackagingMaterial = ({
         items: processedData.purchaseItems,
       }).unwrap()
 
-      console.log(res)
+      toast(res.message)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message);
+      } else {
+        toast('An unexpected error occurred');
+      }
     }
   }
 

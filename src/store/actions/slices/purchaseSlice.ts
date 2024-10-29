@@ -71,7 +71,7 @@ export const purchaseApi = createApi({
       providesTags: ['PurchaseItems'],
     }),
 
-    addPurchase: builder.mutation<void, object>({
+    addPurchase: builder.mutation<ResponseType, object>({
       query: (body) => {
         const { ...rest } = body
 
@@ -96,7 +96,7 @@ export const purchaseApi = createApi({
       invalidatesTags: ['PurchaseItems']
     }),
 
-    removePurchaseItem: builder.mutation<unknown, { id: string }>({
+    removePurchaseItem: builder.mutation<ResponseType, { id: string }>({
       query: (body) => {
         const { id } = body
         return {
@@ -131,7 +131,7 @@ export const purchaseApi = createApi({
       invalidatesTags: ['PurchaseEntry'],
     }),
 
-    updatePurchaseItem: builder.mutation<IncomingData, object>({
+    updatePurchaseItem: builder.mutation<ResponseType, object>({
       query: (body) => {
         const { ...rest } = body
         return {
@@ -253,6 +253,7 @@ export const PurchaseSlice = createSlice({
         purchaseApi.endpoints.getPurchaseEntry.matchRejected,
         (state, action) => {
           state.status = 'failed'
+          
           state.error = action.error.message
         }
       )

@@ -25,6 +25,8 @@ import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const RawMaterial = ({
   setOpen,
@@ -51,7 +53,7 @@ const RawMaterial = ({
     name: 'purchaseItems',
   })
 
-  const onSubmit = async (
+  const handleSubmitData = async (
     formData: z.infer<typeof purchaseItemsSchemaforRawMaterial>
   ) => {
     try {
@@ -74,7 +76,7 @@ const RawMaterial = ({
       const total_amount =
         invoice_amount + transportation_charge + unloading_charge
 
-      const res: any = await Add({
+      const res = await Add({
         ...purchaseInfo,
         total_amount,
         invoice_amount,
@@ -82,11 +84,21 @@ const RawMaterial = ({
         items: processedData.purchaseItems,
       }).unwrap()
 
-      console.log(res)
+      toast(res.message)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message);
+      } else {
+        toast('An unexpected error occurred');
+      }
     }
+  }
+
+  async function onSubmit(data: z.infer<typeof purchaseItemsSchemaforRawMaterial>) {
+    toast.promise(handleSubmitData(data), {
+      loading: `${'Adding Information...'}`,
+    })
   }
 
   return (

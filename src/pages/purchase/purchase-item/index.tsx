@@ -4,8 +4,20 @@ import {
 } from '@/store/actions/slices/purchaseSlice'
 import { useEffect, useState } from 'react'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import { Drawer, DrawerContent, DrawerDescription, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import ModifyPurchaseItems from './modify-purchase-item'
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
+import { Input } from '@/components/ui/input'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const mapToCategory = {
   RAW_MATERIAL: 'Raw Material',
@@ -22,6 +34,10 @@ const PurchaseItems = ({
   setClose: React.Dispatch<React.SetStateAction<boolean>>
   category: 'RAW_MATERIAL' | 'PACKAGING_PRODUCT' | 'OTHER'
 }) => {
+  const [text, setText] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null)
+
   const [Delete] = useRemovePurchaseItemMutation()
   const { data, isLoading, isError } = useGetPurchaseEntryItemsQuery(
     { id: purchaseId },
@@ -33,10 +49,20 @@ const PurchaseItems = ({
   const handleDeleteSellItems = async (toDeleteItemId: string) => {
     try {
       if (toDeleteItemId) {
-        await Delete({ id: toDeleteItemId })
+        const res = await Delete({ id: toDeleteItemId }).unwrap()
+
+        toast(res.message)
       }
+
+      setDeletingItemId(null)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -103,6 +129,8 @@ const PurchaseItems = ({
                       </DrawerTrigger>
 
                       <DrawerContent className='absolute h-[50%] w-full bg-white'>
+                        <DrawerTitle className='text-center'>Edit Purchase Item</DrawerTitle>
+                        <DrawerDescription className='sr-only'>Edit Purchase Item</DrawerDescription>
                         <ModifyPurchaseItems
                           setOpen={() => setEditingItemId(null)}
                           data={item}
@@ -110,14 +138,71 @@ const PurchaseItems = ({
                         />
                       </DrawerContent>
                     </Drawer>
-                    <div
-                      className='cursor-pointer underline hover:text-rose-900'
-                      onClick={() => {
-                        handleDeleteSellItems(item._id)
-                      }}
-                    >
-                      Delete
-                    </div>
+
+                    <Dialog open={deletingItemId === item._id}>
+                      <DialogTrigger asChild>
+                        <div
+                          className='cursor-pointer underline hover:text-rose-900'
+                          onClick={() => {
+                            setDeletingItemId(item._id)
+                          }}
+                        >
+                          Delete
+                        </div>
+                      </DialogTrigger>
+
+                      <DialogContent>
+                        <DialogTitle>{'Delete Details'}</DialogTitle>
+                        <Separator />
+                        <DialogDescription className='sr-only'>
+                          Action dialog
+                        </DialogDescription>
+
+                        <span className='mb-5 flex flex-col gap-1'>
+                          <span className='text-lg'>
+                            Are you sure, you want to delete this record?
+                          </span>
+                          <span className='text-sm text-gray-500'>
+                            If you are sure, type 'delete' then Confirm else
+                            Cancel.
+                          </span>
+                          <Input
+                            value={text}
+                            onChange={(e) => {
+                              setText(e.target.value)
+                            }}
+                            className={`${text.trim() === 'delete' ? 'border-black' : 'border-red-500'} h-6 w-fit outline-none`}
+                            style={{
+                              boxShadow: 'none',
+                              outline: 'none',
+                            }}
+                          />
+                        </span>
+
+                        <div className='flex items-center gap-2'>
+                          <DialogClose
+                            onClick={() => setDeletingItemId(null)}
+                            className={`w-full text-sm text-gray-400`}
+                            disabled={isSubmitting}
+                          >
+                            Cancel
+                          </DialogClose>
+                          <DialogClose
+                            onClick={() => {
+                              if (text === 'delete') {
+                                handleDeleteSellItems(item._id)
+                              }
+
+                              setText('')
+                            }}
+                            className={`inline-block w-full bg-gray-800 py-2 text-sm text-white`}
+                            disabled={isSubmitting}
+                          >
+                            Confirm
+                          </DialogClose>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               </div>

@@ -28,6 +28,8 @@ import {
   useUpdatePurchaseItemMutation,
 } from '@/store/actions/slices/purchaseSlice'
 import { useGetOtherMaterialsQuery } from '@/store/actions/slices/otherMaterialsSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const purchaseItemsAddSchema = z.object({
   product: z.string().optional(),
@@ -96,7 +98,6 @@ const ModifyPurchaseItems = ({
           }),
     },
   })
-  console.log(data)
 
   async function handleSubmit(
     formData: z.infer<
@@ -107,8 +108,8 @@ const ModifyPurchaseItems = ({
 
     try {
       if (toEdit) {
-        const name = variants.find(i => i._id === data?.variant?._id)?.name;
-        const variantName = name ? parseInt(name) : 0;
+        const name = variants.find((i) => i._id === data?.variant?._id)?.name
+        const variantName = name ? parseInt(name) : 0
 
         const payload: {
           _id: string
@@ -121,24 +122,25 @@ const ModifyPurchaseItems = ({
           amount: formData?.amount ?? 0,
         }
 
-        console.log(formData.count)
-        if (data?.category === 'PACKAGING_PRODUCT' && formData.count !== 0 && formData.count !== undefined) {
+        if (
+          data?.category === 'PACKAGING_PRODUCT' &&
+          formData.count !== 0 &&
+          formData.count !== undefined
+        ) {
           console.log('first')
           payload.count = formData.count
           payload.qty = variantName * 0.001 * formData.count
         }
-        
+
         const res = await Edit(payload).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       } else {
-    
-        const { product, variant, material, qty, amount, count } = formData as z.infer<
-          typeof purchaseItemsAddSchema
-        >
+        const { product, variant, material, qty, amount, count } =
+          formData as z.infer<typeof purchaseItemsAddSchema>
 
-        const name = variants.find(i => i._id === variant)?.name;
-        const variantName = name ? parseInt(name) : 0;
+        const name = variants.find((i) => i._id === variant)?.name
+        const variantName = name ? parseInt(name) : 0
 
         const payload: {
           purchaseId: string
@@ -170,20 +172,27 @@ const ModifyPurchaseItems = ({
           payload.material = material
         }
 
-        if (category === 'PACKAGING_PRODUCT' && count !== 0 && count !== undefined) {
+        if (
+          category === 'PACKAGING_PRODUCT' &&
+          count !== 0 &&
+          count !== undefined
+        ) {
           payload.count = count
           payload.qty = variantName * 0.001 * count
         }
 
         const res = await Add(payload).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       }
 
       setOpen(false)
     } catch (error) {
-      console.error('Submission error:', error)
-      // Optionally set an error message in state to show to the user
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -235,17 +244,19 @@ const ModifyPurchaseItems = ({
                           <SelectValue placeholder='Select a Product' />
                         </SelectTrigger>
                         <SelectContent>
-                          {products.filter(i => i.type === 'WHOLE').map((item) => (
-                            <SelectItem
-                              value={item._id || ''}
-                              key={item._id}
-                              disabled={
-                                toEdit ? item._id !== field.value : false
-                              }
-                            >
-                              {item.name}
-                            </SelectItem>
-                          ))}
+                          {products
+                            .filter((i) => i.type === 'WHOLE')
+                            .map((item) => (
+                              <SelectItem
+                                value={item._id || ''}
+                                key={item._id}
+                                disabled={
+                                  toEdit ? item._id !== field.value : false
+                                }
+                              >
+                                {item.name}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                     ) : (
