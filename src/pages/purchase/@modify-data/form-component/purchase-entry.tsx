@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import {
   modifyPurchaseEntry,
+  resetPurchaseInfo,
   useUpdatePurchaseMutation,
 } from '@/store/actions/slices/purchaseSlice'
 import { isErrorWithMessage } from '@/lib/utils'
@@ -114,6 +115,7 @@ const PurchaseEntry = ({
           total_amount,
         })
 
+        dispatch(resetPurchaseInfo())
         toast(res.data?.message)
         setOpen(false)
       } else {
@@ -244,7 +246,7 @@ const PurchaseEntry = ({
                           field.onChange(Number(e.target.value))
                         }}
                         autoComplete='off'
-                        disabled
+                        disabled={toEdit}
                       />
                     </FormControl>
                     <FormMessage />
@@ -281,7 +283,7 @@ const PurchaseEntry = ({
                           field.onChange(Number(e.target.value))
                         }}
                         autoComplete='off'
-                        disabled
+                        disabled={toEdit}
                       />
                     </FormControl>
                     <FormMessage />

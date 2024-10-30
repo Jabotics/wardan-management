@@ -4,6 +4,8 @@ import { HiMiniArrowLongRight } from 'react-icons/hi2'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { useState } from 'react'
 import PurchaseEntry from './purchase-entry'
+import { useAppDispatch } from '@/store/hooks'
+import { resetPurchaseInfo } from '@/store/actions/slices/purchaseSlice'
 
 const FormComponent = ({
   data,
@@ -14,7 +16,10 @@ const FormComponent = ({
   isSubmitting?: boolean
   setIsSubmitting?: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-  const toEdit = Boolean(data)
+  const toEdit = Boolean(data);
+  const dispatch = useAppDispatch();
+
+  console.log(data)
 
   const [purchaseCategory, setPurchaseCategory] = useState<
     'Raw Material' | 'Packaging Material' | 'Other' | undefined
@@ -26,6 +31,7 @@ const FormComponent = ({
       <Fragment>
         <div
           onClick={() => {
+            dispatch(resetPurchaseInfo())
             setOpen(false);
           }}
           className='absolute right-5 top-5 cursor-pointer'
@@ -47,6 +53,7 @@ const FormComponent = ({
     <Fragment>
       <div
         onClick={() => {
+          // dispatch(resetPurchaseInfo())
           setOpen(false)
           setPurchaseCategory(undefined)
         }}

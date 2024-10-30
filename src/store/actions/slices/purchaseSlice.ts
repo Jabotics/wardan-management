@@ -218,6 +218,9 @@ export const PurchaseSlice = createSlice({
       const selectedPurchase = state.allPurchase.findIndex(i => i._id === id)
 
       state.allPurchase[selectedPurchase].invoice_url = state.allPurchase[selectedPurchase].invoice_url?.filter(i => i !== url);
+    },
+    resetPurchaseInfo: (state) => {
+      state.purchaseInfo = undefined;
     }
   },
   extraReducers: (builder) => {
@@ -276,6 +279,7 @@ export const {
   setNewPurchase,
   setPurchaseAddInfo,
   modifyPurchaseEntry,
-  deleteInvoiceImages
+  deleteInvoiceImages,
+  resetPurchaseInfo
 } = PurchaseSlice.actions
 export default PurchaseSlice.reducer

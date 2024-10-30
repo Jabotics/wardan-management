@@ -21,9 +21,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useAppSelector } from '@/store/hooks'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
-import { useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
+import { resetPurchaseInfo, useAddPurchaseMutation } from '@/store/actions/slices/purchaseSlice'
 import { useGetProductsQuery } from '@/store/actions/slices/productsSlice'
 import { useGetAllVariantsQuery } from '@/store/actions/slices/variantsSlice'
 import { toast } from 'sonner'
@@ -34,6 +34,8 @@ const PackagingMaterial = ({
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
+  const dispatch = useAppDispatch()
+
   useGetProductsQuery({})
   const { products } = useAppSelector((state: RootState) => state.products)
 
@@ -94,6 +96,8 @@ const PackagingMaterial = ({
         items: processedData.purchaseItems,
       }).unwrap()
 
+      dispatch(resetPurchaseInfo())
+      
       toast(res.message)
       setOpen(false)
     } catch (error) {
