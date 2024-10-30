@@ -126,6 +126,20 @@ const router = createBrowserRouter([
           Component: (await import('./pages/material-usage')).default,
         })
       },
+
+      {
+        path: 'expense-details',
+        lazy: async () => ({
+          Component: (await import('./pages/expense')).default,
+        })
+      },
+
+      {
+        path: 'expense-category',
+        lazy: async () => ({
+          Component: (await import('./pages/expense-categories')).default,
+        })
+      },
     ],
   },
 

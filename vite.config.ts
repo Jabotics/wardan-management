@@ -12,6 +12,9 @@ export default defineConfig({
     sourcemap: true,
     minify: false,
   },
+  optimizeDeps: {
+    exclude: ['js-big-decimal']
+  },
   plugins: [
     react(),
     VitePWA({

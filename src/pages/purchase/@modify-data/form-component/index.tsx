@@ -19,8 +19,6 @@ const FormComponent = ({
   const toEdit = Boolean(data);
   const dispatch = useAppDispatch();
 
-  console.log(data)
-
   const [purchaseCategory, setPurchaseCategory] = useState<
     'Raw Material' | 'Packaging Material' | 'Other' | undefined
   >(undefined)

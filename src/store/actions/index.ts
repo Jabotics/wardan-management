@@ -17,6 +17,7 @@ import getStockHistorySlice, { getStockHistoryApi } from "./slices/getStockHisto
 import getRemainingSlice, { getRemainingApi } from "./slices/getRemainingSlice"
 import shipmentLogsSlice, { shipmentLogsApi } from "./slices/shipmentLogsSlice"
 import materialUsageSlice, { materialUsageApi } from "./slices/materialUsageSlice"
+import expenseSlice, { expenseApi } from "./slices/expenseSlice"
 
 export {
   appSlice,
@@ -55,5 +56,7 @@ export {
   shipmentLogsApi,
   shipmentLogsSlice,
   materialUsageApi,
-  materialUsageSlice
+  materialUsageSlice,
+  expenseApi,
+  expenseSlice,
 }

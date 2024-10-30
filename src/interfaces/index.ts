@@ -40,6 +40,15 @@ import {
 } from './data/assets'
 
 import {
+  IExpense,
+  IAddExpense,
+  IUpdateExpense,
+  IAddExpenseCategory,
+  IExpenseCategory,
+  IUpdateExpenseCategory,
+} from './data/expense'
+
+import {
   IAddPayment,
   IPayment,
   IUpdatePayment
@@ -90,6 +99,16 @@ export type {
   IAsset,
   IUpdateAsset,
 
+
+  IAddExpenseCategory,
+  IExpenseCategory,
+  IUpdateExpenseCategory,
+
+  IExpense,
+  IAddExpense,
+  IUpdateExpense,
+  
+  
   IPayment,
   IAddPayment,
   IUpdatePayment,
