@@ -33,6 +33,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
 import { useGetAllExportersQuery } from '@/store/actions/slices/exportersSlice'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const FormComponent = ({
   data,
@@ -82,15 +84,19 @@ const FormComponent = ({
         payload._id = data._id
 
         const res = await Update(payload as IUpdateReceipt).unwrap()
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       } else {
         const res = await Add(payload).unwrap()
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       }
 
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }

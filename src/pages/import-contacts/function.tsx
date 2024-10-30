@@ -8,6 +8,8 @@ import {
 } from '@/store/actions/slices/importersSlice'
 import { useAppDispatch } from '@/store/hooks'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 export const Address = ({ data }: { data: Data }) => {
   return (
@@ -53,12 +55,16 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       try {
         const res = await Delete({ id: data._id }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
 
         dispatch(removeImporter({ id: data._id }))
         setDeleteOpen(false)
       } catch (error) {
-        console.log(error)
+        if (isErrorWithMessage(error)) {
+          toast(error.data.message)
+        } else {
+          toast('An unexpected error occurred')
+        }
       } finally {
         setIsSubmitting(false)
       }

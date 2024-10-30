@@ -17,6 +17,14 @@ interface QueryParams extends TablePaginationConfig {
   [key: string]: unknown
 }
 
+interface ResponseType {
+  message: string
+  status: 'success' | 'fail'
+  data: {
+    _id: string
+  }
+}
+
 export const assetsApi = createApi({
   reducerPath: 'AssetsApi',
   baseQuery: fetchBaseQuery({
@@ -44,7 +52,7 @@ export const assetsApi = createApi({
       providesTags: ['Assets'],
     }),
 
-    addAsset: builder.mutation<IncomingData, IAddAsset>({
+    addAsset: builder.mutation<ResponseType, IAddAsset>({
       query: (body) => {
         const { ...rest } = body
         return {
@@ -56,7 +64,7 @@ export const assetsApi = createApi({
       invalidatesTags: ['Assets']
     }),
 
-    editAsset: builder.mutation<Partial<IncomingData>, IUpdateAsset>({
+    editAsset: builder.mutation<ResponseType, IUpdateAsset>({
       query: (body) => {
         const { ...rest } = body
         return {
@@ -68,7 +76,7 @@ export const assetsApi = createApi({
       invalidatesTags: ['Assets']
     }),
 
-    removeAsset: builder.mutation<Partial<IncomingData>, { id: string }>({
+    removeAsset: builder.mutation<ResponseType, { id: string }>({
       query: (body) => {
         const { id } = body
         return {

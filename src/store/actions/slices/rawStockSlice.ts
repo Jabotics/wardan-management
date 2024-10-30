@@ -22,6 +22,14 @@ interface QueryParams extends TablePaginationConfig {
   [key: string]: unknown
 }
 
+interface ResponseType {
+  message: string
+  status: 'success' | 'fail'
+  data: {
+    _id: string
+  }
+}
+
 export const rawStockApi = createApi({
   reducerPath: 'RawStockApi',
   baseQuery: fetchBaseQuery({
@@ -49,7 +57,7 @@ export const rawStockApi = createApi({
       providesTags: ['RawStocks'],
     }),
 
-    resetRawMaterialStock: builder.mutation<IncomingData, { id: string }>({
+    resetRawMaterialStock: builder.mutation<ResponseType, { id: string }>({
       query: (body) => {
         const { id } = body
 
@@ -62,7 +70,7 @@ export const rawStockApi = createApi({
     }),
 
     updatePackagingOrOtherStock: builder.mutation<
-      object,
+      ResponseType,
       {
         category: 'PACKAGING_PRODUCT' | 'OTHER'
         items: {
@@ -111,7 +119,6 @@ const initialState: InitialState = {
 
   toEditPackagingAndOther: false,
   newQty: 0,
-  
 }
 
 export const RawStockSlice = createSlice({

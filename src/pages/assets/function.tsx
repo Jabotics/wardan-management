@@ -4,6 +4,8 @@ import TableToolbarActions from '@/components/table/table-toolbar-actions'
 import { useRemoveAssetMutation } from '@/store/actions/slices/assetsSlice'
 import FormComponent from './@modify-data/form-component'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 export const ItemName = ({ data }: { data: Data }) => {
   return <>{data?.item_name}</>
@@ -43,11 +45,15 @@ export const ToolbarAction = ({ data }: { data: Data }) => {
       try {
         const res = await Delete({ id: data._id }).unwrap()
 
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
 
         setDeleteOpen(false)
       } catch (error) {
-        console.log(error)
+        if (isErrorWithMessage(error)) {
+          toast(error.data.message)
+        } else {
+          toast('An unexpected error occurred')
+        }
       } finally {
         setIsSubmitting(false)
       }

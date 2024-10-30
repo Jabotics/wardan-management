@@ -32,6 +32,8 @@ import { Button } from '@/components/ui/button'
 import { useGetAllImportersQuery } from '@/store/actions/slices/importersSlice'
 import { useAppSelector } from '@/store/hooks'
 import { RootState } from '@/store'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 const FormComponent = ({
   data,
@@ -92,15 +94,21 @@ const FormComponent = ({
             name: sellerName,
           },
         } as IAsset).unwrap()
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
       } else {
         const res = await Add(payload).unwrap()
         if (res.status === 'fail') throw new Error(res.message)
+
+        toast(res.message)
       }
 
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }

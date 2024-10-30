@@ -13,6 +13,8 @@ import {
   useUpdatePackagingOrOtherStockMutation,
 } from '@/store/actions/slices/rawStockSlice'
 import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa'
+import { toast } from 'sonner'
+import { isErrorWithMessage } from '@/lib/utils'
 
 export const Product = ({ data }: { data: Data }) => {
   return <>{data?.product?.name}</>
@@ -93,7 +95,7 @@ export const SaveOrCancel = ({ data }: { data: Data }) => {
 
   const handleSubmit = async () => {
     try {
-      await Update({
+      const res = await Update({
         category: 'PACKAGING_PRODUCT',
         items: [
           {
@@ -104,9 +106,14 @@ export const SaveOrCancel = ({ data }: { data: Data }) => {
         ],
       }).unwrap()
 
+      toast(res.message)
       dispatch(resetEditPackagingAndOther())
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     }
   }
 

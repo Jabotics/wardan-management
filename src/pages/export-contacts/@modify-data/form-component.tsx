@@ -19,7 +19,7 @@ import {
 } from 'react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { GSTValidation } from '@/lib/utils'
+import { GSTValidation, isErrorWithMessage } from '@/lib/utils'
 import {
   addExporter,
   editExporter,
@@ -28,6 +28,7 @@ import {
 } from '@/store/actions/slices/exportersSlice'
 import { Button } from '@/components/ui/button'
 import { useAppDispatch } from '@/store/hooks'
+import { toast } from 'sonner'
 
 const FormComponent = ({
   data,
@@ -80,7 +81,7 @@ const FormComponent = ({
         payload._id = data._id
 
         const res = await Update(payload as ISeller).unwrap()
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
 
         dispatch(
           editExporter({
@@ -90,7 +91,7 @@ const FormComponent = ({
         )
       } else {
         const res = await Add(payload).unwrap()
-        if (res.status === 'fail') throw new Error(res.message)
+        toast(res.message)
 
         dispatch(
           addExporter({ ...payload, is_active: true, _id: res.data._id })
@@ -99,7 +100,11 @@ const FormComponent = ({
 
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      if (isErrorWithMessage(error)) {
+        toast(error.data.message)
+      } else {
+        toast('An unexpected error occurred')
+      }
     } finally {
       setIsSubmitting(false)
     }
