@@ -37,15 +37,19 @@ import {
   useAddExpenseCategoryMutation,
   useAddExpenseMutation,
   useGetExpenseCategoryQuery,
+  useUpdateExpenseMutation,
 } from '@/store/actions/slices/expenseSlice'
 import { FaPlus } from 'react-icons/fa'
 import { Textarea } from '@/components/ui/textarea'
+import { IExpense } from '@/interfaces'
 
 const FormComponent = ({
+  data,
   isSubmitting,
   setOpen,
   setIsSubmitting,
 }: {
+  data?: IExpense
   toEdit: boolean
   isSubmitting: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -58,6 +62,7 @@ const FormComponent = ({
   const [clickMonthYear, setClickMonthYear] = useState<boolean>(false)
   const selectRef = useRef<HTMLDivElement | null>(null)
   const calendarRef = useRef<HTMLDivElement | null>(null)
+  const [selectedDate, setSelectedDate] = useState(dayjs(new Date()))
 
   useGetExpenseCategoryQuery(
     {
@@ -73,15 +78,16 @@ const FormComponent = ({
 
   const [AddCategory] = useAddExpenseCategoryMutation()
   const [Add] = useAddExpenseMutation()
+  const [Update] = useUpdateExpenseMutation()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: 0,
-      category: '',
-      month: '',
-      remarks: '',
-      year: 0,
+      amount: data?.amount ?? 0,
+      category: data?.category?._id ?? '',
+      month: data?.month ?? '',
+      remarks: data?.remarks ?? '',
+      year: data?.year ?? 0,
     },
   })
 
@@ -90,8 +96,10 @@ const FormComponent = ({
       const newMonth = newValue.format('MMMM')
       const newYear = newValue.year()
 
-      form.setValue('month', `${newMonth.slice(0,3)}`)
+      form.setValue('month', `${newMonth.slice(0, 3)}`)
       form.setValue('year', newYear)
+
+      setSelectedDate(newValue)
     }
   }
 
@@ -140,9 +148,18 @@ const FormComponent = ({
     }
 
     try {
-      const res = await Add(payload).unwrap()
+      if (data) {
+        const res = await Update({
+          ...payload,
+          _id: data?._id ?? '',
+        }).unwrap()
 
-      toast(res.message)
+        toast(res.message)
+      } else {
+        const res = await Add(payload).unwrap()
+
+        toast(res.message)
+      }
       setOpen(false)
     } catch (error) {
       if (isErrorWithMessage(error)) {
@@ -173,6 +190,16 @@ const FormComponent = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  useEffect(() => {
+    if (data) {
+      const { month, year } = data
+
+      const newDate = dayjs(`${year}-${month}-01`)
+
+      setSelectedDate(newDate)
+    }
+  }, [data])
 
   return (
     <Fragment>
@@ -268,7 +295,7 @@ const FormComponent = ({
                 name={`month`}
                 render={() => (
                   <FormItem className='w-full' ref={selectRef}>
-                    <FormLabel>Pick Month</FormLabel>
+                    <FormLabel>Pick Month + Year</FormLabel>
                     <FormControl>
                       <Select open={clickMonthYear}>
                         <SelectTrigger
@@ -276,13 +303,13 @@ const FormComponent = ({
                           onClick={() => setClickMonthYear(true)}
                         >
                           <SelectValue
-                            placeholder={`${form.watch('month') !== '' ? form.watch('month') : 'Pick a Month'}`}
+                            placeholder={`${form.watch('month') !== '' ? `${form.watch('month')} ${form.watch('year')}` : 'Pick a Month'}`}
                           />
                         </SelectTrigger>
                         <SelectContent ref={calendarRef}>
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DateCalendar
-                              value={dayjs(new Date())}
+                              value={selectedDate}
                               views={['month', 'year']}
                               openTo='month'
                               onChange={handleMonthYearChange}

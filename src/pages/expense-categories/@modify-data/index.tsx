@@ -23,9 +23,9 @@ const ModifyReadyProduct = ({
         <Cross2Icon className='h-4 w-4' />
       </div>
       <div className='flex h-8 flex-col items-start justify-between'>
-        <DialogTitle className='h-fit'>{`Add Ready Product`}</DialogTitle>
+        <DialogTitle className='h-fit'>{`Add Expense Category`}</DialogTitle>
         <DialogDescription className='sr-only h-0'>
-          Add / Edit dialog for Ready Product
+          Add / Edit dialog for Expense Category
         </DialogDescription>
 
         <div className='h-px w-3/4 bg-gray-400'></div>

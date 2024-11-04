@@ -168,6 +168,14 @@ export const ExpenseSlice = createSlice({
     },
     removeExpenseCategory: (state, action: PayloadAction<{ id: string }>) => {
       state.expenseCategories = state.expenseCategories.filter(i => i._id !== action.payload.id)
+    },
+    updateExpenseCategory: (state, action: PayloadAction<IUpdateExpenseCategory>) => {
+      const { _id } = action.payload; 
+      const selectedIndex = state.expenseCategories.findIndex(i => i._id === _id);
+    
+      if (selectedIndex !== -1) {
+        state.expenseCategories[selectedIndex] = action.payload;
+      }
     }
   },
   extraReducers: builder => {
@@ -227,4 +235,4 @@ export const {
   useRemoveExpenseMutation,
 } = expenseApi
 
-export const { addExpenseCategory, removeExpenseCategory } = ExpenseSlice.actions
+export const { addExpenseCategory, removeExpenseCategory, updateExpenseCategory } = ExpenseSlice.actions

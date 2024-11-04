@@ -32,8 +32,5 @@ export interface IAddExpense extends BaseExpense {
 }
 export interface IUpdateExpense extends BaseExpense {
   _id: string
-  category: {
-    _id: string
-    name: string
-  }
+  category: string
 }
