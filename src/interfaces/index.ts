@@ -60,6 +60,12 @@ import {
   IUpdateReceipt
 } from './data/receipts'
 
+import {
+  IExpenseReport,
+  ISellReport,
+  IStockReport
+} from './data/reports'
+
 export type {
   // app
   EnhancedTableHeadProps,
@@ -116,4 +122,8 @@ export type {
   IReceipt,
   IAddReceipt,
   IUpdateReceipt,
+
+  IExpenseReport,
+  ISellReport,
+  IStockReport,
 }

@@ -1,75 +1,66 @@
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  Legend,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-} from 'recharts'
-
-const data = [
-  {
-    subject: 'Math',
-    A: 120,
-    B: 110,
-    fullMark: 150,
-  },
-  {
-    subject: 'Chinese',
-    A: 98,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'English',
-    A: 86,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'Geography',
-    A: 99,
-    B: 100,
-    fullMark: 150,
-  },
-  {
-    subject: 'Physics',
-    A: 85,
-    B: 90,
-    fullMark: 150,
-  },
-  {
-    subject: 'History',
-    A: 65,
-    B: 85,
-    fullMark: 150,
-  },
-]
+import { useEffect, useRef } from 'react'
+import * as echarts from 'echarts'
+import { useGetTopFiveBuyersQuery } from '@/store/actions/slices/analysisSlice'
+import { useAppSelector } from '@/store/hooks'
+import { RootState } from '@/store'
 
 export default function StocksChart() {
-  return (
-    <ResponsiveContainer width={"100%"} height={"100%"}>
-      <RadarChart cx='50%' cy='50%' outerRadius='80%' data={data}>
-        <PolarGrid />
-        <PolarAngleAxis dataKey='subject' />
-        <PolarRadiusAxis angle={30} domain={[0, 150]} />
-        <Radar
-          name='Mike'
-          dataKey='A'
-          stroke='#8884d8'
-          fill='#8884d8'
-          fillOpacity={0.6}
-        />
-        <Radar
-          name='Lily'
-          dataKey='B'
-          stroke='#82ca9d'
-          fill='#82ca9d'
-          fillOpacity={0.6}
-        />
-        <Legend />
-      </RadarChart>
-    </ResponsiveContainer>
-  )
+  const chartRef = useRef(null)
+
+  useGetTopFiveBuyersQuery()
+  const { topFiveBuyers } = useAppSelector((state: RootState) => state.analysis)
+
+  const topFiveBuyersForChartData = topFiveBuyers.map((i) => ({
+    value: i.totalAmount,
+    name: i.buyer,
+  }))
+
+  useEffect(() => {
+    const myChart = echarts.init(chartRef.current)
+
+    const option = {
+      tooltip: {
+        trigger: 'item',
+      },
+      legend: {
+        top: '5%',
+        left: 'center',
+      },
+      series: [
+        {
+          name: 'Total Sell (₹)',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          padAngle: 5,
+          itemStyle: {
+            borderRadius: 10,
+          },
+          label: {
+            show: false,
+            position: 'center',
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold',
+            },
+          },
+          labelLine: {
+            show: false,
+          },
+          data: topFiveBuyersForChartData ?? [],
+        },
+      ],
+    }
+
+    myChart.setOption(option)
+
+    return () => {
+      myChart.dispose()
+    }
+  }, [topFiveBuyersForChartData])
+
+  return <div ref={chartRef} style={{ width: '100%', height: '400px' }} />
 }

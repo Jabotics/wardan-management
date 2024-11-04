@@ -18,6 +18,8 @@ import getRemainingSlice, { getRemainingApi } from "./slices/getRemainingSlice"
 import shipmentLogsSlice, { shipmentLogsApi } from "./slices/shipmentLogsSlice"
 import materialUsageSlice, { materialUsageApi } from "./slices/materialUsageSlice"
 import expenseSlice, { expenseApi } from "./slices/expenseSlice"
+import analysisSlice, { analysisApi } from "./slices/analysisSlice"
+import reportsSlice, { reportsApi } from "./slices/reportsSlice"
 
 export {
   appSlice,
@@ -59,4 +61,8 @@ export {
   materialUsageSlice,
   expenseApi,
   expenseSlice,
+  analysisApi,
+  analysisSlice,
+  reportsApi,
+  reportsSlice,
 }

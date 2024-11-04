@@ -13,6 +13,8 @@ import { paymentsEndpoints } from "./endpoints/payments";
 import { receiptsEndpoints } from "./endpoints/receipts";
 import { materialUsageEndpoints } from "./endpoints/materialUsage";
 import { expenseEndpoints } from "./endpoints/expense";
+import { analysisEndpoints } from "./endpoints/analysis";
+import { reportsEndpoints } from "./endpoints/reports";
 
 export const APIEndPoints = {
   // BackendURL: 'http://localhost:5000',
@@ -62,4 +64,10 @@ export const APIEndPoints = {
 
   // EXPENSE
   ...expenseEndpoints,
+
+  // PRODUCT WISE SELL
+  ...analysisEndpoints,
+
+  // REPORT
+  ...reportsEndpoints,
 }

@@ -41,6 +41,10 @@ import {
   materialUsageSlice,
   expenseApi,
   expenseSlice,
+  analysisApi,
+  analysisSlice,
+  reportsApi,
+  reportsSlice,
 } from "./actions";
 
 import { RequestHandler } from "./RequestHandler";
@@ -68,6 +72,8 @@ export const rootReducer = combineReducers({
   shipmentLogs: shipmentLogsSlice,
   materialUsage: materialUsageSlice,
   expense: expenseSlice,
+  analysis: analysisSlice,
+  reports: reportsSlice,
 
   // CATEGORY
   [productsApi.reducerPath]: productsApi.reducer,
@@ -88,5 +94,7 @@ export const rootReducer = combineReducers({
   [shipmentLogsApi.reducerPath]: shipmentLogsApi.reducer,
   [materialUsageApi.reducerPath]: materialUsageApi.reducer,
   [expenseApi.reducerPath]: expenseApi.reducer,
+  [analysisApi.reducerPath]: analysisApi.reducer,
+  [reportsApi.reducerPath]: reportsApi.reducer,
   
 })
