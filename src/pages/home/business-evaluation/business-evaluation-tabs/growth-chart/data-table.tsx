@@ -135,7 +135,7 @@ const DataTable = ({
           <TableFooter>
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
-              <TableCell className='text-right'>
+              <TableCell className='text-right text-lg text-green-600'>
                 {indianStyleAmount(overallExpenseTotal)}
               </TableCell>
             </TableRow>
@@ -167,8 +167,8 @@ const DataTable = ({
           </TableBody>
           <TableFooter>
             <TableRow>
-              <TableCell colSpan={2}>Total</TableCell>
-              <TableCell className='text-right'>
+              <TableCell colSpan={1}>Total</TableCell>
+              <TableCell className='text-right text-lg text-green-600'>
                 {indianStyleAmount(sell?.total_sell_amount || 0)}
               </TableCell>
             </TableRow>
@@ -220,7 +220,7 @@ const DataTable = ({
             <TableFooter>
               <TableRow>
                 <TableCell colSpan={2}>Total</TableCell>
-                <TableCell className='text-right'>
+                <TableCell className='text-right text-lg text-green-600'>
                   {indianStyleAmount(totalStockAmount)}
                 </TableCell>
               </TableRow>

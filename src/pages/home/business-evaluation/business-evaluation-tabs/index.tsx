@@ -6,11 +6,11 @@ export function DashboardTabs() {
   return (
     <Tabs defaultValue='transactions' className='w-full h-full'>
       <TabsList className='grid w-full grid-cols-2'>
-        <TabsTrigger value='growth-chart'>Growth Chart</TabsTrigger>
+        <TabsTrigger value='monthly-reports'>Monthly Reports</TabsTrigger>
         <TabsTrigger value='transactions'>Transactions</TabsTrigger>
       </TabsList>
 
-      <TabsContent value='growth-chart' className='h-full'>
+      <TabsContent value='monthly-reports' className='h-full'>
         <GrowthChart />
       </TabsContent>
 
