@@ -17,8 +17,8 @@ import { analysisEndpoints } from "./endpoints/analysis";
 import { reportsEndpoints } from "./endpoints/reports";
 
 export const APIEndPoints = {
-  BackendURL: 'http://localhost:5000',
-  // BackendURL: 'http://192.168.29.16:5000',
+  // BackendURL: 'http://localhost:5000',
+  BackendURL: 'http://192.168.29.16:5000',
 
   // VARIANTS
   ...variantsEndpoints,
