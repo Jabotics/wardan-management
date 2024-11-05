@@ -1,22 +1,26 @@
-import { useEffect, useRef } from 'react'
-import * as echarts from 'echarts'
-import { useGetTopFiveBuyersQuery } from '@/store/actions/slices/analysisSlice'
-import { useAppSelector } from '@/store/hooks'
-import { RootState } from '@/store'
+import { useEffect, useRef, useMemo, memo } from 'react';
+import * as echarts from 'echarts';
+import { useGetTopFiveBuyersQuery } from '@/store/actions/slices/analysisSlice';
+import { useAppSelector } from '@/store/hooks';
+import { RootState } from '@/store';
 
-export default function StocksChart() {
-  const chartRef = useRef(null)
+const StocksChart = () => {
+  const chartRef = useRef(null);
 
-  useGetTopFiveBuyersQuery()
-  const { topFiveBuyers } = useAppSelector((state: RootState) => state.analysis)
+  // Fetch top five buyers
+  useGetTopFiveBuyersQuery();
+  const { topFiveBuyers } = useAppSelector((state: RootState) => state.analysis);
 
-  const topFiveBuyersForChartData = topFiveBuyers.map((i) => ({
-    value: i.totalAmount,
-    name: i.buyer,
-  }))
+  // Memoize the chart data
+  const topFiveBuyersForChartData = useMemo(() => {
+    return topFiveBuyers.map((i) => ({
+      value: i.totalAmount,
+      name: i.buyer,
+    }));
+  }, [topFiveBuyers]);
 
   useEffect(() => {
-    const myChart = echarts.init(chartRef.current)
+    const myChart = echarts.init(chartRef.current);
 
     const option = {
       tooltip: {
@@ -50,17 +54,19 @@ export default function StocksChart() {
           labelLine: {
             show: false,
           },
-          data: topFiveBuyersForChartData ?? [],
+          data: topFiveBuyersForChartData,
         },
       ],
-    }
+    };
 
-    myChart.setOption(option)
+    myChart.setOption(option);
 
     return () => {
-      myChart.dispose()
-    }
-  }, [topFiveBuyersForChartData])
+      myChart.dispose();
+    };
+  }, [topFiveBuyersForChartData]);
 
-  return <div ref={chartRef} style={{ width: '100%', height: '400px' }} />
-}
+  return <div ref={chartRef} style={{ width: '100%', height: '400px' }} />;
+};
+
+export default memo(StocksChart);

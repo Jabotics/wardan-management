@@ -18,7 +18,7 @@ const GrowthChart = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(currentDate)
   const [clickMonthYear, setClickMonthYear] = useState<boolean>(false)
   const [selectedMonth, setSelectedMonth] = useState<string>(
-    currentDate.format('MMMM').substring(0,3)
+    currentDate.format('MMMM').substring(0, 3)
   )
   const [selectedYear, setSelectedYear] = useState<number>(currentDate.year())
 
@@ -56,7 +56,7 @@ const GrowthChart = () => {
       <div className='flex h-6 w-full items-center justify-between rounded-md px-2'>
         <div className='flex items-center gap-2'>
           <div
-            className='cursor-pointer rounded-md border-2 border-[#EE666675] px-3 py-1 text-sm'
+            className={`cursor-pointer rounded-md ${selectedTable === 'Expense' ? 'border-2 border-transparent bg-[#EE6666] text-white' : 'border-2 border-[#EE666675] text-black/50'} px-3 py-1 text-sm`}
             onClick={() => {
               setSelectedTable('Expense')
             }}
@@ -64,7 +64,7 @@ const GrowthChart = () => {
             Expense
           </div>
           <div
-            className='cursor-pointer rounded-md border-2 border-[#5C7BD975] px-3 py-1 text-sm'
+            className={`cursor-pointer rounded-md ${selectedTable === 'Sell' ? 'border-2 border-transparent bg-[#5C7BD9] text-white' : 'border-2 border-[#5C7BD975] text-black/50'} px-3 py-1 text-sm`}
             onClick={() => {
               setSelectedTable('Sell')
             }}
@@ -72,35 +72,37 @@ const GrowthChart = () => {
             Sell
           </div>
           <div
-            className='cursor-pointer rounded-md border-2 border-[#9FE08075] px-3 py-1 text-sm'
+            className={`cursor-pointer rounded-md ${selectedTable === 'Stock' ? 'border-2 border-transparent bg-[#56913a] text-white' : 'border-2 border-[#9FE08075] text-black/50'} px-3 py-1 text-sm`}
             onClick={() => {
               setSelectedTable('Stock')
             }}
           >
-            Stock
+            Remaining Stock
           </div>
         </div>
-        <Select open={clickMonthYear}>
-          <SelectTrigger
-            className='h-8 w-32 border-2 border-amber-950/5'
-            onClick={() => setClickMonthYear(true)}
-          >
-            <SelectValue
-              placeholder={`${selectedMonth} ${selectedYear}`}
-              className='text-xs'
-            />
-          </SelectTrigger>
-          <SelectContent ref={calendarRef}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateCalendar
-                value={selectedDate}
-                views={['month', 'year']}
-                openTo='month'
-                onChange={handleMonthYearChange}
+        {selectedTable !== 'Stock' ? (
+          <Select open={clickMonthYear}>
+            <SelectTrigger
+              className='h-8 w-32 border-2 border-amber-950/5'
+              onClick={() => setClickMonthYear(true)}
+            >
+              <SelectValue
+                placeholder={`${selectedMonth} ${selectedYear}`}
+                className='text-xs'
               />
-            </LocalizationProvider>
-          </SelectContent>
-        </Select>
+            </SelectTrigger>
+            <SelectContent ref={calendarRef}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DateCalendar
+                  value={selectedDate}
+                  views={['month', 'year']}
+                  openTo='month'
+                  onChange={handleMonthYearChange}
+                />
+              </LocalizationProvider>
+            </SelectContent>
+          </Select>
+        ) : null}
       </div>
 
       <DataTable

@@ -110,7 +110,7 @@ const PurchaseItems = ({
                   <div className='whitespace-nowrap'>
                     {`${item?.qty} ${item?.unit}`} ({' '}
                     <span className='stacked-fractions'>
-                      ₹{item?.price_per_kg}/kg
+                      ₹{item?.price_per_kg}/{item?.unit}
                     </span>{' '}
                     )
                   </div>

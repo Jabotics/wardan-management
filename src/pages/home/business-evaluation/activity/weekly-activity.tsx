@@ -16,7 +16,6 @@ const WeeklyActivity = () => {
   const { remainingStock } = useAppSelector(
     (state: RootState) => state.remainings
   )
-  console.log(remainingStock)
 
   const chartRef = useRef<ReactECharts | null>(null)
   const [chartData, setChartData] = useState<TransactionDataType>([])

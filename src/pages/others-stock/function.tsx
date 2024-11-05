@@ -63,7 +63,7 @@ export const Quantity = ({ data }: { data: Data }) => {
             boxShadow: 'none',
           }}
         />{' '}
-        kg
+        {data?.unit}
       </div>
       <FaMinusCircle
         size={20}

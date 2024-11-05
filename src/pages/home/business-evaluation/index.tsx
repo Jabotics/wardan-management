@@ -8,7 +8,7 @@ const BusinessEvaluation = () => {
     <div className='flex h-full w-full flex-col gap-2 overflow-hidden'>
       <div className='flex h-[40%] w-full flex-row gap-5 overflow-hidden'>
         <div className='flex h-full flex-1 flex-col items-center justify-start overflow-x-auto overflow-y-hidden'>
-          <span className='text-xs'>Comparison Of Purchases</span>
+          <span className='text-xs'>Comparison Of Stocks</span>
           {/* <StocksBarChart /> */}
           <WeeklyActivity />
         </div>
