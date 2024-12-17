@@ -61,6 +61,7 @@ const ModifySellItems = ({
   const uniqueProducts = Array.from(
     new Map(readyProducts.map((item) => [item.product._id, item])).values()
   )
+  const productsInReadyProducts = uniqueProducts.map((i) => i.product._id)
   const variantsInReadyProducts = uniqueProducts.map((i) => i.variant._id)
 
   useGetAllVariantsQuery({})
@@ -157,13 +158,14 @@ const ModifySellItems = ({
                           <SelectValue placeholder='Select a Unit' />
                         </SelectTrigger>
                         <SelectContent>
-                          {readyProducts.map((item, index) => {
+                          {productsInReadyProducts?.map((item, index) => {
+                            const selectedProduct = readyProducts.filter(i => i?.product?._id === item)[0];
                             return (
                               <SelectItem
-                                value={item.product._id || ''}
+                                value={selectedProduct?.product?._id || ''}
                                 key={index}
                               >
-                                {item.product.name}
+                                {selectedProduct?.product?.name}
                               </SelectItem>
                             )
                           })}

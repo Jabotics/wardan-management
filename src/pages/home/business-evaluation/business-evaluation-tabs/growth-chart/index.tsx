@@ -77,7 +77,7 @@ const GrowthChart = () => {
               setSelectedTable('Stock')
             }}
           >
-            Remaining Stock
+            Remaining Ready Stock
           </div>
         </div>
         {selectedTable !== 'Stock' ? (

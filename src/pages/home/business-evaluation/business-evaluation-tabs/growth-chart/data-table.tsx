@@ -58,7 +58,7 @@ const DataTable = ({
     (expense?.rawMaterial || 0)
 
   return (
-    <div className='mt-5 h-full w-full'>
+    <div className='mt-5 h-full w-full overflow-x-hidden overflow-y-auto'>
       {title === 'Expense' ? (
         <Table>
           <TableHeader>
